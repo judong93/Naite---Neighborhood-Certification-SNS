@@ -9,6 +9,11 @@
 </template>
 
 <style>
+
+@local {
+  font-color: red;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -27,6 +32,7 @@
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  /* color: #42b983; */
+  color: font-color
 }
 </style>
