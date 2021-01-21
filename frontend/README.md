@@ -135,7 +135,47 @@
 
 
 
+### 0121(목)
 
+
+
+#### 1) 스타일 가이드 정리(FE)
+
+1-1) Vue.js 스타일 가이드
+
+- methods, computed 함수명, data or state 내 변수명 - lowerCamelCase
+
+- 컴포넌트명, 컴포넌트 폴더명 - UpperCamelCase
+
+- mutations의 함수와 actions의 함수명 일치시키기.
+  - actions - lowerCamelCase, mutations - upper_snake_case
+  - ex) saveMovies - SAVE_MOVIES
+
+- 이 외에 기본적으로는 lowercase
+
+
+
+1-2) CSS 스타일 가이드
+
+- class 선택자를 1순위로 사용 
+- 사용시 하이픈을 사용한 snake case(일반적인 snake case는 언더바 사용 / 'font_size')
+
+
+
+#### 2) Commit, Branch명 생성 기준
+
+2-1) Commit
+
+![커밋메세지](./README\커밋메세지.png)
+
+- 기능을 최초로 커밋한 후, 내용이 수정 됐을 때는 그 기능이 완성되기 전까지는 '기능추가'로 커밋한다!
+
+
+
+2-2) Branch
+
+- fe-feature-login
+- be-feature-login
 
 
 
