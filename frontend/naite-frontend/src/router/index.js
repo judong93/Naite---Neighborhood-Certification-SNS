@@ -1,15 +1,23 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Firstpage from '@/views/Firstpage'
+import Sign from '@/views/Sign'
 
 
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   component: Home
-  // },
+  {
+    path: '/',
+    name: 'Firstpage',
+    component: Firstpage
+  },
+  {
+    path:'/sign',
+    name: 'Sign',
+    component: Sign,
+
+  }
 
 ]
 
