@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Firstpage from '@/views/Firstpage'
 import Sign from '@/views/Sign'
+import Main from '@/views/Main'
 
 
 Vue.use(VueRouter)
@@ -17,6 +18,11 @@ const routes = [
     name: 'Sign',
     component: Sign,
 
+  },
+  {
+    path:'/main',
+    name: 'Main',
+    component: Main,
   }
 
 ]
