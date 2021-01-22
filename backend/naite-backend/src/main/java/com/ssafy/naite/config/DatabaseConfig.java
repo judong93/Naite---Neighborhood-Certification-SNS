@@ -1,4 +1,4 @@
-package com.ssafy.naite.test;
+package com.ssafy.naite.config;
 
 import javax.sql.DataSource;
 
