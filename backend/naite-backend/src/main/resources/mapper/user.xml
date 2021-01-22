@@ -2,7 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ssafy.naite.model.dao.UserDao">
-
+<mapper namespace="com.ssafy.naite.model.mapper.UserMapper">
+	<select id="getAllUsers" resultType="com.ssafy.naite.model.dto.User">
+		SELECT userid, username
+		FROM user
+	</select>
 	
 </mapper>
