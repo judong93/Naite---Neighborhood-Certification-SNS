@@ -1,17 +1,20 @@
 <template>
     <div id="main">
         <Navbar />
+        <Message />
     </div>
     
 </template>
 <script>
 import Navbar from '@/components/Navbar'
+import Message from '@/components/Message'
 
 
 export default {
     name:'Main',
     components:{
-        Navbar
+        Navbar,
+        Message
                 
     },
     data: function() {
