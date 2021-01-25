@@ -37,11 +37,7 @@ export default {
     computed: {
 
     },
-    
-    
-    created:{
-        
-    }
+
     
 }
 </script>
@@ -50,13 +46,14 @@ export default {
 
 #navbar {
     position:fixed;
-    background-color: rgb(240, 198, 198);
+    background-color: rgb(95, 86, 86);
     width:98%;
     height:8%;
-    margin: 0 1%;
+    margin: 0.5% 1%;
     text-align: left;
     display: flex;
     justify-content: space-between;
+    color:white;
 }
 
 .nav-right{

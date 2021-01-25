@@ -62,9 +62,6 @@ export default {
 
         }
     },
-    created:{
-        
-    }
 }
 </script>
 
@@ -80,8 +77,8 @@ export default {
     top: 50%;
     left: 10%;
     transform: translate(-50%,-50%);
-    width: 20%;
-    height:100%;
+    width: 400px;
+    height:969px;
     background:rgb(255,255,255,1);
     transition: 0.3s;
 }

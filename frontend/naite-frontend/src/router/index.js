@@ -5,6 +5,8 @@ import Sign from '@/views/Sign'
 import Main from '@/views/Main'
 
 
+
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -23,7 +25,8 @@ const routes = [
     path:'/main',
     name: 'Main',
     component: Main,
-  }
+  },
+
 
 ]
 

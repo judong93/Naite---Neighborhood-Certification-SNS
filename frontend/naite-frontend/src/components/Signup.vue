@@ -55,12 +55,6 @@ export default {
     computed: {
 
     },
-    
-    
-    created:{
-        
-
-    },
     props:{
         toSignup:Boolean,
     }
