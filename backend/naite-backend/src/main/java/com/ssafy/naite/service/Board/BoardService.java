@@ -22,6 +22,12 @@ public class BoardService {
         return boardRepository.findAll().stream().filter(board->board.getBoard_is_deleted() == 0).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
     }
 
+    /** 게시글 카테고리별 조회 */
+    @Transactional(readOnly = true)
+    public List<BoardDto.BoardResponseDto> findAllBoardsByCategory(int big_category_no) {
+        return boardRepository.findAll().stream().filter(board->board.getBig_category_no() == big_category_no).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+    }
+
     /** 게시글 상세 조회 */
     @Transactional(readOnly = true)
     public BoardDto.BoardResponseDto findById(int board_no) {

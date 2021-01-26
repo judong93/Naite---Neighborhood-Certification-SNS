@@ -26,6 +26,14 @@ public class BoardController {
         return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
 
+    /** 게시글 카테고리별 조회 */
+    @GetMapping("/list/{big_category_no}")
+    @ApiOperation(value = "게시글 카테고리별 조회")
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByCategory(@PathVariable int big_category_no){
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByCategory(big_category_no);
+        return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
+    }
+
     /** 게시글 상세 조회 */
     @GetMapping("/lookup/{board_no}")
     @ApiOperation(value = "게시글 상세 조회")
