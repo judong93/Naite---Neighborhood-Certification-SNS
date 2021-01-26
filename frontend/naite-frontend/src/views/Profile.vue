@@ -9,15 +9,15 @@
         {{ userName }}
         </div>
         <div class="activities">
-          <p> {{ posting }} | </p>
-          <p> &nbsp;{{ groupBuying }} | </p>
-          <p> {{ comment }} </p>
+          <p @click="postingList" :class="{ underLine: dd}"> {{ posting }} | </p>
+          <p @click="groupBuying"> &nbsp;{{ groupBuying }} | </p>
+          <p @click="commentList"> {{ comment }} </p>
         </div>
       </div>  
     </div>
     <hr>
     <div class="cards">
-      <div v-for="(card,idx) in cards" :key="idx" class="card">
+      <div v-for="(card,idx) in postingCards" :key="idx" class="card">
         <div>
           {{ card.title }}
         </div>
@@ -42,7 +42,7 @@ export default {
       posting: "게시글 3",
       groupBuying: "장터거래 4",
       comment: "댓글 4",
-      cards: [
+      postingCards: [
         {title: "공사한대요", content: "시끄러울 것 같아요"},
         {title: "글쎄요", content: "그러게요"},
         {title: "글쎄요", content: "그러게요"},
@@ -50,6 +50,17 @@ export default {
       ],
       postingImg: "https://picsum.photos/200/300",
     }
+  },
+  methods: {
+    postingList: function () {
+      console.log('good!')
+    },
+    groupBuyingList: function () {
+
+    },
+    commentList: function () {
+
+    },
   },
   components: {
     
@@ -67,7 +78,7 @@ hr {
   align-items: center;
   flex-direction: column;
   height: 600px;
-  margin-top: 120px;
+  margin-top: 110px;
 }
 .profile-box {
   /* position: relative; */
@@ -95,8 +106,9 @@ hr {
   transform: rotateY(180deg);
 }
 .username {
-  /* position: absolute; */
+  position: relative;
   font-size: 35px;
+  top: 10px;
 }
 .profile-info {
   position: relative;
@@ -107,7 +119,7 @@ hr {
   display: flex;
   justify-content: space-between;
   position: relative;
-  top: 55px; 
+  top: 38px; 
   font-size: 30px;
 }
 .cards {
@@ -129,6 +141,9 @@ hr {
   height: 100px;
   width: 130px;
   border-radius: 10px;
+}
+.underLine {
+
 }
 @media screen and (max-width:767px) {
   .profile {
