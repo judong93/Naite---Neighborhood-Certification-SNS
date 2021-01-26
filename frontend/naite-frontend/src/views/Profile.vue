@@ -9,20 +9,20 @@
         {{ userName }}
         </div>
         <div class="activities">
-          <p @click="postingList" :class="{ underLine: dd}"> {{ posting }} | </p>
-          <p @click="groupBuying"> &nbsp;{{ groupBuying }} | </p>
-          <p @click="commentList"> {{ comment }} </p>
+          <p @click="postingList" :class="{ underline: activityCheckNum===1}" class="activity"> {{ posting }} </p><p>|</p>
+          <p @click="groupBuyingList" :class="{ underline: activityCheckNum===2}" class="activity"> {{ groupBuying }} </p><p>|</p>
+          <p @click="commentList" :class="{ underline: activityCheckNum===3}" class="activity"> {{ comment }} </p>
         </div>
       </div>  
     </div>
     <hr>
     <div class="cards">
-      <div v-for="(card,idx) in postingCards" :key="idx" class="card">
+      <div v-for="(card,idx) in Cards" :key="idx" class="card">
         <div>
           {{ card.title }}
         </div>
         <div>
-          <img :src="postingImg" alt="" class="posting-img">
+          <img :src="card.img" alt="" class="posting-img">
         </div>
         <div>
           {{ card.content }}
@@ -42,24 +42,38 @@ export default {
       posting: "게시글 3",
       groupBuying: "장터거래 4",
       comment: "댓글 4",
+      Cards: [],
       postingCards: [
-        {title: "공사한대요", content: "시끄러울 것 같아요"},
-        {title: "글쎄요", content: "그러게요"},
-        {title: "글쎄요", content: "그러게요"},
-        {title: "글쎄요", content: "그러게요"},
+        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
+        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
+        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
+      ],
+      groupBuyingCards: [
+        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
+        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
+        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
+      ],
+      commentCards: [
+        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
+        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
+        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
       ],
       postingImg: "https://picsum.photos/200/300",
+      activityCheckNum: 0,
     }
   },
   methods: {
     postingList: function () {
-      console.log('good!')
+      this.activityCheckNum = 1
+      this.Cards = this.postingCards
     },
     groupBuyingList: function () {
-
+      this.activityCheckNum = 2
+      this.Cards = this.groupBuyingCards
     },
     commentList: function () {
-
+      this.activityCheckNum = 3
+      this.Cards = this.commentCards
     },
   },
   components: {
@@ -74,11 +88,12 @@ hr {
   width: 700px;
 }
 .profile {
+  position: relative;
   display: flex;
   align-items: center;
   flex-direction: column;
   height: 600px;
-  margin-top: 110px;
+  top: 110px;
 }
 .profile-box {
   /* position: relative; */
@@ -135,16 +150,26 @@ hr {
   border: 2px solid lightgray;
   border-radius: 10px;
   width: 170px;
-  height: 200px;
+  height: 250px;
 }
 .posting-img {
   height: 100px;
   width: 130px;
   border-radius: 10px;
 }
-.underLine {
-
+.underline {
+  text-decoration: underline;
 }
+.activity {
+  cursor: pointer;
+  /* border-radius: 40%; */
+}
+.activity:hover {
+  background-color: rgb(223, 217, 217);
+  opacity: 0.7;
+}
+
+
 @media screen and (max-width:767px) {
   .profile {
     width: 767px;

@@ -3,12 +3,8 @@ import VueRouter from 'vue-router'
 import Firstpage from '@/views/Firstpage'
 import Sign from '@/views/Sign'
 import Main from '@/views/Main'
-
-
-
-
+import Profile from '@/views/Profile'
 Vue.use(VueRouter)
-
 const routes = [
   {
     path: '/',
@@ -19,21 +15,21 @@ const routes = [
     path:'/sign',
     name: 'Sign',
     component: Sign,
-
   },
   {
     path:'/main',
     name: 'Main',
     component: Main,
   },
-
-
+  {
+    path:'/profile',
+    name: 'Profile',
+    component: Profile,
+  }
 ]
-
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
-
 export default router
