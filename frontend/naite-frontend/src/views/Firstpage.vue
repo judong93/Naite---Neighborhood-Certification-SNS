@@ -4,7 +4,7 @@
         <span>자취생들을 위한 커뮤니티</span><br>
         <span>나의 이웃 테두리: 나이테</span>
     </div>
-    <button class="start-btn" @click='go_to_sign'> start</button>
+    <button class="start-btn" @click='go_to_sign'>start</button>
 
 
 
@@ -29,11 +29,7 @@ export default {
     computed: {
 
     },
-    
-    
-    created:{
-        
-    }
+
 }
 </script>
 
@@ -42,7 +38,8 @@ export default {
 <style>
 #Firstpage {
     position: relative;
-    height: 100vh;
+    height:100vh;
+    width: 100vw;
     background: url('../assets/firstpage.jpg') no-repeat center center;
     background-size: 100% 100%;
 }
@@ -57,7 +54,7 @@ export default {
     cursor: pointer;
     width: 10%;
     height: 5%;
-    font-size: 2rem;
+    font-size: 2em;
 
 }
 

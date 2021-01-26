@@ -33,14 +33,6 @@ export default {
         this.toSignup = false
       }
     },
-    computed: {
-
-    },
-    
-    
-    created:{
-        
-    }
 }
 </script>
 
@@ -50,6 +42,7 @@ export default {
 #sign {
     background: url('../assets/sign.jpg') no-repeat center center;
     height: 100vh;   
+    width:100vw;
     overflow:hidden; 
     
 }
