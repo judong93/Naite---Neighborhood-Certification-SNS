@@ -1,38 +1,46 @@
 <template>
-  <div class="profile">
-    <div class="profile-box">
-      <div class="img-container">
-        <img :src="imgData" alt="No Image" class="profile-img">
+  <div>
+    <Navbar />
+    <Message />
+    <div class="profile">
+      <div class="profile-box">
+        <div class="img-container">
+          <img :src="imgData" alt="No Image" class="profile-img">
+        </div>
+        <div class="profile-info">
+          <div class="username">
+          {{ userName }}
+          </div>
+          <div class="activities">
+            <p @click="postingList" :class="{ underline: activityCheckNum===1}" class="activity"> {{ posting }} </p><p>|</p>
+            <p @click="groupBuyingList" :class="{ underline: activityCheckNum===2}" class="activity"> {{ groupBuying }} </p><p>|</p>
+            <p @click="commentList" :class="{ underline: activityCheckNum===3}" class="activity"> {{ comment }} </p>
+          </div>
+        </div>  
       </div>
-      <div class="profile-info">
-        <div class="username">
-        {{ userName }}
-        </div>
-        <div class="activities">
-          <p @click="postingList" :class="{ underline: activityCheckNum===1}" class="activity"> {{ posting }} </p><p>|</p>
-          <p @click="groupBuyingList" :class="{ underline: activityCheckNum===2}" class="activity"> {{ groupBuying }} </p><p>|</p>
-          <p @click="commentList" :class="{ underline: activityCheckNum===3}" class="activity"> {{ comment }} </p>
-        </div>
-      </div>  
-    </div>
-    <hr>
-    <div class="cards">
-      <div v-for="(card,idx) in Cards" :key="idx" class="card">
-        <div>
-          {{ card.title }}
-        </div>
-        <div>
-          <img :src="card.img" alt="" class="posting-img">
-        </div>
-        <div>
-          {{ card.content }}
+      <hr>
+      <div class="cards">
+        <div v-for="(card,idx) in Cards" :key="idx" class="card">
+          <div>
+            {{ card.title }}
+          </div>
+          <div>
+            <img :src="card.img" alt="" class="posting-img">
+          </div>
+          <div>
+            {{ card.content }}
+          </div>
         </div>
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
+import Navbar from '@/components/Navbar'
+import Message from '@/components/Message'
+
 export default {
   name: 'Profile',
   data: function () {
@@ -59,7 +67,7 @@ export default {
         {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
       ],
       postingImg: "https://picsum.photos/200/300",
-      activityCheckNum: 0,
+      activityCheckNum: 1,
     }
   },
   methods: {
@@ -77,7 +85,11 @@ export default {
     },
   },
   components: {
-    
+    Navbar,
+    Message
+  },
+  created: function () {
+    this.Cards = this.postingCards
   }
 }
 </script>
