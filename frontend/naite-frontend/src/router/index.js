@@ -4,6 +4,7 @@ import Firstpage from '@/views/Firstpage'
 import Sign from '@/views/Sign'
 import Main from '@/views/Main'
 import Profile from '@/views/Profile'
+import GroupBuying from '@/views/GroupBuying'
 Vue.use(VueRouter)
 const routes = [
   {
@@ -25,6 +26,11 @@ const routes = [
     path:'/profile',
     name: 'Profile',
     component: Profile,
+  },
+  {
+    path:'/groupbuying',
+    name: 'GroupBuying',
+    component: GroupBuying,
   }
 ]
 const router = new VueRouter({
