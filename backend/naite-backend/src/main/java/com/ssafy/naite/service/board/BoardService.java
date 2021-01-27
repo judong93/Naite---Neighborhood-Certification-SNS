@@ -1,4 +1,4 @@
-package com.ssafy.naite.service.Board;
+package com.ssafy.naite.service.board;
 
 import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.board.BoardRepository;
@@ -30,7 +30,7 @@ public class BoardService {
 
     /** 게시글 상세 조회 */
     @Transactional(readOnly = true)
-    public BoardDto.BoardResponseDto findById(int board_no) {
+    public BoardDto.BoardResponseDto findBoardById(int board_no) {
         Board board = boardRepository.findById(board_no)
                                     .orElseThrow(()-> new IllegalAccessError("[board_no=" + board_no + "] 해당 게시글이 존재하지 않습니다."));
 

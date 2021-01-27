@@ -1,7 +1,7 @@
-package com.ssafy.naite.Controller;
+package com.ssafy.naite.controller;
 
 import com.ssafy.naite.dto.board.BoardDto;
-import com.ssafy.naite.service.Board.BoardService;
+import com.ssafy.naite.service.board.BoardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/board")
+@RestController
+@RequestMapping("/board")
 @AllArgsConstructor
 @Api(value = "게시판")
 public class BoardController {
@@ -35,10 +36,10 @@ public class BoardController {
     }
 
     /** 게시글 상세 조회 */
-    @GetMapping("/lookup/{board_no}")
+    @GetMapping("/detail/{board_no}")
     @ApiOperation(value = "게시글 상세 조회")
     public ResponseEntity<BoardDto.BoardResponseDto> getBoardById(@PathVariable int board_no) {
-        BoardDto.BoardResponseDto boardResponseDto= boardService.findById(board_no);
+        BoardDto.BoardResponseDto boardResponseDto = boardService.findBoardById(board_no);
         return new ResponseEntity<BoardDto.BoardResponseDto>(boardResponseDto, HttpStatus.OK);
     }
 

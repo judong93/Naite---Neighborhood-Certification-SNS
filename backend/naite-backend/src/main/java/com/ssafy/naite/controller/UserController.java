@@ -1,4 +1,4 @@
-package com.ssafy.naite.Controller;
+package com.ssafy.naite.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 

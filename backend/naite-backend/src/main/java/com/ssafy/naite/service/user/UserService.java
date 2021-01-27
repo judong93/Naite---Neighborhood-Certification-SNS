@@ -1,9 +1,9 @@
-package com.ssafy.naite.service.User;
+package com.ssafy.naite.service.user;
 
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
 import com.ssafy.naite.dto.user.UserSignUpRequestDto;
-import com.ssafy.naite.service.Util.Salt;
+import com.ssafy.naite.service.util.Salt;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +26,10 @@ public class UserService {
         if (user == null) {
             System.out.println("here 유저 없음 ");
             // 패스워드 암호화
-            String salt = saltService.genSalt();
-            String pw = saltService.encodePassword(requestDto.getUserPw(), salt);
-            user.setUserPw(pw);
-            user.setUserSalt(salt);
+//            String salt = saltService.genSalt();
+//            String pw = saltService.encodePassword(requestDto.getUserPw(), salt);
+//            user.setUserPw(pw);
+//            user.setUserSalt(salt);
 
             // 회원가입 진행
             userRepository.save(user);
