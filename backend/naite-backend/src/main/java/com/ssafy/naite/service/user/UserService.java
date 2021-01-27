@@ -3,13 +3,10 @@ package com.ssafy.naite.service.user;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
 import com.ssafy.naite.dto.user.UserSignUpRequestDto;
-<<<<<<< HEAD:backend/naite-backend/src/main/java/com/ssafy/naite/service/user/UserService.java
 import com.ssafy.naite.service.util.Salt;
 import lombok.AllArgsConstructor;
-=======
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
->>>>>>> f5c810b5faad367f07caf898d520b2e95ea7b732:backend/naite-backend/src/main/java/com/ssafy/naite/service/User/UserService.java
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
