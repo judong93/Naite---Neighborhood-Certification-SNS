@@ -14,9 +14,13 @@ import javax.persistence.*;
 public class User {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "user_no")
     @Id
     private Integer userNo;
+
+//    @OneToOne
+//    @JoinColumn(name = "user_no")
+//    private AuthKey authKey;
 
     @Column(length = 15, nullable = false)
     private String userId;
@@ -64,4 +68,3 @@ public class User {
     }
 
 }
-

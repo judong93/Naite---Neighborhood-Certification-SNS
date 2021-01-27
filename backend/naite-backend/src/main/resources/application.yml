@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/naite?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
-    username: ssafy
-    password: ssafy
+    url: jdbc:mysql://i4a402.p.ssafy.io:3306/naite?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    username: naite
+    password: naite0122zz
   jpa:
     hibernate:
       ddl-auto: none
@@ -13,8 +13,26 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kimmk0924
+    password: alsrbfkd01!
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 logging:
   level:
     org:
       hibernate: info
+
+#  spring.mail.host=smtp.gmail.com
+#  spring.mail.port=587
+#  spring.mail.username=kimmk0924
+#  spring.mail.password=alsrbfkd01!
+#  spring.mail.properties.mail.smtp.auth=true
+#  spring.mail.properties.mail.smtp.starttls.enable=true
