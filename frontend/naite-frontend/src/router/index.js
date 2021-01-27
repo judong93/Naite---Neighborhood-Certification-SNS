@@ -5,6 +5,7 @@ import Sign from '@/views/Sign'
 import Main from '@/views/Main'
 import Profile from '@/views/Profile'
 import GroupBuying from '@/views/GroupBuying'
+import PostingForm from '@/views/PostingForm'
 Vue.use(VueRouter)
 const routes = [
   {
@@ -31,7 +32,12 @@ const routes = [
     path:'/groupbuying',
     name: 'GroupBuying',
     component: GroupBuying,
-  }
+  },
+  {
+    path:'/postingform',
+    name: 'PostingForm',
+    component: PostingForm,
+  },
 ]
 const router = new VueRouter({
   mode: 'history',
