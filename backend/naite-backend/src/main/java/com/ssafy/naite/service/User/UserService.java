@@ -3,17 +3,20 @@ package com.ssafy.naite.service.User;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
 import com.ssafy.naite.dto.user.UserSignUpRequestDto;
-import com.ssafy.naite.service.Util.Salt;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-//@RequiredArgsConstructor
-@AllArgsConstructor
+import java.util.Optional;
+
+@RequiredArgsConstructor
+//@AllArgsConstructor
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final Salt saltService;
+//    private final PasswordEncoder passwordEncoder;
+//    private final Salt saltService;
 
     /**
      * 회원가입
@@ -21,47 +24,31 @@ public class UserService {
      * @return
      */
     @Transactional
-    public void save(UserSignUpRequestDto requestDto) throws Exception{
-        User user = userRepository.findByUserEmail(requestDto.getUserEmail());
-        if (user == null) {
-            System.out.println("here 유저 없음 ");
+    public User save(UserSignUpRequestDto requestDto) throws Exception{
+        Optional<User> existed = userRepository.findByUserEmail(requestDto.getUserEmail());
+        if (!existed.isPresent()) {
             // 패스워드 암호화
-            String salt = saltService.genSalt();
-            String pw = saltService.encodePassword(requestDto.getUserPw(), salt);
-            user.setUserPw(pw);
+            String salt = BCrypt.gensalt();
+            String encodedPw = BCrypt.hashpw(requestDto.getUserPw(), salt);
+
+            User user = requestDto.toEntity();
+            user.setUserPw(encodedPw);
             user.setUserSalt(salt);
 
             // 회원가입 진행
-            userRepository.save(user);
-            userRepository.save(requestDto.toEntity());
+            return userRepository.save(user);
         } else {
-            System.out.println("here 이미 가입된 유저 ");
             throw new Exception("이미 가입된 회원입니다.");
         }
     }
 
-//    /**
-//     * 중복회원 검사
-//     */
-//    private boolean validateDuplicateUser(String userEmail) {
-//
-//
-//        System.out.println("EMAIL: " + userEmail);
-//        User existed = userRepository.findByUserEmail(userEmail);
-//        System.out.println("EXIST : " + existed);
-//        if (existed == null) return true;
-//        else return false;
-//    }
+    /**
+     * 존재하는 회원인지 확인 (Email 중복인지 체크)
+     */
+    @Transactional
+    public User findByEmail(String email) {
+        Optional<User> existed = userRepository.findByUserEmail(email);
+        return existed.get();
+    }
 
-//    @Transactional
-//    public Long update (Long id, PostsUpdateRequestDto requestDto) {
-//        Posts posts = postsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
-//        posts.update(requestDto.getTitle(), requestDto.getContent());
-//        return id;
-//    }
-//
-//    public PostsResponseDto findById(Long id) {
-//        Posts entity = postsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
-//        return new PostsResponseDto(entity);
-//    }
 }
