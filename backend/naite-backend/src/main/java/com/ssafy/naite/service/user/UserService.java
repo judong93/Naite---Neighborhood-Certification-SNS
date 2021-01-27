@@ -26,10 +26,10 @@ public class UserService {
         if (user == null) {
             System.out.println("here 유저 없음 ");
             // 패스워드 암호화
-//            String salt = saltService.genSalt();
-//            String pw = saltService.encodePassword(requestDto.getUserPw(), salt);
-//            user.setUserPw(pw);
-//            user.setUserSalt(salt);
+            String salt = saltService.genSalt();
+            String pw = saltService.encodePassword(requestDto.getUserPw(), salt);
+            user.setUserPw(pw);
+            user.setUserSalt(salt);
 
             // 회원가입 진행
             userRepository.save(user);
