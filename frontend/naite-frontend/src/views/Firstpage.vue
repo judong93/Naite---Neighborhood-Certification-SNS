@@ -36,12 +36,18 @@ export default {
 
 
 <style>
+@font-face {
+    font-family: font1;
+    src: url(../fonts/titleli.ttf) format('truetype');
+}
+
 #Firstpage {
     position: relative;
     height:100vh;
     width: 100vw;
-    background: url('../assets/firstpage.jpg') no-repeat center center;
+    background: url('../assets/firstpage3.jpg') no-repeat center center;
     background-size: 100% 100%;
+    font-family: font1;
 }
 
 

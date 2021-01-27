@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Firstpage from '@/views/Firstpage'
 import Sign from '@/views/Sign'
 import Main from '@/views/Main'
+import Profile from '@/views/Profile'
+import Test from '@/views/Test'
 
 
 
@@ -26,6 +28,16 @@ const routes = [
     name: 'Main',
     component: Main,
   },
+  {
+    path:'/profile',
+    name: 'Profile',
+    component: Profile,
+  },
+  {
+    path:'/test',
+    name:'Test',
+    component:Test,
+  }
 
 
 ]
