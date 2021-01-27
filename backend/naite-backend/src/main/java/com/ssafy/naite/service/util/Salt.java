@@ -1,4 +1,4 @@
-package com.ssafy.naite.service.Util;
+package com.ssafy.naite.service.util;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;

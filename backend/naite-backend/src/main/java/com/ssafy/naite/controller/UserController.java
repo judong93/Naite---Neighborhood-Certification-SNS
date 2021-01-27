@@ -1,4 +1,4 @@
-package com.ssafy.naite.Controller;
+package com.ssafy.naite.controller;
 
 import com.ssafy.naite.domain.user.User;
 //import com.ssafy.naite.dto.user.AuthKeySaveRequestDto;
@@ -10,7 +10,7 @@ import com.ssafy.naite.dto.util.Response;
 
 import com.ssafy.naite.service.User.AuthKeyService;
 import com.ssafy.naite.service.User.EmailService;
-import com.ssafy.naite.service.User.UserService;
+import com.ssafy.naite.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;

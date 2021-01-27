@@ -1,8 +1,10 @@
-package com.ssafy.naite.service.User;
+package com.ssafy.naite.service.user;
 
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
 import com.ssafy.naite.dto.user.UserSignUpRequestDto;
+import com.ssafy.naite.service.util.Salt;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
