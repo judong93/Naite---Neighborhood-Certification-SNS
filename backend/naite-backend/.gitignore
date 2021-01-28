@@ -41,3 +41,4 @@ applilcation.yml
 /src/main/resources/secret.properties
 src/main/resources/secret.properties
 secret.properties
+/src/main/resources/application.yml
