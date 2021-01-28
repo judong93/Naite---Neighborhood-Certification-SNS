@@ -2,6 +2,7 @@
   <div id="sign">
     <Login @changeSignup='changeSignup' :toLogin='toLogin'/>
     <Signup @changeLogin='changeLogin' :toSignup='toSignup'/>
+
   </div>
 </template>
 
@@ -10,12 +11,12 @@ import Login from '@/components/Login'
 import Signup from '@/components/Signup'
 
 
+
 export default {
     name:'Sign',
     components:{
         Login,
-        Signup
-                
+        Signup,
     },
     data: function() {
         return {
@@ -40,12 +41,18 @@ export default {
 
 <style>
 #sign {
+    position:relative;
     background: url('../assets/sign.jpg') no-repeat center center;
     height: 100vh;   
     width:100vw;
     overflow:hidden; 
-    
+  
 }
 
+@media screen and (max-width: 1800px) {
+  #sign {
+    overflow: auto;
+  }
+}
 
 </style>
