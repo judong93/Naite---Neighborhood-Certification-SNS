@@ -4,6 +4,7 @@
         <BoardImg :messagetitle='messagetitle' :message='message' :imgsrc='imgsrc' :onDetail='onDetail'/>
         <BoardDetail :onDetail='onDetail'/>
         <BoardList :onDetail='onDetail'/>
+        <CategoryBar />
 
 
 
@@ -19,6 +20,7 @@ import Message from '@/components/Message'
 import BoardImg from '@/components/BoardImg'
 import BoardDetail from '@/components/BoardDetail'
 import BoardList from '@/components/BoardList'
+import CategoryBar from '@/components/CategoryBar'
 
 export default {
     name:'Main',
@@ -28,7 +30,7 @@ export default {
         BoardImg,
         BoardDetail,
         BoardList,
-                
+        CategoryBar,
     },
     data: function() {
         return {
@@ -46,7 +48,7 @@ export default {
         },
         backdetail:function(){
             this.onDetail=false
-        }
+        },
 
         
     },
