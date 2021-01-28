@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/naite?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
-    username: ssafy
-    password: ssafy
+    url: jdbc:mysql://i4a402.p.ssafy.io:3306/naite?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    username: naite
+    password: naite0122zz
   jpa:
     hibernate:
       ddl-auto: none
