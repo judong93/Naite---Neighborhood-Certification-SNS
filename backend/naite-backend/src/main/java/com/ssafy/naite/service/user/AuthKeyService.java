@@ -1,4 +1,4 @@
-package com.ssafy.naite.service.User;
+package com.ssafy.naite.service.user;
 
 import com.ssafy.naite.domain.user.AuthKey;
 import com.ssafy.naite.domain.user.AuthKeyRepository;

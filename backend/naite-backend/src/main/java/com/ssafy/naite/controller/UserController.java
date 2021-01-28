@@ -8,8 +8,8 @@ import com.ssafy.naite.dto.user.UserSignUpRequestDto;
 //import com.ssafy.naite.service.user.AuthKeyService;
 import com.ssafy.naite.dto.util.Response;
 
-import com.ssafy.naite.service.User.AuthKeyService;
-import com.ssafy.naite.service.User.EmailService;
+import com.ssafy.naite.service.user.AuthKeyService;
+import com.ssafy.naite.service.user.EmailService;
 import com.ssafy.naite.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -23,6 +23,7 @@ import java.util.Random;
 
 
 //@RequiredArgsConstructor
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 @AllArgsConstructor
 @RestController
 public class UserController {
