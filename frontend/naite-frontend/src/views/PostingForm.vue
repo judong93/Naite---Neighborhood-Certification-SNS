@@ -30,12 +30,14 @@
         <span class="postingform">
           <div class="title">
             <span class="title-letter">글 제목:</span>
-            <input class="title-input" type="text">
-            <button class="post-button">등록</button>
+            <input v-model="title" class="title-input" type="text">
+            <button @click="post" class="post-button">등록</button>
           </div>
           <div class="attach-img">
             <span class="attach-img-letter">사진 첨부</span>
             <button class="attach-img-button">내PC</button>
+            <p class="rating-letter">평점</p>
+            <StarRating />
           </div>
           <div class="text-style">
             <span>바탕체</span>
@@ -48,7 +50,7 @@
             <span>가운데정렬</span>
             <span>오른쪽정렬</span>
           </div>
-          <textarea name="contentInput" id="" cols="30" rows="10" class="content-input"></textarea>
+          <textarea v-model="content" name="contentInput" id="" cols="30" rows="10" class="content-input"></textarea>
         </span>
       </div>
     </div>
@@ -59,9 +61,17 @@
 import Navbar from '@/components/Navbar'
 import Message from '@/components/Message'
 import BoardImg from '@/components/BoardImg'
+import StarRating from '@/components/StarRating'
+import axios from 'axios'
 
-export default {
+export default {  
   name: 'PostingForm',
+  components: {
+    Navbar,
+    Message,
+    BoardImg,
+    StarRating,
+  },
   data: function () {
     return {
       messagetitle:'나의 이웃테두리: 나이테',
@@ -70,6 +80,11 @@ export default {
       onDetail: false,
       selectedCategoryNum: 0,
       selectedReviewCategoryNum: 0,
+      board_title: '',
+      board_content: '',
+      board_pic: '',
+      big_category_no: 0,
+      user_no: 0,
     }
   },
   methods: {
@@ -113,11 +128,60 @@ export default {
       this.selectedCategoryNum=3
       this.selectedReviewCategoryNum=5
     },
-  },
-  components: {
-    Navbar,
-    Message,
-    BoardImg,
+    // setToken: function () {
+    //   const token = localStorage.getItem('jwt')
+
+    //   const config = {
+    //     headers: {
+    //       Authorization: `JWT ${token}`
+    //     }
+    //   }
+    //   return config
+    // },
+    post: function () {
+      const config = this.setToken()
+      const posting = {
+        big_category_no: this.big_category_no,
+        board_content: this.board_content,
+        board_pic: this.board_pic,
+        board_title: this.board_title,
+        // open_flag:
+        // unknown_flag:
+        // user_no: 
+      }
+      console.log(this.title)
+      console.log(this.content)
+      axios.post('http://localhost:8080/board/insert', posting, config)
+        .then((res) => {
+          console.log(res)
+          this.$router.push({ name: 'Main' })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    postReview: function () {
+      const config = this.setToken()
+      const posting = {
+        big_category_no: this.big_category_no,
+        board_content: this.board_content,
+        board_pic: this.board_pic,
+        board_title: this.board_title,
+        // open_flag:
+        // unknown_flag:
+        // user_no: 
+      }
+      console.log(this.title)
+      console.log(this.content)
+      axios.post('http://localhost:8080/review/insert', posting, config)
+        .then((res) => {
+          console.log(res)
+          this.$router.push({ name: 'Main' })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
   },
 }
 </script>
@@ -200,5 +264,9 @@ export default {
 }
 .underline {
   text-decoration: underline;
+}
+.rating-letter {
+  margin-left: 100px;
+  margin-right: 20px;
 }
 </style>
