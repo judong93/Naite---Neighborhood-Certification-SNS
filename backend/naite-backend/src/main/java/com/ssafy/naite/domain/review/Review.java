@@ -12,14 +12,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@Table(name = "review")
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="review_no")
-    private int review_no;
-    private int small_category_no;
-//    private int board_no; //겹치는 부분 제외
-    private int review_star;
+    @Column(name = "review_no")
+    private int reviewNo;
+
+    @Column(nullable = false)
+    private int smallCategoryNo;
+
+    @Column(nullable = false)
+    private int reviewStar;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "board_no")
@@ -34,16 +38,16 @@ public class Review {
     }
 
     @Builder
-    public Review(Board board, int review_star, int small_category_no) {
+    public Review(Board board, int reviewStar, int smallCategoryNo) {
         this.board = board;
-        board.setBoard_created_at(LocalDateTime.now());
-        board.setBoard_updated_at(LocalDateTime.now());
-        this.review_star = review_star;
-        this.small_category_no = small_category_no;
+        board.setBoardCreatedAt(LocalDateTime.now());
+        board.setBoardUpdatedAt(LocalDateTime.now());
+        this.reviewStar = reviewStar;
+        this.smallCategoryNo = smallCategoryNo;
     }
 
-    public void update(int review_star, int small_category_no) {
-        this.review_star = review_star;
-        this.small_category_no = small_category_no;
+    public void update(int reviewStar, int smallCategoryNo) {
+        this.reviewStar = reviewStar;
+        this.smallCategoryNo = smallCategoryNo;
     }
 }

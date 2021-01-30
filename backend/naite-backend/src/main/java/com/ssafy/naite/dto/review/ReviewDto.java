@@ -9,60 +9,66 @@ import lombok.Setter;
 
 public class ReviewDto {
 
-    /** insert review dto */
+    /**
+     * insert review dto
+     */
     @Getter
     @NoArgsConstructor
     public static class ReviewSaveRequestDto {
         private Board board;
-        private int review_star;
-        private int small_category_no;
+        private int reviewStar;
+        private int smallCategoryNo;
 
         @Builder
-        public ReviewSaveRequestDto(Board board, int review_star, int small_category_no) {
+        public ReviewSaveRequestDto(Board board, int reviewStar, int smallCategoryNo) {
             this.board = board;
-            this.review_star = review_star;
-            this.small_category_no = small_category_no;
+            this.reviewStar = reviewStar;
+            this.smallCategoryNo = smallCategoryNo;
         }
 
-        public Review toEntity(){
+        public Review toEntity() {
             return Review.builder()
                     .board(board)
-                    .review_star(review_star)
-                    .small_category_no(small_category_no)
+                    .reviewStar(reviewStar)
+                    .smallCategoryNo(smallCategoryNo)
                     .build();
         }
     }
 
-    /** update review dto */
+    /**
+     * update review dto
+     */
     @Getter
     @NoArgsConstructor
     public static class ReviewUpdateRequestDto {
         private Board board;
-        private int review_star;
-        private int small_category_no;
+        private int reviewStar;
+        private int smallCategoryNo;
 
         @Builder
-        public ReviewUpdateRequestDto(Board board, int review_star, int small_category_no) {
+        public ReviewUpdateRequestDto(Board board, int reviewStar, int smallCategoryNo) {
             this.board = board;
-            this.review_star = review_star;
-            this.small_category_no = small_category_no;
+            this.reviewStar = reviewStar;
+            this.smallCategoryNo = smallCategoryNo;
         }
     }
 
-    /** select review dto */
+    /**
+     * select review dto
+     */
     @Getter
     @Setter
     public static class ReviewResponseDto {
-        private int review_no;
+        private int reviewNo;
         private Board board;
-        private int review_star;
-        private int small_category_no;
+        private int reviewStar;
+        private int smallCategoryNo;
 
         public ReviewResponseDto(Review review) {
-            this.review_no = review.getReview_no();
+            this.reviewNo = review.getReviewNo();
             this.board = review.getBoard();
-            this.review_star = review.getReview_star();
-            this.small_category_no = review.getSmall_category_no();
+            this.reviewStar = review.getReviewStar();
+            this.smallCategoryNo = review.getSmallCategoryNo();
         }
     }
 }
