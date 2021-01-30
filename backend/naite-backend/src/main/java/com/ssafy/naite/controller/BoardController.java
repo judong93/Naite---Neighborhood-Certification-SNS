@@ -101,12 +101,22 @@ public class BoardController {
     }
 
     /**
-     * 게시글 좋아요
+     * 게시글 좋아요 등록
      */
     @PostMapping("/like")
-    @ApiOperation(value = "게시글 좋아요")
+    @ApiOperation(value = "게시글 좋아요 등록")
     public ResponseEntity<Integer> addLikeToBoard(@RequestBody BoardDto.LikeRequestSaveDto likeRequestSaveDto) {
         int addedLikeBoardNo = boardService.addLikeToBoard(likeRequestSaveDto);
+        return new ResponseEntity<Integer>(addedLikeBoardNo, HttpStatus.CREATED);
+    }
+
+    /**
+     * 게시글 좋아요 삭제
+     */
+    @PostMapping("/dislike")
+    @ApiOperation(value = "게시글 좋아요 삭제")
+    public ResponseEntity<Integer> deleteLikeToBoard(@RequestBody BoardDto.LikeRequestSaveDto likeRequestSaveDto) {
+        int addedLikeBoardNo = boardService.deleteLikeToBoard(likeRequestSaveDto);
         return new ResponseEntity<Integer>(addedLikeBoardNo, HttpStatus.CREATED);
     }
 }

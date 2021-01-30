@@ -83,7 +83,14 @@ public class Board {
         this.boardIsDeleted = boardIsDeleted;
     }
 
-    public void like() {
-        this.boardLikeCnt += 1;
+    public void like(boolean isLike) {
+        if(isLike) {
+            this.boardLikeCnt += 1;
+        } else {
+            this.boardLikeCnt -= 1;
+            if(this.boardLikeCnt < 0) {
+                this.boardLikeCnt = 0;
+            }
+        }
     }
 }
