@@ -2,6 +2,8 @@ package com.ssafy.naite.service.board;
 
 import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.board.BoardRepository;
+import com.ssafy.naite.domain.like.LikeBoard;
+import com.ssafy.naite.domain.like.LikePK;
 import com.ssafy.naite.domain.like.LikeRepository;
 import com.ssafy.naite.dto.board.BoardDto;
 import lombok.RequiredArgsConstructor;
@@ -106,7 +108,24 @@ public class BoardService {
     public int addLikeToBoard(BoardDto.LikeRequestSaveDto likeRequestSaveDto) {
         Board board = boardRepository.findById(likeRequestSaveDto.toEntity().getBoardNo())
                 .orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
-        board.like();
+        LikePK likePK = new LikePK();
+        likePK.setUserNo(likeRequestSaveDto.getUserNo());
+        likePK.setBoardNo(likeRequestSaveDto.getBoardNo());
+        if(!likeRepository.findById(likePK).isPresent()) {
+            board.like(true);
+        }
         return likeRepository.save(likeRequestSaveDto.toEntity()).getBoardNo();
+    }
+
+    /**
+     * 좋아요 삭제
+     */
+    @Transactional
+    public int deleteLikeToBoard(BoardDto.LikeRequestSaveDto likeRequestSaveDto) {
+        Board board = boardRepository.findById(likeRequestSaveDto.toEntity().getBoardNo())
+                .orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
+        board.like(false);
+        likeRepository.delete(likeRequestSaveDto.toEntity());
+        return board.getBoardNo();
     }
 }
