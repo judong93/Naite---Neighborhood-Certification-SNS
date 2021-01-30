@@ -10,75 +10,80 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@Table(name = "board")
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int board_no;
+    private int boardNo;
 
     @Column(nullable = false)
-    private int user_no;
+    private int userNo;
 
     @Column(nullable = false)
-    private int big_category_no;
+    private int bigCategoryNo;
 
     @Lob
     @Column(nullable = false)
-    private String board_title;
+    private String boardTitle;
 
     @Lob
     @Column(nullable = false)
-    private String board_content;
+    private String boardContent;
 
-    private String board_pic;
+    private String boardPic;
 
     @Column(updatable = false)
-    private LocalDateTime board_created_at;
+    private LocalDateTime boardCreatedAt;
 
     @LastModifiedDate
-    private LocalDateTime board_updated_at;
+    private LocalDateTime boardUpdatedAt;
 
-    private int board_like_cnt;
-
-    @Column(nullable = false)
-    private int unknown_flag;
-
-    private int board_report_cnt;
+    private int boardLikeCnt;
 
     @Column(nullable = false)
-    private int open_flag;
+    private int unknownFlag;
+
+    private int boardReportCnt;
 
     @Column(nullable = false)
-    private int board_is_deleted;
+    private int openFlag;
+
+    @Column(nullable = false)
+    private int boardIsDeleted;
 
     @Builder
-    public Board(int user_no, int big_category_no, String board_title, String board_content, String board_pic,
-                 LocalDateTime board_created_at, LocalDateTime board_updated_at, int board_like_cnt,
-                 int unknown_flag, int board_report_cnt, int open_flag, int board_is_deleted) {
-        this.user_no = user_no;
-        this.big_category_no = big_category_no;
-        this.board_title = board_title;
-        this.board_content = board_content;
-        this.board_pic = board_pic;
-        this.board_created_at = board_created_at;
-        this.board_updated_at = board_updated_at;
-        this.board_like_cnt = board_like_cnt;
-        this.unknown_flag = unknown_flag;
-        this.board_report_cnt = board_report_cnt;
-        this.open_flag = open_flag;
-        this.board_is_deleted = board_is_deleted;
+    public Board(int userNo, int bigCategoryNo, String boardTitle, String boardContent, String boardPic,
+                 LocalDateTime boardCreatedAt, LocalDateTime boardUpdatedAt, int boardLikeCnt,
+                 int unknownFlag, int boardReportCnt, int openFlag, int boardIsDeleted) {
+        this.userNo = userNo;
+        this.bigCategoryNo = bigCategoryNo;
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+        this.boardPic = boardPic;
+        this.boardCreatedAt = boardCreatedAt;
+        this.boardUpdatedAt = boardUpdatedAt;
+        this.boardLikeCnt = boardLikeCnt;
+        this.unknownFlag = unknownFlag;
+        this.boardReportCnt = boardReportCnt;
+        this.openFlag = openFlag;
+        this.boardIsDeleted = boardIsDeleted;
     }
 
-    public void update(String board_title, String board_content, String board_pic, int unknown_flag, int open_flag) {
-        this.board_title = board_title;
-        this.board_content = board_content;
-        this.board_pic = board_pic;
-        this.board_updated_at = LocalDateTime.now();
-        this.unknown_flag = unknown_flag;
-        this.open_flag = open_flag;
+    public void update(String boardTitle, String boardContent, String boardPic, int unknownFlag, int openFlag) {
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+        this.boardPic = boardPic;
+        this.boardUpdatedAt = LocalDateTime.now();
+        this.unknownFlag = unknownFlag;
+        this.openFlag = openFlag;
     }
 
-    public void delete(int board_is_deleted) {
-        this.board_updated_at = LocalDateTime.now();
-        this.board_is_deleted = board_is_deleted;
+    public void delete(int boardIsDeleted) {
+        this.boardUpdatedAt = LocalDateTime.now();
+        this.boardIsDeleted = boardIsDeleted;
+    }
+
+    public void like() {
+        this.boardLikeCnt += 1;
     }
 }
