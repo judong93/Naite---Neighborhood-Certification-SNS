@@ -119,4 +119,14 @@ public class BoardController {
         int addedLikeBoardNo = boardService.deleteLikeToBoard(likeRequestSaveDto);
         return new ResponseEntity<Integer>(addedLikeBoardNo, HttpStatus.CREATED);
     }
+
+    /**
+     * 게시글별 좋아요 유저 전체 조회
+     */
+    @GetMapping("/like/{boardNo}")
+    @ApiOperation(value = "게시글별 좋아요 누른 유저 전체 조회")
+    public ResponseEntity<List<Integer>> findLikesByBoardNo(@PathVariable int boardNo) {
+        List<Integer> likeUserList = boardService.findAllLikesByBoardNo(boardNo);
+        return new ResponseEntity<List<Integer>>(likeUserList, HttpStatus.OK);
+    }
 }

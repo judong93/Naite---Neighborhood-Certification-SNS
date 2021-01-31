@@ -1,7 +1,7 @@
 package com.ssafy.naite.dto.board;
 
 import com.ssafy.naite.domain.board.Board;
-import com.ssafy.naite.domain.like.LikeBoard;
+import com.ssafy.naite.domain.like.BoardLike;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -126,8 +126,18 @@ public class BoardDto {
             this.boardNo = boardNo;
         }
 
-        public LikeBoard toEntity() {
-            return LikeBoard.builder().userNo(userNo).boardNo(boardNo).build();
+        public BoardLike toEntity() {
+            return BoardLike.builder().userNo(userNo).boardNo(boardNo).build();
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class LikeResponseDto {
+        private int userNo;
+
+        public LikeResponseDto (BoardLike boardLike) {
+            this.userNo = boardLike.getUserNo();
         }
     }
 }

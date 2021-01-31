@@ -2,7 +2,6 @@ package com.ssafy.naite.service.board;
 
 import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.board.BoardRepository;
-import com.ssafy.naite.domain.like.LikeBoard;
 import com.ssafy.naite.domain.like.LikePK;
 import com.ssafy.naite.domain.like.LikeRepository;
 import com.ssafy.naite.dto.board.BoardDto;
@@ -10,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -127,5 +127,18 @@ public class BoardService {
         board.like(false);
         likeRepository.delete(likeRequestSaveDto.toEntity());
         return board.getBoardNo();
+    }
+
+    /**
+     * 해당 게시글 좋아요 누른 유저 조회
+     */
+    @Transactional(readOnly = true)
+    public List<Integer> findAllLikesByBoardNo(int boardNo) {
+        List<BoardDto.LikeResponseDto> likeResponseDtoList = likeRepository.findAll().stream().filter(boardLike -> boardLike.getBoardNo() == boardNo).map(BoardDto.LikeResponseDto::new).collect(Collectors.toList());
+        List<Integer> likeUserList = new ArrayList<Integer>();
+        for(BoardDto.LikeResponseDto likeResponseDto : likeResponseDtoList) {
+            likeUserList.add(likeResponseDto.getUserNo());
+        }
+        return likeUserList;
     }
 }
