@@ -51,8 +51,9 @@ public class BoardService {
     public BoardDto.BoardResponseDto findBoardById(int boardNo) {
         Board board = boardRepository.findById(boardNo)
                 .orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
-
-        return new BoardDto.BoardResponseDto(board);
+        BoardDto.BoardResponseDto boardResponseDto = new BoardDto.BoardResponseDto(board);
+        boardResponseDto.setUsersWithLike(findAllLikesByBoardNo(boardNo));
+        return boardResponseDto;
     }
 
     /**
@@ -72,7 +73,6 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
         board.update(boardUpdateRequestDto.getBoardTitle(), boardUpdateRequestDto.getBoardContent(),
                 boardUpdateRequestDto.getBoardPic(), boardUpdateRequestDto.getUnknownFlag(), boardUpdateRequestDto.getOpenFlag());
-
         return boardNo;
     }
 
@@ -85,7 +85,6 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
         board.delete(1);
         boardRepository.save(board);
-
         return boardNo;
     }
 
@@ -140,5 +139,19 @@ public class BoardService {
             likeUserList.add(likeResponseDto.getUserNo());
         }
         return likeUserList;
+    }
+
+    /**
+     * 유저별 좋아요 누른 게시글 전체 조회
+     */
+    @Transactional(readOnly = true)
+    public List<BoardDto.BoardResponseDto> findAllLikesByUserNo(int userNo) {
+        List<BoardDto.LikeResponseDto> likeResponseDtoList = likeRepository.findAll().stream().filter(boardLike -> boardLike.getUserNo() == userNo).map(BoardDto.LikeResponseDto::new).collect(Collectors.toList());
+        List<Integer> likeBoardList = new ArrayList<Integer>();
+        for(BoardDto.LikeResponseDto likeResponseDto : likeResponseDtoList) {
+            likeBoardList.add(likeResponseDto.getBoardNo());
+        }
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> likeBoardList.contains(board.getBoardNo())).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        return boardResponseDtoList;
     }
 }

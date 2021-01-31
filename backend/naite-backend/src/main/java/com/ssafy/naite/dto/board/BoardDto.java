@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoardDto {
 
@@ -94,6 +96,7 @@ public class BoardDto {
         private int boardReportCnt;
         private int openFlag;
         private int boardIsDeleted;
+        private List<Integer> usersWithLike = new ArrayList<Integer>();
 
         public BoardResponseDto(Board board) {
             this.boardNo = board.getBoardNo();
@@ -135,9 +138,11 @@ public class BoardDto {
     @Getter
     public static class LikeResponseDto {
         private int userNo;
+        private int boardNo;
 
         public LikeResponseDto (BoardLike boardLike) {
             this.userNo = boardLike.getUserNo();
+            this.boardNo = boardLike.getBoardNo();
         }
     }
 }

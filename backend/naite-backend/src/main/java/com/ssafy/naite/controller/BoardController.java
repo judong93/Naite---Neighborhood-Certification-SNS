@@ -43,7 +43,7 @@ public class BoardController {
     /**
      * 게시글 제목으로 조회
      */
-    @GetMapping("/detail/title/{boardTitle}")
+    @GetMapping("/list/title/{boardTitle}")
     @ApiOperation(value = "게시글 제목으로 조회")
     public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByTitle(@PathVariable String boardTitle) {
         List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByTitle(boardTitle);
@@ -53,7 +53,7 @@ public class BoardController {
     /**
      * 게시글 상세 조회
      */
-    @GetMapping("/detail/{boardNo}")
+    @GetMapping("/list/detail/{boardNo}")
     @ApiOperation(value = "게시글 상세 조회")
     public ResponseEntity<BoardDto.BoardResponseDto> findBoardById(@PathVariable int boardNo) {
         BoardDto.BoardResponseDto boardResponseDto = boardService.findBoardById(boardNo);
@@ -121,12 +121,12 @@ public class BoardController {
     }
 
     /**
-     * 게시글별 좋아요 유저 전체 조회
+     * 유저별 좋아요한 게시글 전체 조회
      */
-    @GetMapping("/like/{boardNo}")
-    @ApiOperation(value = "게시글별 좋아요 누른 유저 전체 조회")
-    public ResponseEntity<List<Integer>> findLikesByBoardNo(@PathVariable int boardNo) {
-        List<Integer> likeUserList = boardService.findAllLikesByBoardNo(boardNo);
-        return new ResponseEntity<List<Integer>>(likeUserList, HttpStatus.OK);
+    @GetMapping("/like/{userNo}")
+    @ApiOperation(value = "유저별 좋아요 누른 게시글 전체 조회")
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findLikesByBoardNo(@PathVariable int userNo) {
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllLikesByUserNo(userNo);
+        return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
 }
