@@ -9,8 +9,8 @@ import javax.persistence.*;
 @Setter
 @Entity
 @IdClass(LikePK.class)
-@Table(name = "like_board")
-public class LikeBoard {
+@Table(name = "board_like")
+public class BoardLike {
 
     @Id
     private int userNo;
@@ -19,7 +19,7 @@ public class LikeBoard {
     private int boardNo;
 
     @Builder
-    public LikeBoard(int userNo, int boardNo) {
+    public BoardLike(int userNo, int boardNo) {
         this.userNo = userNo;
         this.boardNo = boardNo;
     }
