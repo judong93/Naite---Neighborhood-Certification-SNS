@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class MarketSevice {
+public class MarketService {
 
     private final MarketRepository marketRepository;
     private final BoardRepository boardRepository;

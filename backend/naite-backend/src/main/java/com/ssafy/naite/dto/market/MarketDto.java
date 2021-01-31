@@ -10,7 +10,10 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 public class MarketDto {
-    /** insert market dto */
+
+    /**
+     * insert market dto
+     */
     @Getter
     @NoArgsConstructor
     public static class MarketSaveRequestDto {
@@ -31,7 +34,7 @@ public class MarketDto {
             this.time = time;
         }
 
-        public Market toEntity(){
+        public Market toEntity() {
             return Market.builder()
                     .board(board)
                     .smallCategoryNo(smallCategoryNo)
@@ -43,7 +46,9 @@ public class MarketDto {
         }
     }
 
-    /** update market dto */
+    /**
+     * update market dto
+     */
     @Getter
     @NoArgsConstructor
     public static class MarketUpdateRequestDto {
@@ -67,7 +72,9 @@ public class MarketDto {
         }
     }
 
-    /** select market dto */
+    /**
+     * select market dto
+     */
     @Getter
     @Setter
     public static class MarketResponseDto {
@@ -89,8 +96,7 @@ public class MarketDto {
             this.marketIsCompleted = market.getMarketIsCompleted();
             this.marketPerson = market.getMarketPerson();
             this.time = market.getMarketEndTime();
-            if(time.isBefore(LocalDateTime.now())){
-                //market.marketClose();
+            if (time.isBefore(LocalDateTime.now())) {
                 this.marketIsCompleted = 1;
             }
         }
