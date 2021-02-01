@@ -100,8 +100,6 @@ public class UserController {
     @PostMapping("/sign/email/send")
     @ApiOperation(value = "이메일 인증 코드 전송")
     public Response emailSend(@RequestBody EmailSendRequestDto emailSendRequestDto) throws MessagingException {
-        // 회원가입 시 이메일 인증일 경우
-//        if (emailSendRequestDto.getType() == 0) {
 
         // user에 해당 user_email 있는지 확인
         User user = userService.findByEmail(emailSendRequestDto.getUserEmail());
@@ -143,38 +141,24 @@ public class UserController {
                             user.getUserName()																																																+
                             "		님 안녕하세요.<br />"																																													+
                             "		나이테에 가입해 주셔서 진심으로 감사드립니다.<br />"																																						+
-                            "		아래 <b style=\"color: #02b875\">'메일 인증'</b> 버튼을 클릭하여 회원가입을 완료해 주세요.<br />"																													+
+                            "		아래의 인증 번호를 가입 페이지에서 입력해주세요.<br />"																													+
                             "		감사합니다."																																															+
-                            "	</p>"																																																	+
-                            "	<a style=\"color: #FFF; text-decoration: none; text-align: center;\""																																	+
-                            "	href=\"http://localhost:8080/email/auth?email=" + user.getUserEmail() + "&key=" + key + "\" target=\"_blank\">"														+
-
-                            "		<p"																																																	+
-                            "			style=\"display: inline-block; width: 210px; height: 45px; margin: 30px 5px 40px; background: #02b875; line-height: 45px; vertical-align: middle; font-size: 16px;\">"							+
-                            "			메일 인증</p>"																																														+
-                            "	</a>"																																																	+
+                            "	</p>"
+                            + "<b style=\"font-size: 20px; color: #02b875\"> 인증번호 : "+key+"</b>" +
                             "	<div style=\"border-top: 1px solid #DDD; padding: 5px;\"></div>"																																		+
                             " </div>"
             );
             emailcontent.append("</body>");
             emailcontent.append("</html>");
-            emailService.sendMail("kimmk0924@gmail.com", "[나이테] 회원가입 이메일 인증", emailcontent.toString());
+            emailService.sendMail(user.getUserEmail(), "[나이테] 회원가입 이메일 인증", emailcontent.toString());
 
             return new Response("success", "이메일 인증 코드 전송 완료", null);
         }
-
         else {
             // 없으면 존재하지 않는 회원이라고 에러 보냄
             return new Response("error", "존재하지 않는 회원입니다.", null);
         }
-//        }
-        // TODO: 아이디 찾기 시 이메일 인증 일 경우 (type = 1)
-//        else if (emailSendRequestDto.getType() == 1) {
-//
-//        }
-//        else {
-//
-//        }
+
     }
 
     @GetMapping("/sign/email/auth")
@@ -187,7 +171,6 @@ public class UserController {
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);
         }
-
     }
 
 }
