@@ -20,7 +20,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final BoardRepository boardRepository;
 
-    private final Comparator<Review> comp = (r1, r2) -> r2.getBoard().getBoardUpdatedAt().compareTo(r1.getBoard().getBoardUpdatedAt());
+    private final Comparator<Review> comp = (r1, r2) -> r2.getBoard().getBoardCreatedAt().compareTo(r1.getBoard().getBoardCreatedAt());
 
     /**
      * 리뷰 게시글 전체 조회

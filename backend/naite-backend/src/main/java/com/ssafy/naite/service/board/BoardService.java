@@ -26,7 +26,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoards() {
-        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).sorted(Comparator.comparing(Board::getBoardUpdatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
     }
 
     /**
@@ -34,7 +34,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoardsByCategory(int bigCategoryNo) {
-        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getBigCategoryNo() == bigCategoryNo).sorted(Comparator.comparing(Board::getBoardUpdatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getBigCategoryNo() == bigCategoryNo).sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
     }
 
     /**
@@ -55,7 +55,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoardsByUserNo(int userNo) {
-        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getUserNo() == userNo).sorted(Comparator.comparing(Board::getBoardUpdatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getUserNo() == userNo).sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
     }
 
     /**
@@ -63,7 +63,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoardsByTitle(String boardTitle) {
-        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getBoardTitle().contains(boardTitle)).sorted(Comparator.comparing(Board::getBoardUpdatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getBoardTitle().contains(boardTitle)).sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
     }
 
     /**
@@ -166,7 +166,7 @@ public class BoardService {
         for (BoardDto.LikeResponseDto likeResponseDto : likeResponseDtoList) {
             likeBoardList.add(likeResponseDto.getBoardNo());
         }
-        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> likeBoardList.contains(board.getBoardNo())).sorted(Comparator.comparing(Board::getBoardUpdatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> likeBoardList.contains(board.getBoardNo())).sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
         return boardResponseDtoList;
     }
 }

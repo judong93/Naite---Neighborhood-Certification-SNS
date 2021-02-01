@@ -21,7 +21,7 @@ public class MarketService {
     private final MarketRepository marketRepository;
     private final BoardRepository boardRepository;
 
-    private final Comparator<Market> comp = (m1,m2) -> m2.getBoard().getBoardUpdatedAt().compareTo(m1.getBoard().getBoardUpdatedAt());
+    private final Comparator<Market> comp = (m1,m2) -> m2.getBoard().getBoardCreatedAt().compareTo(m1.getBoard().getBoardCreatedAt());
 
     /**
      * 장터 게시글 전체 조회
