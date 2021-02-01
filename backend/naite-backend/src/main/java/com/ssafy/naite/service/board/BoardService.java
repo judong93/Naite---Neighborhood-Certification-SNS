@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoards() {
-        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).sorted(Comparator.comparing(Board::getBoardUpdatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
     }
 
     /**
@@ -33,7 +34,28 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoardsByCategory(int bigCategoryNo) {
-        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getBigCategoryNo() == bigCategoryNo).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getBigCategoryNo() == bigCategoryNo).sorted(Comparator.comparing(Board::getBoardUpdatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+    }
+
+    /**
+     * 게시글 좋아요 높은 순서로 5개
+     */
+    @Transactional(readOnly = true)
+    public List<BoardDto.BoardResponseDto> findTopLikedBoardsByCategory(int bigCategoryNo) {
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getBigCategoryNo() == bigCategoryNo).sorted(Comparator.comparingInt(Board::getBoardLikeCnt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        int index = boardResponseDtoList.size();
+        if(index > 5) {
+            index = 5;
+        }
+        return boardResponseDtoList.subList(0,index);
+    }
+
+    /**
+     * 게시글 유저별 조회
+     */
+    @Transactional(readOnly = true)
+    public List<BoardDto.BoardResponseDto> findAllBoardsByUserNo(int userNo) {
+        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getUserNo() == userNo).sorted(Comparator.comparing(Board::getBoardUpdatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
     }
 
     /**
@@ -41,7 +63,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoardsByTitle(String boardTitle) {
-        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getBoardTitle().contains(boardTitle)).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        return boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> board.getBoardTitle().contains(boardTitle)).sorted(Comparator.comparing(Board::getBoardUpdatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
     }
 
     /**
@@ -49,8 +71,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public BoardDto.BoardResponseDto findBoardById(int boardNo) {
-        Board board = boardRepository.findById(boardNo)
-                .orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
+        Board board = boardRepository.findById(boardNo).orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
         BoardDto.BoardResponseDto boardResponseDto = new BoardDto.BoardResponseDto(board);
         boardResponseDto.setUsersWithLike(findAllLikesByBoardNo(boardNo));
         return boardResponseDto;
@@ -69,10 +90,8 @@ public class BoardService {
      */
     @Transactional
     public int updateBoard(int boardNo, BoardDto.BoardUpdateRequestDto boardUpdateRequestDto) {
-        Board board = boardRepository.findById(boardNo)
-                .orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
-        board.update(boardUpdateRequestDto.getBoardTitle(), boardUpdateRequestDto.getBoardContent(),
-                boardUpdateRequestDto.getBoardPic(), boardUpdateRequestDto.getUnknownFlag(), boardUpdateRequestDto.getOpenFlag());
+        Board board = boardRepository.findById(boardNo).orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
+        board.update(boardUpdateRequestDto.getBoardTitle(), boardUpdateRequestDto.getBoardContent(), boardUpdateRequestDto.getBoardPic(), boardUpdateRequestDto.getUnknownFlag(), boardUpdateRequestDto.getOpenFlag());
         return boardNo;
     }
 
@@ -81,8 +100,7 @@ public class BoardService {
      */
     @Transactional
     public int deleteBoard(int boardNo) {
-        Board board = boardRepository.findById(boardNo)
-                .orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
+        Board board = boardRepository.findById(boardNo).orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
         board.delete(1);
         boardRepository.save(board);
         return boardNo;
@@ -93,8 +111,7 @@ public class BoardService {
      */
     @Transactional
     public int restoreBoard(int board_no) {
-        Board board = boardRepository.findById(board_no)
-                .orElseThrow(() -> new IllegalAccessError("[board_no=" + board_no + "] 해당 게시글이 존재하지 않습니다."));
+        Board board = boardRepository.findById(board_no).orElseThrow(() -> new IllegalAccessError("[board_no=" + board_no + "] 해당 게시글이 존재하지 않습니다."));
         board.delete(0);
         boardRepository.save(board);
         return board_no;
@@ -105,12 +122,11 @@ public class BoardService {
      */
     @Transactional
     public int addLikeToBoard(BoardDto.LikeRequestSaveDto likeRequestSaveDto) {
-        Board board = boardRepository.findById(likeRequestSaveDto.toEntity().getBoardNo())
-                .orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
+        Board board = boardRepository.findById(likeRequestSaveDto.toEntity().getBoardNo()).orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
         LikePK likePK = new LikePK();
         likePK.setUserNo(likeRequestSaveDto.getUserNo());
         likePK.setBoardNo(likeRequestSaveDto.getBoardNo());
-        if(!likeRepository.findById(likePK).isPresent()) {
+        if (!likeRepository.findById(likePK).isPresent()) {
             board.like(true);
         }
         return likeRepository.save(likeRequestSaveDto.toEntity()).getBoardNo();
@@ -121,8 +137,7 @@ public class BoardService {
      */
     @Transactional
     public int deleteLikeToBoard(BoardDto.LikeRequestSaveDto likeRequestSaveDto) {
-        Board board = boardRepository.findById(likeRequestSaveDto.toEntity().getBoardNo())
-                .orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
+        Board board = boardRepository.findById(likeRequestSaveDto.toEntity().getBoardNo()).orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
         board.like(false);
         likeRepository.delete(likeRequestSaveDto.toEntity());
         return board.getBoardNo();
@@ -135,7 +150,7 @@ public class BoardService {
     public List<Integer> findAllLikesByBoardNo(int boardNo) {
         List<BoardDto.LikeResponseDto> likeResponseDtoList = likeRepository.findAll().stream().filter(boardLike -> boardLike.getBoardNo() == boardNo).map(BoardDto.LikeResponseDto::new).collect(Collectors.toList());
         List<Integer> likeUserList = new ArrayList<Integer>();
-        for(BoardDto.LikeResponseDto likeResponseDto : likeResponseDtoList) {
+        for (BoardDto.LikeResponseDto likeResponseDto : likeResponseDtoList) {
             likeUserList.add(likeResponseDto.getUserNo());
         }
         return likeUserList;
@@ -148,10 +163,10 @@ public class BoardService {
     public List<BoardDto.BoardResponseDto> findAllLikesByUserNo(int userNo) {
         List<BoardDto.LikeResponseDto> likeResponseDtoList = likeRepository.findAll().stream().filter(boardLike -> boardLike.getUserNo() == userNo).map(BoardDto.LikeResponseDto::new).collect(Collectors.toList());
         List<Integer> likeBoardList = new ArrayList<Integer>();
-        for(BoardDto.LikeResponseDto likeResponseDto : likeResponseDtoList) {
+        for (BoardDto.LikeResponseDto likeResponseDto : likeResponseDtoList) {
             likeBoardList.add(likeResponseDto.getBoardNo());
         }
-        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> likeBoardList.contains(board.getBoardNo())).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardRepository.findAll().stream().filter(board -> board.getBoardIsDeleted() == 0).filter(board -> likeBoardList.contains(board.getBoardNo())).sorted(Comparator.comparing(Board::getBoardUpdatedAt).reversed()).map(BoardDto.BoardResponseDto::new).collect(Collectors.toList());
         return boardResponseDtoList;
     }
 }

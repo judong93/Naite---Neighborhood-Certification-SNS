@@ -41,6 +41,26 @@ public class BoardController {
     }
 
     /**
+     * 게시글 좋아요 높은 순서로 5개
+     */
+    @GetMapping("/list/top/{bigCategoryNo}")
+    @ApiOperation(value = "게시글 좋아요 많은 순 카테고리별 조회")
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findTopLikedBoardsByCategory(@PathVariable int bigCategoryNo) {
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findTopLikedBoardsByCategory(bigCategoryNo);
+        return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
+    }
+
+    /**
+     * 게시글 유저로 조회
+     */
+    @GetMapping("/list/user/{userNo}")
+    @ApiOperation(value = "게시글 유저별 조회")
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByUserNo(@PathVariable int userNo) {
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByUserNo(userNo);
+        return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
+    }
+
+    /**
      * 게시글 제목으로 조회
      */
     @GetMapping("/list/title/{boardTitle}")
