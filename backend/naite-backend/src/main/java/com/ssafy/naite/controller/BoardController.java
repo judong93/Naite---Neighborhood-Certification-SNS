@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = { "*" }, maxAge = 6000)
+@CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequestMapping("/board")
 @AllArgsConstructor
@@ -20,31 +20,69 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    /** 게시글 전체 조회 */
+    /**
+     * 게시글 전체 조회
+     */
     @GetMapping("/list")
     @ApiOperation(value = "게시글 전체 조회")
-    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoards(){
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoards() {
         List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoards();
         return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
 
-    /** 게시글 카테고리별 조회 */
-    @GetMapping("/list/{big_category_no}")
+    /**
+     * 게시글 카테고리별 조회
+     */
+    @GetMapping("/list/{bigCategoryNo}")
     @ApiOperation(value = "게시글 카테고리별 조회")
-    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByCategory(@PathVariable int big_category_no){
-        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByCategory(big_category_no);
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByCategory(@PathVariable int bigCategoryNo) {
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByCategory(bigCategoryNo);
         return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
 
-    /** 게시글 상세 조회 */
-    @GetMapping("/detail/{board_no}")
+    /**
+     * 게시글 좋아요 높은 순서로 5개
+     */
+    @GetMapping("/list/top/{bigCategoryNo}")
+    @ApiOperation(value = "게시글 좋아요 많은 순 카테고리별 조회")
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findTopLikedBoardsByCategory(@PathVariable int bigCategoryNo) {
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findTopLikedBoardsByCategory(bigCategoryNo);
+        return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
+    }
+
+    /**
+     * 게시글 유저로 조회
+     */
+    @GetMapping("/list/user/{userNo}")
+    @ApiOperation(value = "게시글 유저별 조회")
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByUserNo(@PathVariable int userNo) {
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByUserNo(userNo);
+        return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
+    }
+
+    /**
+     * 게시글 제목으로 조회
+     */
+    @GetMapping("/list/title/{boardTitle}")
+    @ApiOperation(value = "게시글 제목으로 조회")
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByTitle(@PathVariable String boardTitle) {
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByTitle(boardTitle);
+        return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
+    }
+
+    /**
+     * 게시글 상세 조회
+     */
+    @GetMapping("/list/detail/{boardNo}")
     @ApiOperation(value = "게시글 상세 조회")
-    public ResponseEntity<BoardDto.BoardResponseDto> getBoardById(@PathVariable int board_no) {
-        BoardDto.BoardResponseDto boardResponseDto = boardService.findBoardById(board_no);
+    public ResponseEntity<BoardDto.BoardResponseDto> findBoardById(@PathVariable int boardNo) {
+        BoardDto.BoardResponseDto boardResponseDto = boardService.findBoardById(boardNo);
         return new ResponseEntity<BoardDto.BoardResponseDto>(boardResponseDto, HttpStatus.OK);
     }
 
-    /** 게시글 등록 */
+    /**
+     * 게시글 등록
+     */
     @PostMapping("/insert")
     @ApiOperation(value = "게시글 등록")
     public ResponseEntity<Integer> insertBoard(@RequestBody BoardDto.BoardSaveRequestDto boardSaveRequestDto) {
@@ -52,27 +90,63 @@ public class BoardController {
         return new ResponseEntity<Integer>(insertedBoardNo, HttpStatus.CREATED);
     }
 
-    /** 게시글 수정 */
-    @PutMapping("/update/{board_no}")
+    /**
+     * 게시글 수정
+     */
+    @PutMapping("/update/{boardNo}")
     @ApiOperation(value = "게시글 수정")
-    public ResponseEntity<Integer> updateBoard(@PathVariable int board_no, @RequestBody BoardDto.BoardUpdateRequestDto boardUpdateRequestDto) {
-        int updatedBoardNo = boardService.updateBoard(board_no, boardUpdateRequestDto);
+    public ResponseEntity<Integer> updateBoard(@PathVariable int boardNo, @RequestBody BoardDto.BoardUpdateRequestDto boardUpdateRequestDto) {
+        int updatedBoardNo = boardService.updateBoard(boardNo, boardUpdateRequestDto);
         return new ResponseEntity<Integer>(updatedBoardNo, HttpStatus.CREATED);
     }
 
-    /** 게시글 삭제 */
-    @PutMapping("/delete/{board_no}")
+    /**
+     * 게시글 삭제
+     */
+    @PutMapping("/delete/{boardNo}")
     @ApiOperation(value = "게시글 삭제")
-    public ResponseEntity<Integer> deleteBoard(@PathVariable int board_no) {
-        int deletedBoardNo = boardService.deleteBoard(board_no);
+    public ResponseEntity<Integer> deleteBoard(@PathVariable int boardNo) {
+        int deletedBoardNo = boardService.deleteBoard(boardNo);
         return new ResponseEntity<Integer>(deletedBoardNo, HttpStatus.CREATED);
     }
 
-    /** 게시글 복구 */
-    @PutMapping("/restore/{board_no}")
+    /**
+     * 게시글 복구
+     */
+    @PutMapping("/restore/{boardNo}")
     @ApiOperation(value = "게시글 복구")
-    public ResponseEntity<Integer> restoreBoard(@PathVariable int board_no) {
-        int restoreBoardNo = boardService.restoreBoard(board_no);
+    public ResponseEntity<Integer> restoreBoard(@PathVariable int boardNo) {
+        int restoreBoardNo = boardService.restoreBoard(boardNo);
         return new ResponseEntity<Integer>(restoreBoardNo, HttpStatus.CREATED);
+    }
+
+    /**
+     * 게시글 좋아요 등록
+     */
+    @PostMapping("/like")
+    @ApiOperation(value = "게시글 좋아요 등록")
+    public ResponseEntity<Integer> addLikeToBoard(@RequestBody BoardDto.LikeRequestSaveDto likeRequestSaveDto) {
+        int addedLikeBoardNo = boardService.addLikeToBoard(likeRequestSaveDto);
+        return new ResponseEntity<Integer>(addedLikeBoardNo, HttpStatus.CREATED);
+    }
+
+    /**
+     * 게시글 좋아요 삭제
+     */
+    @PostMapping("/dislike")
+    @ApiOperation(value = "게시글 좋아요 삭제")
+    public ResponseEntity<Integer> deleteLikeToBoard(@RequestBody BoardDto.LikeRequestSaveDto likeRequestSaveDto) {
+        int addedLikeBoardNo = boardService.deleteLikeToBoard(likeRequestSaveDto);
+        return new ResponseEntity<Integer>(addedLikeBoardNo, HttpStatus.CREATED);
+    }
+
+    /**
+     * 유저별 좋아요한 게시글 전체 조회
+     */
+    @GetMapping("/like/{userNo}")
+    @ApiOperation(value = "유저별 좋아요 누른 게시글 전체 조회")
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findLikesByBoardNo(@PathVariable int userNo) {
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllLikesByUserNo(userNo);
+        return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
 }

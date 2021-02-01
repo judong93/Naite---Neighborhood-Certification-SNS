@@ -1,105 +1,146 @@
 package com.ssafy.naite.dto.board;
 
 import com.ssafy.naite.domain.board.Board;
+import com.ssafy.naite.domain.like.BoardLike;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoardDto {
 
-    /** insert board dto */
+    /**
+     * insert board dto
+     */
     @Getter
     @NoArgsConstructor
     public static class BoardSaveRequestDto {
-        private int user_no;
-        private int big_category_no;
-        private String board_title;
-        private String board_content;
-        private String board_pic;
-        private int unknown_flag;
-        private int open_flag;
+        private int userNo;
+        private int bigCategoryNo;
+        private String boardTitle;
+        private String boardContent;
+        private String boardPic;
+        private int unknownFlag;
+        private int openFlag;
 
         @Builder
-        public BoardSaveRequestDto(int user_no, int big_category_no, String board_title, String board_content,
-                                   String board_pic, int unknown_flag, int open_flag) {
-            this.user_no = user_no;
-            this.big_category_no = big_category_no;
-            this.board_title = board_title;
-            this.board_content = board_content;
-            this.board_pic = board_pic;
-            this.unknown_flag = unknown_flag;
-            this.open_flag = open_flag;
+        public BoardSaveRequestDto(int userNo, int bigCategoryNo, String boardTitle, String boardContent, String boardPic, int unknownFlag, int openFlag) {
+            this.userNo = userNo;
+            this.bigCategoryNo = bigCategoryNo;
+            this.boardTitle = boardTitle;
+            this.boardContent = boardContent;
+            this.boardPic = boardPic;
+            this.unknownFlag = unknownFlag;
+            this.openFlag = openFlag;
         }
 
         public Board toEntity() {
             return Board.builder()
-                    .user_no(user_no)
-                    .big_category_no(big_category_no)
-                    .board_title(board_title)
-                    .board_content(board_content)
-                    .board_pic(board_pic)
-                    .board_created_at(LocalDateTime.now())
-                    .board_updated_at(LocalDateTime.now())
-                    .unknown_flag(unknown_flag)
-                    .open_flag(open_flag)
+                    .userNo(userNo)
+                    .bigCategoryNo(bigCategoryNo)
+                    .boardTitle(boardTitle)
+                    .boardContent(boardContent)
+                    .boardPic(boardPic)
+                    .boardCreatedAt(LocalDateTime.now())
+                    .boardUpdatedAt(LocalDateTime.now())
+                    .unknownFlag(unknownFlag)
+                    .openFlag(openFlag)
                     .build();
         }
     }
 
-    /** update board dto */
+    /**
+     * update board dto
+     */
     @Getter
     @NoArgsConstructor
     public static class BoardUpdateRequestDto {
-        private String board_title;
-        private String board_content;
-        private String board_pic;
-        private int unknown_flag;
-        private int open_flag;
+        private String boardTitle;
+        private String boardContent;
+        private String boardPic;
+        private int unknownFlag;
+        private int openFlag;
 
         @Builder
-        public BoardUpdateRequestDto(String board_title, String board_content, String board_pic,
-                                   int unknown_flag, int open_flag) {
-            this.board_title = board_title;
-            this.board_content = board_content;
-            this.board_pic = board_pic;
-            this.unknown_flag = unknown_flag;
-            this.open_flag = open_flag;
+        public BoardUpdateRequestDto(String boardTitle, String boardContent, String boardPic, int unknownFlag, int openFlag) {
+            this.boardTitle = boardTitle;
+            this.boardContent = boardContent;
+            this.boardPic = boardPic;
+            this.unknownFlag = unknownFlag;
+            this.openFlag = openFlag;
         }
     }
 
-    /** select board dto */
+    /**
+     * select board dto
+     */
     @Getter
     @Setter
     public static class BoardResponseDto {
 
-        private int board_no;
-        private int user_no;
-        private int big_category_no;
-        private String board_title;
-        private String board_content;
-        private LocalDateTime board_created_at;
-        private LocalDateTime board_updated_at;
-        private int board_like_cnt;
-        private int unknown_flag;
-        private int board_report_cnt;
-        private int open_flag;
-        private int board_is_deleted;
+        private int boardNo;
+        private int userNo;
+        private int bigCategoryNo;
+        private String boardTitle;
+        private String boardContent;
+        private LocalDateTime boardCreatedAt;
+        private LocalDateTime boardUpdatedAt;
+        private int boardLikeCnt;
+        private int unknownFlag;
+        private int boardReportCnt;
+        private int openFlag;
+        private int boardIsDeleted;
+        private List<Integer> usersWithLike = new ArrayList<Integer>();
 
         public BoardResponseDto(Board board) {
-            this.board_no = board.getBoard_no();
-            this.user_no = board.getUser_no();
-            this.big_category_no = board.getBig_category_no();
-            this.board_title = board.getBoard_title();
-            this.board_content = board.getBoard_content();
-            this.board_created_at = board.getBoard_created_at();
-            this.board_updated_at = board.getBoard_updated_at();
-            this.board_like_cnt = board.getBoard_like_cnt();
-            this.unknown_flag = board.getUnknown_flag();
-            this.board_report_cnt = board.getBoard_report_cnt();
-            this.open_flag = board.getOpen_flag();
-            this.board_is_deleted = board.getBoard_is_deleted();
+            this.boardNo = board.getBoardNo();
+            this.userNo = board.getUserNo();
+            this.bigCategoryNo = board.getBigCategoryNo();
+            this.boardTitle = board.getBoardTitle();
+            this.boardContent = board.getBoardContent();
+            this.boardCreatedAt = board.getBoardCreatedAt();
+            this.boardUpdatedAt = board.getBoardUpdatedAt();
+            this.boardLikeCnt = board.getBoardLikeCnt();
+            this.unknownFlag = board.getUnknownFlag();
+            this.boardReportCnt = board.getBoardReportCnt();
+            this.openFlag = board.getOpenFlag();
+            this.boardIsDeleted = board.getBoardIsDeleted();
+        }
+    }
+
+    /**
+     * add like to board
+     */
+    @Getter
+    @NoArgsConstructor
+    public static class LikeRequestSaveDto {
+        private int userNo;
+        private int boardNo;
+
+        @Builder
+        LikeRequestSaveDto(int userNo, int boardNo) {
+            this.userNo = userNo;
+            this.boardNo = boardNo;
+        }
+
+        public BoardLike toEntity() {
+            return BoardLike.builder().userNo(userNo).boardNo(boardNo).build();
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class LikeResponseDto {
+        private int userNo;
+        private int boardNo;
+
+        public LikeResponseDto(BoardLike boardLike) {
+            this.userNo = boardLike.getUserNo();
+            this.boardNo = boardLike.getBoardNo();
         }
     }
 }
