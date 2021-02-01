@@ -28,8 +28,7 @@ public class BoardDto {
         private int openFlag;
 
         @Builder
-        public BoardSaveRequestDto(int userNo, int bigCategoryNo, String boardTitle, String boardContent,
-                                   String boardPic, int unknownFlag, int openFlag) {
+        public BoardSaveRequestDto(int userNo, int bigCategoryNo, String boardTitle, String boardContent, String boardPic, int unknownFlag, int openFlag) {
             this.userNo = userNo;
             this.bigCategoryNo = bigCategoryNo;
             this.boardTitle = boardTitle;
@@ -67,8 +66,7 @@ public class BoardDto {
         private int openFlag;
 
         @Builder
-        public BoardUpdateRequestDto(String boardTitle, String boardContent, String boardPic,
-                                     int unknownFlag, int openFlag) {
+        public BoardUpdateRequestDto(String boardTitle, String boardContent, String boardPic, int unknownFlag, int openFlag) {
             this.boardTitle = boardTitle;
             this.boardContent = boardContent;
             this.boardPic = boardPic;
@@ -140,7 +138,7 @@ public class BoardDto {
         private int userNo;
         private int boardNo;
 
-        public LikeResponseDto (BoardLike boardLike) {
+        public LikeResponseDto(BoardLike boardLike) {
             this.userNo = boardLike.getUserNo();
             this.boardNo = boardLike.getBoardNo();
         }
