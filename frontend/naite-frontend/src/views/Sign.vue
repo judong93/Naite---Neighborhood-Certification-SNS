@@ -1,5 +1,6 @@
 <template>
   <div id="sign">
+    <div class='bgColor'></div>
     <Login @changeSignup='changeSignup' :toLogin='toLogin'/>
     <Signup @changeLogin='changeLogin' :toSignup='toSignup'/>
 
@@ -47,6 +48,13 @@ export default {
     width:100vw;
     overflow:hidden; 
   
+}
+
+.bgColor {
+  width:100%;
+  height:100%;
+  background-color: rgba(0, 0, 0, 0.7);
+
 }
 
 @media screen and (max-width: 1800px) {
