@@ -6,7 +6,6 @@
             style='width:500px;max-height:700px; backgroudColor:red;position:fixed; top:50%;left:50%; overflow:auto;transform: translate(-50%,-50%);borderRadius:30px;' 
             id = 'locationSearch'
             @complete='result=$event'
-            @click='checkAddress'
             :theme="{
                 bgColor: '#162525',
                 searchBgColor: '#162525',
@@ -84,11 +83,10 @@ export default {
         userLatitude:function(){
             const a = Math.pow(this.serverLatitude-this.userLatitude,2)
             const b = Math.pow(this.serverLongitude-this.userLongitude,2)
-            if (Math.sqrt(a+b)<=0.01) {
-                console.log('가')
+            // 0.01로줄이기
+            if (Math.sqrt(a+b)<=1) {
                 this.$emit('checkAddress',true)
             } else {
-                console.log('멈')
                 this.$emit('checkAddress',false)
                 
             }
