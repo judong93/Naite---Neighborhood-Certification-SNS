@@ -19,25 +19,23 @@
         
         <button class="login-btn">로그인</button>
         <button class="login-btn-sns">네이버로 로그인 하기</button>
-        <span></span>
+        <span class='find-pw'>아이디/비밀번호 찾기</span>
         
     </div>
     
     
-
-    <div class="login-bottom">
-        아이디 및 비밀번호 찾기 링크 <br>
-        snslogin <br>
-        
-
-    </div>
-
 
 
   </div>
 </template>
 
 <script>
+// import axios from 'axois'
+
+// const SERVER_URL = 'http://localhost:8080/'
+
+
+
 export default {
     name:'Login',
     components:{
@@ -50,7 +48,7 @@ export default {
     methods:{
        look_signup: function(){
            const loginDiv = document.getElementById('login')
-           loginDiv.style.left = '-100%'
+           loginDiv.style.top = '200%'
            this.$emit('changeSignup')
        }
     },
@@ -65,7 +63,7 @@ export default {
         toLogin: function(){
             if(this.toLogin){
                 const loginDiv = document.getElementById('login')
-                loginDiv.style.left = '0%'
+                loginDiv.style.top = '0%'
             }
 
         }
@@ -95,8 +93,7 @@ export default {
     top: 0%;
     left: 0%;
     width: 100%;
-    height:100%;
-    background:rgb(0,0,0,0.7);
+    height:100%;    
     transition: 0.3s;
     font-family: font1;
     color:white;
@@ -110,7 +107,7 @@ export default {
     top:600px;
     left: 950px;
     transform: translate(-50%,-55%);
-    -webkit-animation: fadeout 2s;
+    /* -webkit-animation: fadeout 2s; */
     transition: 0.3s;
     /* animation-fill-mode: forwards; */
     /* animation-fill-mode: none; */
@@ -180,7 +177,7 @@ export default {
 }
 
 #login-checkbox > span:hover {
-    color:rgb(223, 247, 118)
+    color:rgb(208, 255, 0)
 }
 
 
@@ -214,5 +211,15 @@ export default {
     transform:translateX(-50%)
 
 }
+
+.find-pw{
+    position:absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor:pointer;
+    border-bottom: white solid 1px;
+}
+
 
 </style>

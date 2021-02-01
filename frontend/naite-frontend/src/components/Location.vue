@@ -17,7 +17,7 @@
                 outlineColor: '#44444'
             }"
             />
-            <button class="testgeocoder" @click='geo'>test geocoder </button>
+            
         </div>
     </div>
 </template>
@@ -38,22 +38,33 @@ export default {
             serverLongitude:0,  
             userLatitude:0,
             userLongitude:0,
-            result:'',     
+            result:'',    
+            userBname:'',
+            check:false, 
         }
     },
     methods:{  
         geo:function(){
+            let that = this
             var geocoder = new window.kakao.maps.services.Geocoder();
             var callback = function(result,status) {
                 if (status === 'OK') {
-                    console.log(result)
+                    that.userLatitude = result[0].address.y
+                    that.userLongitude= result[0].address.x
+                    that.checkAddress()
                 }
             }
-            geocoder.addressSearch('고색동',callback)
+            geocoder.addressSearch(this.userBname,callback)
             
+
+
         },
         checkAddress: function(){
-
+            const a = Math.pow(this.serverLatitude-this.userLatitude,2)
+            const b = Math.pow(this.serverLongitude-this.userLongitude,2)
+            if (Math.sqrt(a+b)<=0.01) {
+                this.check=true
+            } else {this.check=false}
         },
     },
     computed: {
@@ -79,10 +90,13 @@ export default {
             }
             
         },
-        result:function(result){
-            if (result) {
-                // this.searchLocation = false
+        result: async function(result){
+            this.userBname = result.bname
+            let wait = await this.geo()
+            if (result) {   
+                console.log(this.userLatitude,this.check,wait)             
                 this.$emit('selectAddress',result)
+
             }
         }
     },
