@@ -1,6 +1,6 @@
 <template>
     <div id="main">
-        <Navbar />
+        <!-- <Navbar /> -->
         <BoardImg :messagetitle='messagetitle' :message='message' :imgsrc='imgsrc' :onDetail='onDetail'/>
         <BoardDetail :onDetail='onDetail'/>
         <BoardList :onDetail='onDetail' @onDetailMethod='onDetailMethod' />
@@ -11,11 +11,12 @@
         <button class="toDetail" @click='toDetail'>디테일보기</button>
         <button class="backdetail" @click='backdetail'>돌아가기</button>
         <Message />
+        <button @click='t'>test</button>
     </div>
     
 </template>
 <script>
-import Navbar from '@/components/Navbar'
+// import Navbar from '@/components/Navbar'
 import Message from '@/components/Message'
 import BoardImg from '@/components/BoardImg'
 import BoardDetail from '@/components/BoardDetail'
@@ -25,7 +26,7 @@ import CategoryBar from '@/components/CategoryBar'
 export default {
     name:'Main',
     components:{
-        Navbar,
+        // Navbar,
         Message,
         BoardImg,
         BoardDetail,
@@ -57,6 +58,9 @@ export default {
             this.toDetail()
             console.log('??')
         },
+        t:function() {
+            this.$router.push({name:'PostingForm'})
+        }
 
         
     },

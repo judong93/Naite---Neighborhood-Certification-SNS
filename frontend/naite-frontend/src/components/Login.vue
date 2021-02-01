@@ -5,9 +5,9 @@
 
         <form action="#" class='login-form'>
             <label for="id">ID</label><br>
-            <input type="text" id='id' placeholder="아이디를 입력해주세요"><br>
+            <input type="text" id='id' placeholder="아이디를 입력해주세요" v-model="params.userId"><br>
             <label for="password">PASSWORD</label><br>
-            <input type="password" id='password' placeholder="비밀번호를 입력해주세요"><br>
+            <input type="password" id='password' placeholder="비밀번호를 입력해주세요" v-model="params.userPw"><br>
         </form>
         <div id='login-checkbox'>
             <label for="id-save">아이디 저장</label>
@@ -17,7 +17,7 @@
             <span @click='look_signup'>Don't have an account? Signup</span>
         </div>
         
-        <button class="login-btn">로그인</button>
+        <button class="login-btn" @click='loginById'>로그인</button>
         <button class="login-btn-sns">네이버로 로그인 하기</button>
         <span class='find-pw'>아이디/비밀번호 찾기</span>
         
@@ -30,9 +30,9 @@
 </template>
 
 <script>
-// import axios from 'axois'
+import axios from 'axios'
 
-// const SERVER_URL = 'http://localhost:8080/'
+const SERVER_URL = 'http://localhost:8080'
 
 
 
@@ -43,14 +43,35 @@ export default {
     },
     data: function() {
         return {
+            params: {
+                'userId':'',
+                'userPw':'',
+            }
         }
     },
     methods:{
-       look_signup: function(){
-           const loginDiv = document.getElementById('login')
-           loginDiv.style.top = '200%'
-           this.$emit('changeSignup')
-       }
+        look_signup: function(){
+            const loginDiv = document.getElementById('login')
+            loginDiv.style.top = '200%'
+            this.$emit('changeSignup')
+        },
+        loginById:function(){
+            if (this.params.userId && this.params.userPw) {
+                axios.post(`${SERVER_URL}/user/sign/signin`,this.params)
+                    .then(res=>{
+                        console.log(res.data)
+                        // localStorage.setItem('jwt',res.data.auth-token)
+                        this.$router.push({name:'Main'})
+                        
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                        alert('회원정보를 확인해주세요!')
+                    })
+            } else {
+                alert('회원정보를 입력해주세요')
+            }
+        }
     },
     computed: {
 
