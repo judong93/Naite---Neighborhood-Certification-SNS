@@ -6,6 +6,7 @@ import Main from '@/views/Main'
 import Profile from '@/views/Profile'
 import GroupBuying from '@/views/GroupBuying'
 import PostingForm from '@/views/PostingForm'
+
 Vue.use(VueRouter)
 const routes = [
   {
