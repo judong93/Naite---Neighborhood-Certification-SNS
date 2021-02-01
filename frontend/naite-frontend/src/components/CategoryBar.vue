@@ -53,6 +53,7 @@ export default {
   width: 60px;
   left: 3%;
   top: 350px;
+  display: none;
 }
 .category-bar > div {
   cursor: pointer;
