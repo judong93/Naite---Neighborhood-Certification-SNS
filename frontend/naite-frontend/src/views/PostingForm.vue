@@ -6,38 +6,40 @@
     <div style="display: flex; justify-content: center;">
       <div class="postingform-box">
         <span class="category">
-          <div @click="selectFreeBoard" :class="{ underline: selectedCategoryNum===1 }">
+          <div @click="selectFreeBoard" :class="{ underline: bigCategoryNo===1 }">
             번화가
           </div>
-          <div @click="selectQuestionBoard" :class="{ underline: selectedCategoryNum===2 }">
+          <div @click="selectQuestionBoard" :class="{ underline: bigCategoryNo===2 }">
             동사무소
           </div>
           <div class="review">
-            <p @click="selectReviewBoard" :class="{ underline: selectedCategoryNum===3 }">수군수군</p>
-            <div @click="selectReviewRestaurant" :class="{ underline: selectedReviewCategoryNum===1}">식당</div>
-            <div @click="selectReviewSports" :class="{ underline: selectedReviewCategoryNum===2}">체육시설</div>
-            <div @click="selectReviewMedical" :class="{ underline: selectedReviewCategoryNum===3}">의료</div>
-            <div @click="selectReviewBeauty" :class="{ underline: selectedReviewCategoryNum===4}">미용</div>
-            <div @click="selectReviewEtc" :class="{ underline: selectedReviewCategoryNum===5}">기타</div>
+            <p @click="selectReviewBoard" :class="{ underline: bigCategoryNo===3 }">수군수군</p>
+            <div @click="selectReviewRestaurant" :class="{ underline: smallCategoryNo===1}">식당</div>
+            <div @click="selectReviewSports" :class="{ underline: smallCategoryNo===2}">의료</div>
+            <div @click="selectReviewMedical" :class="{ underline: smallCategoryNo===3}">체육시설</div>
+            <div @click="selectReviewBeauty" :class="{ underline: smallCategoryNo===4}">미용</div>
+            <div @click="selectReviewEtc" :class="{ underline: smallCategoryNo===5}">기타</div>
           </div>
-          <div @click="selectIssueBoard" :class="{ underline: selectedCategoryNum===4 }">
+          <div @click="selectIssueBoard" :class="{ underline: bigCategoryNo===4 }">
             소리소문
           </div>
-          <div @click="selectGroupBuyingBoard" :class="{ underline: selectedCategoryNum===5 }">
-            장터
+          <div class="market">
+            <p @click="selectMarketBoard" :class="{ underline: bigCategoryNo===5}">장터</p>
+            <div @click="selectGroupBuying" :class="{ underline: smallCategoryNo===6}">공동구매</div>
+            <div @click="selectSecondhand" :class="{ underline: smallCategoryNo===7}">중고거래</div>
           </div>
         </span>
         <span class="postingform">
           <div class="title">
             <span class="title-letter">글 제목:</span>
-            <input v-model="title" class="title-input" type="text">
+            <input v-model="boardTitle" class="title-input" type="text">
             <button @click="post" class="post-button">등록</button>
           </div>
           <div class="attach-img">
             <span class="attach-img-letter">사진 첨부</span>
             <button class="attach-img-button">내PC</button>
-            <p class="rating-letter">평점</p>
-            <StarRating />
+            <p class="rating-letter" v-if="bigCategoryNo===3">평점을 등록해주세요!</p>
+            <StarRating @selectStar="selectStar" v-if="bigCategoryNo===3" />
           </div>
           <div class="text-style">
             <span>바탕체</span>
@@ -50,7 +52,7 @@
             <span>가운데정렬</span>
             <span>오른쪽정렬</span>
           </div>
-          <textarea v-model="content" name="contentInput" id="" cols="30" rows="10" class="content-input"></textarea>
+          <textarea v-model="boardContent" name="contentInput" id="" cols="30" rows="10" class="content-input"></textarea>
         </span>
       </div>
     </div>
@@ -78,56 +80,86 @@ export default {
       message:'당신이 모르는 동네이야기',
       imgsrc: 'boardimg-main.png',
       onDetail: false,
-      selectedCategoryNum: 0,
-      selectedReviewCategoryNum: 0,
-      board_title: '',
-      board_content: '',
-      board_pic: '',
-      big_category_no: 0,
-      user_no: 0,
+      bigCategoryNo: 0,
+      smallCategoryNo: 0,
+      boardTitle: '',
+      boardContent: '',
+      boardPic: '',
+      openFlag: 0,
+      unknownFlag: 0,
+      userNo: 1,
+      marketCost: 0,
+      marketPerson: 0,
+      marketPlace: '',
+      ratedStar: 0
     }
   },
   methods: {
+    selectStar: function (star) {
+      this.ratedStar=star
+      console.log(this.ratedStar)
+    },
     selectFreeBoard: function () {
-      this.selectedCategoryNum=1
-      this.selectedReviewCategoryNum=0
+      this.bigCategoryNo=1
+      this.smallCategoryNo=0
+      this.unknownFlag=1
     },
     selectQuestionBoard: function () {
-      this.selectedCategoryNum=2
-      this.selectedReviewCategoryNum=0
+      this.bigCategoryNo=2
+      this.smallCategoryNo=0
+      this.unknownFlag=0
     },
     selectReviewBoard: function () {
-      this.selectedCategoryNum=3
-      this.selectedReviewCategoryNum=1
+      this.bigCategoryNo=3
+      this.smallCategoryNo=1
+      this.unknownFlag=0
     },
     selectIssueBoard: function () {
-      this.selectedCategoryNum=4
-      this.selectedReviewCategoryNum=0
+      this.bigCategoryNo=4
+      this.smallCategoryNo=0
+      this.unknownFlag=0
     },
-    selectGroupBuyingBoard: function () {
-      this.selectedCategoryNum=5
-      this.selectedReviewCategoryNum=0
+    selectMarketBoard: function () {
+      this.bigCategoryNo=5
+      this.smallCategoryNo=6
+      this.unknownFlag=0
+    },
+    selectGroupBuying: function () {
+      this.bigCategoryNo=5
+      this.smallCategoryNo=6
+      this.unknownFlag=0
+    },
+    selectSecondhand: function () {
+      this.bigCategoryNo=5
+      this.smallCategoryNo=7
+      this.unknownFlag=0
     },
     selectReviewRestaurant: function () {
-      this.selectedCategoryNum=3
-      this.selectedReviewCategoryNum=1
+      this.bigCategoryNo=3
+      this.smallCategoryNo=1
+      this.unknownFlag=0
     },
     selectReviewSports: function () {
-      this.selectedCategoryNum=3
-      this.selectedReviewCategoryNum=2
+      this.bigCategoryNo=3
+      this.smallCategoryNo=2
+      this.unknownFlag=0
     },
     selectReviewMedical: function () {
-      this.selectedCategoryNum=3
-      this.selectedReviewCategoryNum=3
+      this.bigCategoryNo=3
+      this.smallCategoryNo=3
+      this.unknownFlag=0
     },
     selectReviewBeauty: function () {
-      this.selectedCategoryNum=3
-      this.selectedReviewCategoryNum=4
+      this.bigCategoryNo=3
+      this.smallCategoryNo=4
+      this.unknownFlag=0
     },
     selectReviewEtc: function () {
-      this.selectedCategoryNum=3
-      this.selectedReviewCategoryNum=5
+      this.bigCategoryNo=3
+      this.smallCategoryNo=5
+      this.unknownFlag=0
     },
+
     // setToken: function () {
     //   const token = localStorage.getItem('jwt')
 
@@ -139,48 +171,59 @@ export default {
     //   return config
     // },
     post: function () {
-      const config = this.setToken()
+      // const config = this.setToken()
       const posting = {
-        big_category_no: this.big_category_no,
-        board_content: this.board_content,
-        board_pic: this.board_pic,
-        board_title: this.board_title,
-        // open_flag:
-        // unknown_flag:
-        // user_no: 
+        bigCategoryNo: this.bigCategoryNo,
+        boardContent: this.boardContent,
+        boardPic: this.boardPic,
+        boardTitle: this.boardTitle,
+        openFlag: this.openFlag, 
+        unknownFlag: this.unknownFlag,
+        userNo: this.userNo 
       }
-      console.log(this.title)
-      console.log(this.content)
-      axios.post('http://localhost:8080/board/insert', posting, config)
-        .then((res) => {
-          console.log(res)
-          this.$router.push({ name: 'Main' })
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    postReview: function () {
-      const config = this.setToken()
-      const posting = {
-        big_category_no: this.big_category_no,
-        board_content: this.board_content,
-        board_pic: this.board_pic,
-        board_title: this.board_title,
-        // open_flag:
-        // unknown_flag:
-        // user_no: 
+      console.log(this.smallCategoryNo)
+      // 리뷰 게시판
+      if (0 < this.smallCategoryNo && this.smallCategoryNo < 5) {
+        const reviewPosting = {
+          board: posting,
+          reviewStar: this.ratedStar,
+          smallCategoryNo: this.smallCategoryNo
+        }
+        axios.post('http://localhost:8080/review/insert', reviewPosting)
+          .then((res) => {
+            console.log(res)
+            this.$router.push({ name: 'Main' })
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      // 스몰카테고리가 6이상이면, 장터 거래
+      } else if (5 < this.smallCategoryNo) {
+        const marktePosting = {
+          board: posting,
+          marketCost: this.marketCost,
+          smallCategoryNo: this.smallCategoryNo
+        }
+        axios.post('http://localhost:8080/market/insert', marktePosting)
+          .then((res) => {
+            console.log(res)
+            this.$router.push({ name: 'Main' })
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      // 그 외 게시판
+      } else {
+        console.log(posting)
+        axios.post('http://localhost:8080/board/insert', posting)
+          .then((res) => {
+            console.log(res)
+            this.$router.push({ name: 'Main' })
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       }
-      console.log(this.title)
-      console.log(this.content)
-      axios.post('http://localhost:8080/review/insert', posting, config)
-        .then((res) => {
-          console.log(res)
-          this.$router.push({ name: 'Main' })
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     },
   },
 }
@@ -197,16 +240,18 @@ export default {
 }
 .category {
   position: absolute;
-  background-color: #ffb5b5;
+  background-color: #3F9F47;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   top: 0;
   left: 0;
   height: 600px;
-  width: 350px;
+  width: 300px;
   font-size: 25px;
   margin: 0;
+  color: aliceblue;
+  font-weight: bold;
 }
 .category > div {
   cursor: pointer;
@@ -220,14 +265,18 @@ export default {
   font-size: 17px;
   margin: 4px 0;
 }
+.market > div {
+  font-size: 17px;
+  margin: 4px 0;
+}
 .postingform {
   position: absolute;
   display: flex;
   flex-direction: column;
   background-color: lightyellow;
-  left: 350px;
+  left: 300px;
   height: 600px;
-  width: 1180px;
+  width: 1230px;
 }
 .postingform > div {
   padding: 12px 20px 12px 40px;
