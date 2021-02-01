@@ -4,34 +4,87 @@ import com.ssafy.naite.domain.user.User;
 //import com.ssafy.naite.dto.user.AuthKeySaveRequestDto;
 import com.ssafy.naite.dto.user.AuthKeySaveRequestDto;
 import com.ssafy.naite.dto.user.EmailSendRequestDto;
+import com.ssafy.naite.dto.user.UserSignInRequestDto;
 import com.ssafy.naite.dto.user.UserSignUpRequestDto;
 //import com.ssafy.naite.service.user.AuthKeyService;
 import com.ssafy.naite.dto.util.Response;
 
 import com.ssafy.naite.service.user.AuthKeyService;
 import com.ssafy.naite.service.user.EmailService;
+import com.ssafy.naite.service.user.JwtService;
 import com.ssafy.naite.service.user.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.security.core.parameters.P;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 
 //@RequiredArgsConstructor
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @AllArgsConstructor
+@RequestMapping("/user")
+@Api(value = "회원 관리")
 @RestController
 public class UserController {
     private final UserService userService;
     private final AuthKeyService authKeyService;
     private final EmailService emailService;
+    private final JwtService jwtService;
 
-    @PostMapping("/signup")
+    @PostMapping("/sign/signin")
+    @ApiOperation(value = "회원 로그인")
+    public ResponseEntity<Map<String,Object>> signin(@RequestBody UserSignInRequestDto userSignInRequestDto, HttpServletResponse res){
+        Map<String,Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try{
+            User loginUser = userService.signin(userSignInRequestDto);
+            if(loginUser!=null) {
+                // 토큰 생성
+                String token = jwtService.create(loginUser);
+                System.out.println(token);
+                resultMap.put("auth-token", token);
+                resultMap.put("user-id", loginUser.getUserId());
+                resultMap.put("user-name", loginUser.getUserName());
+                status = HttpStatus.ACCEPTED;
+            } else {
+                resultMap.put("message", "로그인 실패");
+                status = HttpStatus.ACCEPTED;
+            }
+        } catch (Exception e) {
+            resultMap.put("message", e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String,Object>>(resultMap,status);
+    }
+
+    @ApiOperation(value = "회원 정보 조회")
+    @GetMapping("/info")
+    public ResponseEntity<Map<String, Object>> getUser(HttpServletRequest req){
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.ACCEPTED;
+        System.out.println(">>>>>> " + jwtService.get(req.getHeader("auth-token")));
+        try {
+            resultMap.putAll(jwtService.get(req.getHeader("auth-token")));
+            status = HttpStatus.ACCEPTED;
+        } catch (RuntimeException e) {
+            resultMap.put("message", e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+
+    @PostMapping("/sign/signup")
     @ApiOperation(value = "회원가입")
     public Response save(@RequestBody UserSignUpRequestDto userSignUpRequestDto) {
         try {
@@ -44,7 +97,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/email/send")
+    @PostMapping("/sign/email/send")
     @ApiOperation(value = "이메일 인증 코드 전송")
     public Response emailSend(@RequestBody EmailSendRequestDto emailSendRequestDto) throws MessagingException {
         // 회원가입 시 이메일 인증일 경우
@@ -124,7 +177,7 @@ public class UserController {
 //        }
     }
 
-    @GetMapping("/email/auth")
+    @GetMapping("/sign/email/auth")
     @ApiOperation(value = "이메일 인증")
     public Response update(@RequestParam("email") String userEmail, @RequestParam("key") String certified) throws Exception{
         // auth_key에 있는 값과 비교
