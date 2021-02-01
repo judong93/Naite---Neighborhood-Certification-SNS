@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,12 +20,14 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final BoardRepository boardRepository;
 
+    private final Comparator<Review> comp = (r1, r2) -> r2.getBoard().getBoardUpdatedAt().compareTo(r1.getBoard().getBoardUpdatedAt());
+
     /**
      * 리뷰 게시글 전체 조회
      */
     @Transactional(readOnly = true)
     public List<ReviewDto.ReviewResponseDto> findAllReviews() {
-        return reviewRepository.findAll().stream().filter(review -> review.getBoard().getBoardIsDeleted() == 0).map(ReviewDto.ReviewResponseDto::new).collect(Collectors.toList());
+        return reviewRepository.findAll().stream().filter(review -> review.getBoard().getBoardIsDeleted() == 0).sorted(comp).map(ReviewDto.ReviewResponseDto::new).collect(Collectors.toList());
     }
 
     /**
@@ -32,7 +35,7 @@ public class ReviewService {
      */
     @Transactional(readOnly = true)
     public List<ReviewDto.ReviewResponseDto> findAllReviewsByCategory(int smallCategoryNo) {
-        return reviewRepository.findAll().stream().filter(review -> review.getBoard().getBoardIsDeleted() == 0).filter(review -> review.getSmallCategoryNo() == smallCategoryNo).map(ReviewDto.ReviewResponseDto::new).collect(Collectors.toList());
+        return reviewRepository.findAll().stream().filter(review -> review.getBoard().getBoardIsDeleted() == 0).filter(review -> review.getSmallCategoryNo() == smallCategoryNo).sorted(comp).map(ReviewDto.ReviewResponseDto::new).collect(Collectors.toList());
     }
 
     /**
@@ -40,8 +43,7 @@ public class ReviewService {
      */
     @Transactional(readOnly = true)
     public ReviewDto.ReviewResponseDto findReviewById(int reviewNo) {
-        Review review = reviewRepository.findById(reviewNo)
-                .orElseThrow(() -> new IllegalAccessError("[review_no=" + reviewNo + "] 해당 게시글이 존재하지 않습니다."));
+        Review review = reviewRepository.findById(reviewNo).orElseThrow(() -> new IllegalAccessError("[review_no=" + reviewNo + "] 해당 게시글이 존재하지 않습니다."));
         return new ReviewDto.ReviewResponseDto(review);
     }
 
@@ -58,13 +60,11 @@ public class ReviewService {
      */
     @Transactional
     public int updateReview(int review_no, ReviewDto.ReviewUpdateRequestDto reviewUpdateRequestDto) {
-        Review review = reviewRepository.findById(review_no)
-                .orElseThrow(() -> new IllegalAccessError("[review_no=" + review_no + "] 해당 게시글이 존재하지 않습니다."));
+        Review review = reviewRepository.findById(review_no).orElseThrow(() -> new IllegalAccessError("[review_no=" + review_no + "] 해당 게시글이 존재하지 않습니다."));
         review.update(reviewUpdateRequestDto.getReviewStar(), reviewUpdateRequestDto.getSmallCategoryNo());
 
         Board newBoard = reviewUpdateRequestDto.getBoard();
-        Board board = boardRepository.findById(newBoard.getBoardNo())
-                .orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
+        Board board = boardRepository.findById(newBoard.getBoardNo()).orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
         board.update(newBoard.getBoardTitle(), newBoard.getBoardContent(), newBoard.getBoardPic(), newBoard.getUnknownFlag(), newBoard.getOpenFlag());
 
         return review_no;
