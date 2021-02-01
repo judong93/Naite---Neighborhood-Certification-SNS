@@ -3,7 +3,7 @@
         <Navbar />
         <BoardImg :messagetitle='messagetitle' :message='message' :imgsrc='imgsrc' :onDetail='onDetail'/>
         <BoardDetail :onDetail='onDetail'/>
-        <BoardList :onDetail='onDetail'/>
+        <BoardList :onDetail='onDetail' @onDetailMethod='onDetailMethod' />
         <CategoryBar />
 
 
@@ -43,11 +43,19 @@ export default {
     },
     methods:{
         toDetail:function(){
-            this.onDetail=true
+            if (this.onDetail) {
+                this.onDetail = false
+            } else {
+                this.onDetail = true
+            }
             
         },
         backdetail:function(){
             this.onDetail=false
+        },
+        onDetailMethod:function(){
+            this.toDetail()
+            console.log('??')
         },
 
         
@@ -63,8 +71,8 @@ export default {
 <style>
 #main {
     position:relative;
-    height: 100vh;
-    width:100vw;
+    width: 1920px;
+    height:969px;
     overflow:hidden;
     background-color: rgb(250, 246, 240);
 }

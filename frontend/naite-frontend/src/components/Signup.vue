@@ -4,27 +4,27 @@
             <div class='signuphead'>회원가입</div>
             <div class="signupleftdiv">
                 <label for="#" >아이디</label><br>
-                <input type="text" v-model='params.userId'><br>
+                <input type="text" v-model='params.userId' @keypress.space="checkSpace"><br>
                 <label for="#">비밀번호</label><br>
-                <input type="password" v-model='params.userPw'><br>
+                <input type="password" v-model='params.userPw' @keypress.space="checkSpace"><br>
                 <label for="#">비밀번호확인</label><br>
-                <input type="password" v-model='pwConfirm'><br>   
+                <input type="password" v-model='pwConfirm' @keypress.space="checkSpace"><br>   
                 <label for="#">닉네임</label><br>
-                <input type="text"  v-model='params.userNick'><br>   
+                <input type="text"  v-model='params.userNick' @keypress.space="checkSpace"><br>   
                 <label for="#">프로필사진</label><br>
-                <input type="text"  v-model='params.userPic'><br>                
+                <input type="text"  v-model='params.userPic' @keypress.space="checkSpace"><br>                
             </div>
             <div class="signuprightdiv">
-                <label for="#">이름</label><br>
-                <input type="text"  v-model='params.userName'><br>                
+                <label for="#" >이름</label><br>
+                <input type="text"  v-model='params.userName' @keypress.space="checkSpace"><br>                
                 <label for="#">이메일</label><br>
-                <input type="text"  v-model='params.userEmail'><br>            
+                <input type="text"  v-model='params.userEmail' @keypress.space="checkSpace"><button class="emailSend">인증하기</button><br>            
                 <label for="#">주소</label><br>
                 <input type="text" 
                 placeholder="클릭하여 주소를 검색해주세요" 
                 v-model='params.userBasicAddress'
                 @click='openSearchLocation' 
-                readonly/><br>                
+                readonly/> <br>                
                 <label for="#">상세주소</label><br>
                 <input type="text"  v-model='params.userDetailAddress'/><br>   
                 <button class="signupComplete" @click='completeSignup'>회원가입</button>
@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <Location :searchLocation='searchLocation' @selectAddress = 'selectAddress'/>
+        <Location :searchLocation='searchLocation' @selectAddress = 'selectAddress' @checkAddress='checkAddress' />
         
 
 
@@ -67,6 +67,7 @@ export default {
             },
             pwConfirm:'',
             emailConfirm:false,
+            addressConfirm: false,
             testparam:{
                 'type':0,
                 'userEmail':'ldh29768@gmail.com'
@@ -75,8 +76,7 @@ export default {
     },
     methods:{
         toLogin:function(){
-            this.$emit('changeLogin')
-            console.log('?')
+            this.$emit('changeLogin')            
         },
         openSearchLocation:function(){
             if (this.searchLocation) {
@@ -90,7 +90,9 @@ export default {
             this.params.userBasicAddress = result.address
         },
         completeSignup:function(){
-            axios.post(`${SERVER_URL}/signup`,this.params)
+            // let that = this
+            
+            axios.post(`${SERVER_URL}/sign/signup`,this.params)
                 .then(res => {
                     console.log(res)
                 })
@@ -103,6 +105,12 @@ export default {
                     
                 })
                 .catch(err => {console.log(err,'ㅠㅠ')})
+        },
+        checkAddress:function(res) {
+            this.addressConfirm = res
+        },
+        checkSpace: function(){
+            event.returnValue = false;
         }
   
       
@@ -168,18 +176,16 @@ export default {
 }
 
 .signupleftdiv{    
-    
     width: 50%;
     height: 80%;
     margin-top: 10%;
     text-align: left;
  
 }
-.signuprightdiv{
-   
+.signuprightdiv{   
     width: 50%;
     height: 80%;
-    margin-top: 15%;
+    margin-top: 10%;
     text-align: left; 
 }
 

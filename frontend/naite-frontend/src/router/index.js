@@ -6,6 +6,7 @@ import Main from '@/views/Main'
 import Profile from '@/views/Profile'
 import GroupBuying from '@/views/GroupBuying'
 import PostingForm from '@/views/PostingForm'
+import Test from '@/views/Test'
 
 Vue.use(VueRouter)
 const routes = [
@@ -38,6 +39,11 @@ const routes = [
     path:'/postingform',
     name: 'PostingForm',
     component: PostingForm,
+  },
+  {
+    path:'/test',
+    name: 'Test',
+    component: Test,
   },
 ]
 const router = new VueRouter({

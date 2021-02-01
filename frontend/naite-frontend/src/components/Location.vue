@@ -2,7 +2,7 @@
     <div id="location">
     
         <div v-if='searchLocation'>
-            <VueDaumPostcode v-if='searchLocation' 
+            <VueDaumPostcode
             style='width:500px;max-height:700px; backgroudColor:red;position:fixed; top:50%;left:50%; overflow:auto;transform: translate(-50%,-50%);borderRadius:30px;' 
             id = 'locationSearch'
             @complete='result=$event'
@@ -40,31 +40,19 @@ export default {
             userLongitude:0,
             result:'',    
             userBname:'',
-            check:false, 
         }
     },
     methods:{  
-        geo:function(){
+        geo: function(){
             let that = this
             var geocoder = new window.kakao.maps.services.Geocoder();
             var callback = function(result,status) {
                 if (status === 'OK') {
                     that.userLatitude = result[0].address.y
                     that.userLongitude= result[0].address.x
-                    that.checkAddress()
-                }
+                }   
             }
-            geocoder.addressSearch(this.userBname,callback)
-            
-
-
-        },
-        checkAddress: function(){
-            const a = Math.pow(this.serverLatitude-this.userLatitude,2)
-            const b = Math.pow(this.serverLongitude-this.userLongitude,2)
-            if (Math.sqrt(a+b)<=0.01) {
-                this.check=true
-            } else {this.check=false}
+            geocoder.addressSearch(this.userBname,callback)          
         },
     },
     computed: {
@@ -82,21 +70,27 @@ export default {
                 
                 });
             } else {
-                if (that.result) {
-                    alert('주소를 변경하시겠습니까?')
-                } else {
-                    alert('잠시후 다시 이용해주세요');
+                if (!that.result) {
+                    alert('잠시후 다시 이용해주세요')
                 }
             }
             
         },
-        result: async function(result){
+        result: function(result){
             this.userBname = result.bname
-            let wait = await this.geo()
-            if (result) {   
-                console.log(this.userLatitude,this.check,wait)             
-                this.$emit('selectAddress',result)
-
+            this.geo()
+            this.$emit('selectAddress',result)            
+        },
+        userLatitude:function(){
+            const a = Math.pow(this.serverLatitude-this.userLatitude,2)
+            const b = Math.pow(this.serverLongitude-this.userLongitude,2)
+            if (Math.sqrt(a+b)<=0.01) {
+                console.log('가')
+                this.$emit('checkAddress',true)
+            } else {
+                console.log('멈')
+                this.$emit('checkAddress',false)
+                
             }
         }
     },

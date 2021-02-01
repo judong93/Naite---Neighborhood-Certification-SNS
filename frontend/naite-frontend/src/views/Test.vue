@@ -1,77 +1,82 @@
 <template>
-  <div>
-    <Navbar />
-    <BoardImg :messagetitle='messagetitle' :message='message' :imgsrc='imgsrc' :onDetail='onDetail'/>
-    <div style="display: flex; justify-content: center;">
-      <div class="group-buying">
-        <div v-for="(posting, idx) in postings" :key="idx" class="posting-box">
-          <img :src="posting.thumbnail" alt="" class="posting-img">
-          <div class="posting-card">
-            {{ posting.title }} {{ posting.area }} {{ posting.created }}
-          </div>
-        </div>
-      </div>
-    </div>
-    <Message />
+  <div id='test'>
+    <div id="a">a</div>
+    <div id="b">b</div>
+    <div id="c">c</div>
+    
+    <div id="d">d</div>
+    <div id="e">e</div>
+    <div id="f">f</div>
+    <div id="g">g</div>
+    <div id="h">h</div>
+    <div id="i">i</div>
+    <div id="j">j</div>
+
   </div>
 </template>
 <script>
-import Navbar from '@/components/Navbar'
-import Message from '@/components/Message'
-import BoardImg from '@/components/BoardImg'
+
 export default {
-  name: "GroupBuying",
-  data: function () {
-    return {
-      messagetitle:'나의 이웃테두리: 나이테',
-      message:'당신이 모르는 동네이야기',
-      imgsrc: 'boardimg-main.png',
-      onDetail: false,
-      postings: [
-        {title: "뿌링클 한마리 나누실분!!", area: "동대문구 이문동", created: "15분 전", thumbnail: "https://picsum.photos/200/300"},
-        {title: "아기헤어밴드 팝니다!", area: "동대문구 이문동", created: "15분 전", thumbnail: "https://picsum.photos/200/300"},
-        {title: "아기헤어밴드 팝니다!", area: "동대문구 이문동", created: "15분 전", thumbnail: "https://picsum.photos/200/300"},
-        {title: "아기헤어밴드 팝니다!", area: "동대문구 이문동", created: "15분 전", thumbnail: "https://picsum.photos/200/300"},
-        {title: "아기헤어밴드 팝니다!", area: "동대문구 이문동", created: "15분 전", thumbnail: "https://picsum.photos/200/300"},
-        {title: "아기헤어밴드 팝니다!", area: "동대문구 이문동", created: "15분 전", thumbnail: "https://picsum.photos/200/300"},
-      ],
-    }
-  },
+  name: 'TestColor',
+
   components: {
-    Navbar,
-    Message,
-    BoardImg,
+
   }
 }
 </script>
 <style>
-.group-buying {
+#test {
   position: relative;
-  overflow: auto;
-  top: 280px;
-  height: 600px;
-  width: 1530px;
+  width: 100vw;
+  display:flex
 }
-.vl {
-  border: 1px solid lightgray;
-  height: 500px;
-  position: absolute;
-  left: 50%;
-  top: 300px;
-}
-.posting-box {
-  display: flex;
-  width: 765px;
-  margin: 3px;
+#test > div {
+  width: 10%;
+  height: 100vh;
+  }
   
-  border-bottom: 2px solid lightgray;
+
+#a {
+  background-color:#3F9F47;
+  margin-right: 10px;
 }
-.posting-card {
-  margin-left: 20px;
+#b {
+  background-color:#6BB664;
+  margin-right: 10px;
 }
-.posting-img {
-  height: 120px;
-  width: 120px;
-  overflow: hidden;
+#c {
+  background-color: #5EB656;
+  margin-right: 10px;
 }
+#d {
+  background-color:#3F9F47;
+  margin-right: 10px;
+}
+#e {
+  background-color:#2D7533;
+  margin-right: 10px;
+}
+#f {
+  background-color:#A87A4F;
+  margin-right: 10px;
+}
+
+#g {
+  background-color:#3F9F47;
+  margin-right: 10px;
+}
+#h {
+  /* background-color:#2D7533; */
+  margin-right: 10px;
+}
+#i {
+  /* background-color:#2D7533; */
+  margin-right: 10px;
+}
+#j {
+  /* background-color:#2D7533; */
+  margin-right: 10px;
+}
+
+
 </style>

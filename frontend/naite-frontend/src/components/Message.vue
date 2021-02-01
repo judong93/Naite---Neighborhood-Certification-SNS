@@ -31,8 +31,7 @@ export default {
                 messageWindow.style.height='500px'
                 messageWindow.style.borderRadius='10px'
                 this.firstmessage=false
-                this.secondmessage=true
-                console.log('?')
+                this.secondmessage=true                
             } else if(this.secondmessage){
                 messageWindow.style.width='1300px'
                 messageWindow.style.height='600px'
@@ -76,7 +75,9 @@ export default {
     /* background-color: red; */
     border: black solid 1px;
     border-radius: 100%;
-    background-color: rgb(107, 107, 189);
+    background-color: #FDD692;
+    /* background-color: #9B8281; */
+    /* background-color: #75D701; */
     transition: 0.3s;
     
 }
