@@ -52,6 +52,11 @@ public class Board {
     private int boardIsDeleted;
 
     @Builder
+    public Board(int boardNo) {
+        this.boardNo = boardNo;
+    }
+
+    @Builder
     public Board(int userNo, int bigCategoryNo, String boardTitle, String boardContent, String boardPic,
                  LocalDateTime boardCreatedAt, LocalDateTime boardUpdatedAt, int boardLikeCnt,
                  int unknownFlag, int boardReportCnt, int openFlag, int boardIsDeleted) {
