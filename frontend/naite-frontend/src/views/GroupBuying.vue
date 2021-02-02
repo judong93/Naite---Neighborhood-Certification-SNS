@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .group-buying {
   position: relative;
   overflow: auto;

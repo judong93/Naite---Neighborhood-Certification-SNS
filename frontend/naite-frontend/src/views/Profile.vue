@@ -1,15 +1,16 @@
 <template>
-  <div>
+  <div id="profile">
     <Navbar />
     <Message />
     <div class="profile">
       <div class="profile-box">
-        <div class="img-container">
-          <img :src="imgData" alt="No Image" class="profile-img">
-        </div>
+        <img :src="imgData" alt="No Image" class="profile-img">
         <div class="profile-info">
-          <div class="username">
-          {{ userName }}
+          <div class="username-settings">
+            <div class="username">
+            {{ userName }}
+            <i id="settings-icon" class="fas fa-user-cog" @click="selectSettings"></i>
+            </div>
           </div>
           <div class="activities">
             <p @click="postingList" :class="{ underline: activityCheckNum===1}" class="activity"> {{ posting }} </p><p>|</p>
@@ -19,8 +20,8 @@
         </div>  
       </div>
       <hr>
-      <div class="cards">
-        <div v-for="(card,idx) in Cards" :key="idx" class="card">
+      <div class="profile-cards">
+        <div v-for="(card,idx) in Cards" :key="idx" class="profile-card">
           <div>
             {{ card.title }}
           </div>
@@ -46,12 +47,15 @@ export default {
   data: function () {
     return {
       imgData: "https://picsum.photos/200/300",
-      userName: "Naite",
-      posting: "게시글 3",
-      groupBuying: "장터거래 4",
-      comment: "댓글 4",
+      userName: "user1",
+      posting: "게시글 6",
+      groupBuying: "장터거래 6",
+      comment: "댓글 6",
       Cards: [],
       postingCards: [
+        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
+        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
+        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
         {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
         {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
         {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
@@ -60,8 +64,14 @@ export default {
         {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
         {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
         {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
+        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
+        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
+        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
       ],
       commentCards: [
+        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
+        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
+        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
         {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
         {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
         {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
@@ -83,6 +93,9 @@ export default {
       this.activityCheckNum = 3
       this.Cards = this.commentCards
     },
+    selectSettings: function () {
+      this.$router.push({ name: 'ProfileSettings' })
+    }
   },
   components: {
     Navbar,
@@ -94,41 +107,45 @@ export default {
 }
 </script>
   
-<style>
+<style scoped>
+#profile {
+  position:relative;
+  width: 1918px;
+  height: 935px;
+  overflow:hidden;
+  background-color: rgb(250, 246, 240);
+  font-family: font1;
+}
 hr {
   position: relative;
-  width: 700px;
+  width: 55%;
 }
 .profile {
   position: relative;
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 600px;
+  height: 15%;
   top: 110px;
 }
 .profile-box {
   /* position: relative; */
   /* background-color: lightgray; */
   display: flex;
-  /* justify-content: space-evenly; */
+  justify-content: space-evenly;
   /* top: 130px; */
   height: 180px;
-  width: 900px;
+  width: 60%;
 }
-.img-container {
+.profile-img {
   position: relative;
   background-color: red;
   width: 150px;
   height: 150px;
-  left: 100px;
   overflow: hidden;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-.img-container:hover {
+.profile-img:hover {
   background-color: black;
   transform: rotateY(180deg);
 }
@@ -137,9 +154,17 @@ hr {
   font-size: 35px;
   top: 10px;
 }
+.username-settings {
+  display: flex;
+  justify-content: center;
+  padding-left: 105px;
+}
+#settings-icon {
+  margin-left: 20px;
+  cursor: pointer;
+}
 .profile-info {
   position: relative;
-  left: 200px;
   width: 400px;
 }
 .activities {
@@ -149,25 +174,26 @@ hr {
   top: 38px; 
   font-size: 30px;
 }
-.cards {
+.profile-cards {
+  /* overflow: hidden; */
   margin-top: 20px;
   display: flex;
   justify-content: space-around;
-  width: 900px;
+  width: 60%;
 }
-.card {
+.profile-card {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   border: 2px solid lightgray;
-  border-radius: 10px;
+  border-radius: 10%;
   width: 170px;
   height: 250px;
 }
 .posting-img {
-  height: 100px;
-  width: 130px;
-  border-radius: 10px;
+  height: 120px;
+  width: 75%;
+  border-radius: 10%;
 }
 .underline {
   text-decoration: underline;
@@ -200,10 +226,10 @@ hr {
   .activities {
     font-size: 15px;
   }
-  .cards {
+  .profile-cards {
     width: 400px;
   }
-  .card {
+  .profile-card {
     width: 85px;
     height: 100px;
     font-size: 5px;
