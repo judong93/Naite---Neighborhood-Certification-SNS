@@ -7,6 +7,7 @@ import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.dto.comment.CommentGetResponseDto;
 import com.ssafy.naite.dto.comment.CommentPostRequestDto;
 import com.ssafy.naite.dto.comment.CommentPutRequestDto;
+import com.ssafy.naite.service.user.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.List;
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final JwtService jwtService;
 
     @Transactional
     public List<CommentGetResponseDto> getComments(int boardId) {
@@ -43,6 +45,7 @@ public class CommentService {
 //    @Transactional
     public void postComment(CommentPostRequestDto commentPostRequestDto) throws Exception {
         // TODO[수정]: 토큰값 해석해서 userNo 값 가져와야함
+        jwtService.
         Comment comment = Comment.builder()
                 .commentContent(commentPostRequestDto.getContent())
                 .commentParentId(commentPostRequestDto.getParentId())
