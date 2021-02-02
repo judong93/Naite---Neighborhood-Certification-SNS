@@ -7,6 +7,7 @@ import Profile from '@/views/Profile'
 import GroupBuying from '@/views/GroupBuying'
 import PostingForm from '@/views/PostingForm'
 import Test from '@/views/Test'
+import ProfileSettings from '@/views/ProfileSettings'
 
 Vue.use(VueRouter)
 const routes = [
@@ -44,6 +45,11 @@ const routes = [
     path:'/test',
     name: 'Test',
     component: Test,
+  },
+  {
+    path:'/profilesettings',
+    name: 'ProfileSettings',
+    component: ProfileSettings,
   },
 ]
 const router = new VueRouter({
