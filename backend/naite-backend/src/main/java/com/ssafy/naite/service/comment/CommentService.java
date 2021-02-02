@@ -22,7 +22,7 @@ public class CommentService {
 
     @Transactional
     public List<CommentGetResponseDto> getComments(int boardId) {
-        List<Comment> list = commentRepository.getCommentsByBoardId(Board.builder().boardNo(boardId).build());
+        List<Comment> list = commentRepository.getCommentsByBoardId(new Board(boardId));
         List<CommentGetResponseDto> returnList = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
@@ -48,8 +48,8 @@ public class CommentService {
                 .commentParentId(commentPostRequestDto.getParentId())
                 .commentReportCnt(0)
                 .commentIsDeleted(Byte.parseByte("0"))
-                .board(Board.builder().boardNo(commentPostRequestDto.getBoardId()).build())
-                .user(User.builder().userNo(1).build())
+                .board(new Board(commentPostRequestDto.getBoardId()))
+                .user(new User(1))
                 .commentCreatedAt(new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9)))
                 .build();
 

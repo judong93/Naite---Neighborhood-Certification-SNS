@@ -51,7 +51,6 @@ public class User {
     private String userPic;
     private Byte userActive;
 
-    @Builder
     public User(int userNo) {
         this.userNo = userNo;
     }
