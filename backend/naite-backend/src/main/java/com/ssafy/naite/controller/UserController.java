@@ -2,10 +2,7 @@ package com.ssafy.naite.controller;
 
 import com.ssafy.naite.domain.user.User;
 //import com.ssafy.naite.dto.user.AuthKeySaveRequestDto;
-import com.ssafy.naite.dto.user.AuthKeySaveRequestDto;
-import com.ssafy.naite.dto.user.EmailSendRequestDto;
-import com.ssafy.naite.dto.user.UserSignInRequestDto;
-import com.ssafy.naite.dto.user.UserSignUpRequestDto;
+import com.ssafy.naite.dto.user.*;
 //import com.ssafy.naite.service.user.AuthKeyService;
 import com.ssafy.naite.dto.util.Response;
 
@@ -170,6 +167,17 @@ public class UserController {
         try {
             authKeyService.compare(userEmail, certified);
             return new Response("success", "이메일 인증 완료", null);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/profile")
+    @ApiOperation(value = "내 프로필 조회")
+    public Response getProfile(@RequestHeader("userToken") String userToken) {
+        try {
+            UserGetProfileResponseDto dto = userService.getProfile(userToken);
+            return new Response("success", "프로필 조회 성공", dto);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);
         }

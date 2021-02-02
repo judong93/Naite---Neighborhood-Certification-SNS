@@ -1,7 +1,10 @@
 package com.ssafy.naite.service.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
+import com.ssafy.naite.dto.user.UserGetProfileResponseDto;
 import com.ssafy.naite.dto.user.UserSignInRequestDto;
 import com.ssafy.naite.dto.user.UserSignUpRequestDto;
 import com.ssafy.naite.service.util.Salt;
@@ -17,7 +20,9 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private  final Salt saltUtil;
+    private final CommentRepository commentRepository;
+    private final Salt saltUtil;
+    private final JwtService jwtService;
 
     /** 로그인 */
     public User signin(UserSignInRequestDto requestDto) throws  Exception{
@@ -64,6 +69,24 @@ public class UserService {
     public User findByEmail(String email) {
         Optional<User> existed = userRepository.findByUserEmail(email);
         return existed.get();
+    }
+
+    @Transactional
+    public UserGetProfileResponseDto getProfile(String userToken) throws Exception{
+        jwtService.checkValid(userToken);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(jwtService.get(userToken).get("user"));
+        User obj = objectMapper.readValue(json, User.class);
+
+        int commentCnt = commentRepository.findByUser(new User()).size();
+        User user = userRepository.findById(obj.getUserNo()).get();
+        return UserGetProfileResponseDto.builder()
+                .userName(user.getUserName())
+                .userNick(user.getUserNick())
+                .commentCnt(commentCnt)
+                .boardCnt(0)
+                .dealCnt(0)
+                .build();
     }
 
 }
