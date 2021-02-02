@@ -2,6 +2,7 @@ package com.ssafy.naite.controller;
 
 import com.ssafy.naite.dto.board.BoardDto;
 import com.ssafy.naite.service.board.BoardService;
+import com.ssafy.naite.service.user.JwtService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
@@ -19,6 +23,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final JwtService jwtService;
 
     /**
      * 게시글 전체 조회
@@ -53,9 +58,10 @@ public class BoardController {
     /**
      * 게시글 유저로 조회
      */
-    @GetMapping("/list/user/{userNo}")
+    @GetMapping("/list/user")
     @ApiOperation(value = "게시글 유저별 조회")
-    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByUserNo(@PathVariable int userNo) {
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByUserNo(HttpServletRequest req) {
+        int userNo = getUserNo(req);
         List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByUserNo(userNo);
         return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
@@ -85,8 +91,9 @@ public class BoardController {
      */
     @PostMapping("/insert")
     @ApiOperation(value = "게시글 등록")
-    public ResponseEntity<Integer> insertBoard(@RequestBody BoardDto.BoardSaveRequestDto boardSaveRequestDto) {
-        int insertedBoardNo = boardService.insertBoard(boardSaveRequestDto);
+    public ResponseEntity<Integer> insertBoard(@RequestBody BoardDto.BoardSaveRequestDto boardSaveRequestDto, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        int insertedBoardNo = boardService.insertBoard(boardSaveRequestDto, userNo);
         return new ResponseEntity<Integer>(insertedBoardNo, HttpStatus.CREATED);
     }
 
@@ -95,8 +102,12 @@ public class BoardController {
      */
     @PutMapping("/update/{boardNo}")
     @ApiOperation(value = "게시글 수정")
-    public ResponseEntity<Integer> updateBoard(@PathVariable int boardNo, @RequestBody BoardDto.BoardUpdateRequestDto boardUpdateRequestDto) {
-        int updatedBoardNo = boardService.updateBoard(boardNo, boardUpdateRequestDto);
+    public ResponseEntity<Integer> updateBoard(@PathVariable int boardNo, @RequestBody BoardDto.BoardUpdateRequestDto boardUpdateRequestDto, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        int updatedBoardNo = boardService.updateBoard(boardNo, boardUpdateRequestDto, userNo);
+        if(updatedBoardNo < 0) {
+            return new ResponseEntity<Integer>(updatedBoardNo, HttpStatus.NOT_ACCEPTABLE);
+        }
         return new ResponseEntity<Integer>(updatedBoardNo, HttpStatus.CREATED);
     }
 
@@ -105,8 +116,12 @@ public class BoardController {
      */
     @PutMapping("/delete/{boardNo}")
     @ApiOperation(value = "게시글 삭제")
-    public ResponseEntity<Integer> deleteBoard(@PathVariable int boardNo) {
-        int deletedBoardNo = boardService.deleteBoard(boardNo);
+    public ResponseEntity<Integer> deleteBoard(@PathVariable int boardNo, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        int deletedBoardNo = boardService.deleteBoard(boardNo, userNo);
+        if(deletedBoardNo < 0) {
+            return new ResponseEntity<Integer>(deletedBoardNo, HttpStatus.NOT_ACCEPTABLE);
+        }
         return new ResponseEntity<Integer>(deletedBoardNo, HttpStatus.CREATED);
     }
 
@@ -115,8 +130,12 @@ public class BoardController {
      */
     @PutMapping("/restore/{boardNo}")
     @ApiOperation(value = "게시글 복구")
-    public ResponseEntity<Integer> restoreBoard(@PathVariable int boardNo) {
-        int restoreBoardNo = boardService.restoreBoard(boardNo);
+    public ResponseEntity<Integer> restoreBoard(@PathVariable int boardNo, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        int restoreBoardNo = boardService.restoreBoard(boardNo, userNo);
+        if(restoreBoardNo < 0) {
+            return new ResponseEntity<Integer>(restoreBoardNo, HttpStatus.NOT_ACCEPTABLE);
+        }
         return new ResponseEntity<Integer>(restoreBoardNo, HttpStatus.CREATED);
     }
 
@@ -125,8 +144,9 @@ public class BoardController {
      */
     @PostMapping("/like")
     @ApiOperation(value = "게시글 좋아요 등록")
-    public ResponseEntity<Integer> addLikeToBoard(@RequestBody BoardDto.LikeRequestSaveDto likeRequestSaveDto) {
-        int addedLikeBoardNo = boardService.addLikeToBoard(likeRequestSaveDto);
+    public ResponseEntity<Integer> addLikeToBoard(@RequestBody BoardDto.LikeRequestSaveDto likeRequestSaveDto, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        int addedLikeBoardNo = boardService.addLikeToBoard(likeRequestSaveDto, userNo);
         return new ResponseEntity<Integer>(addedLikeBoardNo, HttpStatus.CREATED);
     }
 
@@ -135,18 +155,26 @@ public class BoardController {
      */
     @PostMapping("/dislike")
     @ApiOperation(value = "게시글 좋아요 삭제")
-    public ResponseEntity<Integer> deleteLikeToBoard(@RequestBody BoardDto.LikeRequestSaveDto likeRequestSaveDto) {
-        int addedLikeBoardNo = boardService.deleteLikeToBoard(likeRequestSaveDto);
+    public ResponseEntity<Integer> deleteLikeToBoard(@RequestBody BoardDto.LikeRequestSaveDto likeRequestSaveDto, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        int addedLikeBoardNo = boardService.deleteLikeToBoard(likeRequestSaveDto, userNo);
         return new ResponseEntity<Integer>(addedLikeBoardNo, HttpStatus.CREATED);
     }
 
     /**
      * 유저별 좋아요한 게시글 전체 조회
      */
-    @GetMapping("/like/{userNo}")
+    @GetMapping("/like")
     @ApiOperation(value = "유저별 좋아요 누른 게시글 전체 조회")
-    public ResponseEntity<List<BoardDto.BoardResponseDto>> findLikesByBoardNo(@PathVariable int userNo) {
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findLikesByBoardNo(HttpServletRequest req) {
+        int userNo = getUserNo(req);
         List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllLikesByUserNo(userNo);
         return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
+    }
+
+    public int getUserNo(HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.putAll(jwtService.get("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoLXRva2VuIiwiZXhwIjoxNjEyMjQyNTY1LCJ1c2VyIjp7InVzZXJObyI6MywidXNlcklkIjoic3RyaW5nIiwidXNlck5hbWUiOiJzdHJpbmciLCJ1c2VyRW1haWwiOiJzdHJpbmciLCJ1c2VyUHciOiIkMmEkMTAkSDl6TXR2VFJJa01jWDlJcEM5RFhYZXlKbzBqaEVWSUhmeGVkcGJPT3M2TDJNbTJGODRsNHEiLCJ1c2VyU2FsdCI6IiQyYSQxMCRIOXpNdHZUUklrTWNYOUlwQzlEWFhlIiwidXNlckJhc2ljQWRkcmVzcyI6InN0cmluZyIsInVzZXJEZXRhaWxBZGRyZXNzIjoic3RyaW5nIiwidXNlck5pY2siOiJzdHJpbmciLCJ1c2VyU2NvcmUiOjQyLCJ1c2VyUmVwb3J0Q250IjowLCJ1c2VyUGljIjoic3RyaW5nIiwidXNlckFjdGl2ZSI6MX0sImdyZWV0aW5nIjoic3RyaW5n64uYIO2ZmOyYge2VqeuLiOuLpC4ifQ.KGwjdxVv8sZYdutw0R2ETfdolcDwu3HR8Pf5kHvzgzQ"));
+        return (int) ((Map<String, Object>) resultMap.get("user")).get("userNo");
     }
 }

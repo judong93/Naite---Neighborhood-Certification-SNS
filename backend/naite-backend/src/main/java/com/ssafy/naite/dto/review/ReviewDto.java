@@ -26,7 +26,8 @@ public class ReviewDto {
             this.smallCategoryNo = smallCategoryNo;
         }
 
-        public Review toEntity() {
+        public Review toEntity(int userNo) {
+            this.board.setUserNo(userNo);
             return Review.builder()
                     .board(board)
                     .reviewStar(reviewStar)

@@ -20,28 +20,20 @@ public class MarketDto {
         private Board board;
         private int smallCategoryNo;
         private int marketCost;
-        private String marketPlace;
-        private int marketPerson;
-        private String time;
 
         @Builder
         public MarketSaveRequestDto(Board board, int smallCategoryNo, int marketCost, String marketPlace, int marketPerson, String time) {
             this.board = board;
             this.smallCategoryNo = smallCategoryNo;
             this.marketCost = marketCost;
-            this.marketPlace = marketPlace;
-            this.marketPerson = marketPerson;
-            this.time = time;
         }
 
-        public Market toEntity() {
+        public Market toEntity(int userNo) {
+            this.board.setUserNo(userNo);
             return Market.builder()
                     .board(board)
                     .smallCategoryNo(smallCategoryNo)
                     .marketCost(marketCost)
-                    .marketPlace(marketPlace)
-                    .marketPerson(marketPerson)
-                    .time(time)
                     .build();
         }
     }
@@ -55,20 +47,14 @@ public class MarketDto {
         private Board board;
         private int smallCategoryNo;
         private int marketCost;
-        private String marketPlace;
         private int marketIsCompleted;
-        private int marketPerson;
-        private String time;
 
         @Builder
         public MarketUpdateRequestDto(Board board, int smallCategoryNo, int marketCost, String marketPlace, int marketIsCompleted, int marketPerson, String time) {
             this.board = board;
             this.smallCategoryNo = smallCategoryNo;
             this.marketCost = marketCost;
-            this.marketPlace = marketPlace;
             this.marketIsCompleted = marketIsCompleted;
-            this.marketPerson = marketPerson;
-            this.time = time;
         }
     }
 
@@ -82,23 +68,14 @@ public class MarketDto {
         private Board board;
         private int smallCategoryNo;
         private int marketCost;
-        private String marketPlace;
         private int marketIsCompleted;
-        private int marketPerson;
-        private LocalDateTime time;
 
         public MarketResponseDto(Market market) {
             this.marketNo = market.getMarketNo();
             this.board = market.getBoard();
             this.smallCategoryNo = market.getSmallCategoryNo();
             this.marketCost = market.getMarketCost();
-            this.marketPlace = market.getMarketPlace();
             this.marketIsCompleted = market.getMarketIsCompleted();
-            this.marketPerson = market.getMarketPerson();
-            this.time = market.getMarketEndTime();
-            if (time.isBefore(LocalDateTime.now())) {
-                this.marketIsCompleted = 1;
-            }
         }
     }
 }
