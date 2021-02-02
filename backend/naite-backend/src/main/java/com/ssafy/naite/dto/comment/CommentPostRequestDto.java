@@ -13,7 +13,7 @@ public class CommentPostRequestDto {
     @ApiParam(value = "원댓글 인덱스")
     private int parentId; // 원댓글: 0, 답글: 원댓글 아이디
 
-    @ApiParam(value = "수정할 댓글 내용")
+    @ApiParam(value = "등록할 댓글 내용")
     private String content;
 
 }
