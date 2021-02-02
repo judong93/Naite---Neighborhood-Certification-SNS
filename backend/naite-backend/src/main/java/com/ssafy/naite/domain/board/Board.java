@@ -51,7 +51,6 @@ public class Board {
     @Column(nullable = false)
     private int boardIsDeleted;
 
-    @Builder
     public Board(int boardNo) {
         this.boardNo = boardNo;
     }
