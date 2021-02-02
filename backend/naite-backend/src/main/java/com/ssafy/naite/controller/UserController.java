@@ -93,7 +93,9 @@ public class UserController {
             authKeyService.save(new AuthKeySaveRequestDto(user, "empty", 0));
             return new Response("success", "회원가입 완료", null);
         } catch (Exception e) {
-            return new Response("error", e.getMessage(), null);
+            if (e.getMessage().equals("DuplicatedAll")) return new Response("error", "모두 중복", null);
+            else if (e.getMessage().equals("DuplicatedEmail")) return new Response("error", "이메일 중복", null);
+            else return new Response("error", "아이디 중복", null);
         }
     }
 
