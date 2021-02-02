@@ -2,6 +2,7 @@ package com.ssafy.naite.controller;
 
 import com.ssafy.naite.dto.market.MarketDto;
 import com.ssafy.naite.service.market.MarketService;
+import com.ssafy.naite.service.user.JwtService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
@@ -19,6 +23,7 @@ import java.util.List;
 public class MarketController {
 
     private final MarketService marketService;
+    private final JwtService jwtService;
 
     /**
      * 장터 게시글 전체 조회
@@ -55,8 +60,9 @@ public class MarketController {
      */
     @PostMapping("/insert")
     @ApiOperation(value = "장터 게시글 등록")
-    public ResponseEntity<Integer> insertMarket(@RequestBody MarketDto.MarketSaveRequestDto marketSaveRequestDto) {
-        int insertedMarketNo = marketService.insertMarket(marketSaveRequestDto);
+    public ResponseEntity<Integer> insertMarket(@RequestBody MarketDto.MarketSaveRequestDto marketSaveRequestDto, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        int insertedMarketNo = marketService.insertMarket(marketSaveRequestDto, userNo);
         return new ResponseEntity<Integer>(insertedMarketNo, HttpStatus.CREATED);
     }
 
@@ -65,8 +71,18 @@ public class MarketController {
      */
     @PutMapping("/update/{marketNo}")
     @ApiOperation(value = "장터 게시글 수정")
-    public ResponseEntity<Integer> updateMarket(@PathVariable int marketNo, @RequestBody MarketDto.MarketUpdateRequestDto marketUpdateRequestDto) {
-        int updatedMarketNo = marketService.updateMarket(marketNo, marketUpdateRequestDto);
+    public ResponseEntity<Integer> updateMarket(@PathVariable int marketNo, @RequestBody MarketDto.MarketUpdateRequestDto marketUpdateRequestDto, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        int updatedMarketNo = marketService.updateMarket(marketNo, marketUpdateRequestDto, userNo);
+        if(updatedMarketNo < 0) {
+            return new ResponseEntity<Integer>(updatedMarketNo, HttpStatus.NOT_ACCEPTABLE);
+        }
         return new ResponseEntity<Integer>(updatedMarketNo, HttpStatus.CREATED);
+    }
+
+    public int getUserNo(HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.putAll(jwtService.get(req.getHeader("auth-token")));
+        return (int) ((Map<String, Object>) resultMap.get("user")).get("userNo");
     }
 }

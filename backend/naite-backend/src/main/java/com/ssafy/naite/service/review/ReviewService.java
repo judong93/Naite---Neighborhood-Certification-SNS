@@ -51,20 +51,24 @@ public class ReviewService {
      * 리뷰 게시글 등록
      */
     @Transactional
-    public int insertReview(ReviewDto.ReviewSaveRequestDto reviewSaveRequestDto) {
-        return reviewRepository.save(reviewSaveRequestDto.toEntity()).getReviewNo();
+    public int insertReview(ReviewDto.ReviewSaveRequestDto reviewSaveRequestDto, int userNo) {
+        return reviewRepository.save(reviewSaveRequestDto.toEntity(userNo)).getReviewNo();
     }
 
     /**
      * 리뷰 게시글 수정
      */
     @Transactional
-    public int updateReview(int review_no, ReviewDto.ReviewUpdateRequestDto reviewUpdateRequestDto) {
+    public int updateReview(int review_no, ReviewDto.ReviewUpdateRequestDto reviewUpdateRequestDto, int userNo) {
         Review review = reviewRepository.findById(review_no).orElseThrow(() -> new IllegalAccessError("[review_no=" + review_no + "] 해당 게시글이 존재하지 않습니다."));
-        review.update(reviewUpdateRequestDto.getReviewStar(), reviewUpdateRequestDto.getSmallCategoryNo());
 
         Board newBoard = reviewUpdateRequestDto.getBoard();
+        newBoard.setBoardNo(review.getBoard().getBoardNo());
         Board board = boardRepository.findById(newBoard.getBoardNo()).orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
+        if(board.getUserNo() != userNo) {
+            return -1;
+        }
+        review.update(reviewUpdateRequestDto.getReviewStar(), reviewUpdateRequestDto.getSmallCategoryNo());
         board.update(newBoard.getBoardTitle(), newBoard.getBoardContent(), newBoard.getBoardPic(), newBoard.getUnknownFlag(), newBoard.getOpenFlag());
 
         return review_no;

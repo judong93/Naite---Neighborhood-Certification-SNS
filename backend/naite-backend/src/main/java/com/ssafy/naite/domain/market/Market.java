@@ -32,14 +32,8 @@ public class Market {
     @Column(nullable = false)
     private int marketIsCompleted;
 
-    private String marketPlace;
-
-    private int marketPerson;
-
-    private LocalDateTime marketEndTime;
-
     @Builder
-    public Market(int marketNo, Board board, int smallCategoryNo, int marketCost, int marketIsCompleted, String marketPlace, int marketPerson, String time) {
+    public Market(int marketNo, Board board, int smallCategoryNo, int marketCost, int marketIsCompleted) {
         this.marketNo = marketNo;
         this.board = board;
         board.setBoardCreatedAt(LocalDateTime.now());
@@ -47,18 +41,12 @@ public class Market {
         this.smallCategoryNo = smallCategoryNo;
         this.marketCost = marketCost;
         this.marketIsCompleted = marketIsCompleted;
-        this.marketPlace = marketPlace;
-        this.marketPerson = marketPerson;
-        this.marketEndTime = LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
     }
 
-    public void update(int smallCategoryNo, int marketCost, int marketIsCompleted, String marketPlace, int marketPerson, String time) {
+    public void update(int smallCategoryNo, int marketCost, int marketIsCompleted) {
         this.smallCategoryNo = smallCategoryNo;
         this.marketCost = marketCost;
         this.marketIsCompleted = marketIsCompleted;
-        this.marketPlace = marketPlace;
-        this.marketPerson = marketPerson;
-        this.marketEndTime = LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
     }
 
     public void marketClose() {

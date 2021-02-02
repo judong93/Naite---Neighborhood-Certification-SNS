@@ -2,12 +2,10 @@ package com.ssafy.naite.dto.board;
 
 import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.like.BoardLike;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +15,9 @@ public class BoardDto {
      * insert board dto
      */
     @Getter
+    @Setter
     @NoArgsConstructor
     public static class BoardSaveRequestDto {
-        private int userNo;
         private int bigCategoryNo;
         private String boardTitle;
         private String boardContent;
@@ -29,7 +27,6 @@ public class BoardDto {
 
         @Builder
         public BoardSaveRequestDto(int userNo, int bigCategoryNo, String boardTitle, String boardContent, String boardPic, int unknownFlag, int openFlag) {
-            this.userNo = userNo;
             this.bigCategoryNo = bigCategoryNo;
             this.boardTitle = boardTitle;
             this.boardContent = boardContent;
@@ -38,7 +35,7 @@ public class BoardDto {
             this.openFlag = openFlag;
         }
 
-        public Board toEntity() {
+        public Board toEntity(int userNo) {
             return Board.builder()
                     .userNo(userNo)
                     .bigCategoryNo(bigCategoryNo)
@@ -87,14 +84,15 @@ public class BoardDto {
         private int bigCategoryNo;
         private String boardTitle;
         private String boardContent;
-        private LocalDateTime boardCreatedAt;
-        private LocalDateTime boardUpdatedAt;
+        private String boardCreatedAt;
+        private String boardUpdatedAt;
         private int boardLikeCnt;
         private int unknownFlag;
         private int boardReportCnt;
         private int openFlag;
         private int boardIsDeleted;
         private List<Integer> usersWithLike = new ArrayList<Integer>();
+        private String userName;
 
         public BoardResponseDto(Board board) {
             this.boardNo = board.getBoardNo();
@@ -102,8 +100,8 @@ public class BoardDto {
             this.bigCategoryNo = board.getBigCategoryNo();
             this.boardTitle = board.getBoardTitle();
             this.boardContent = board.getBoardContent();
-            this.boardCreatedAt = board.getBoardCreatedAt();
-            this.boardUpdatedAt = board.getBoardUpdatedAt();
+            this.boardCreatedAt = board.getBoardCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
+            this.boardUpdatedAt = board.getBoardUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
             this.boardLikeCnt = board.getBoardLikeCnt();
             this.unknownFlag = board.getUnknownFlag();
             this.boardReportCnt = board.getBoardReportCnt();
@@ -118,17 +116,18 @@ public class BoardDto {
     @Getter
     @NoArgsConstructor
     public static class LikeRequestSaveDto {
-        private int userNo;
         private int boardNo;
 
         @Builder
-        LikeRequestSaveDto(int userNo, int boardNo) {
-            this.userNo = userNo;
+        LikeRequestSaveDto(int boardNo) {
             this.boardNo = boardNo;
         }
 
-        public BoardLike toEntity() {
-            return BoardLike.builder().userNo(userNo).boardNo(boardNo).build();
+        public BoardLike toEntity(int userNo) {
+            return BoardLike.builder()
+                    .userNo(userNo)
+                    .boardNo(boardNo)
+                    .build();
         }
     }
 
