@@ -52,6 +52,11 @@ public class User {
     private Byte userActive;
 
     @Builder
+    public User(int userNo) {
+        this.userNo = userNo;
+    }
+
+    @Builder
     public User(String userId, String userName, String userEmail, String userPw, String userSalt, String userBasicAddress, String userDetailAddress, String userNick, String userPic) {
         this.userId = userId;
         this.userName = userName;
