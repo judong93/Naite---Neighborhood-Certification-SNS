@@ -5,6 +5,8 @@ import com.ssafy.naite.dto.comment.CommentPostRequestDto;
 import com.ssafy.naite.dto.comment.CommentPutRequestDto;
 import com.ssafy.naite.dto.util.Response;
 import com.ssafy.naite.service.comment.CommentService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,45 +19,48 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
-    // TODO: 댓글 조회
+    @ApiOperation(value = "댓글 조회")
     @GetMapping("/{id}")
-    public Response getComment(@PathVariable("id") int boardId) {
+    public Response getComment(@ApiParam(value = "유저 토큰") @RequestHeader String userToken, @ApiParam(value = "게시글 인덱스") @PathVariable("id") int boardId) {
         List<CommentGetResponseDto> list;
         try {
-            list = commentService.getComments(boardId);
+            list = commentService.getComments(userToken, boardId);
         } catch (Exception e) {
             return new Response("error", "댓글 조회 실패", null);
         }
         return new Response("success", "댓글 조회 성공", list);
     }
 
-    // 댓글 등록
+
+    @ApiOperation(value = "댓글 등록")
     @PostMapping
-    public Response postComment(@RequestBody CommentPostRequestDto commentPostRequestDto) {
+    public Response postComment(@ApiParam(value = "유저 토큰") @RequestHeader String userToken, @RequestBody CommentPostRequestDto commentPostRequestDto) {
         try {
-            commentService.postComment(commentPostRequestDto);
+            commentService.postComment(userToken, commentPostRequestDto);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);
         }
         return new Response("success", "댓글 등록 성공", null);
     }
 
-    // 댓글 수정
+
+    @ApiOperation(value = "댓글 수정")
     @PutMapping("/{id}")
-    public Response putComment(@PathVariable("id") int commentId, @RequestBody CommentPutRequestDto commentPutRequestDto) {
+    public Response putComment(@ApiParam(value = "유저 토큰") @RequestHeader String userToken, @ApiParam(value = "수정할 댓글 인덱스") @PathVariable("id") int commentId, @RequestBody CommentPutRequestDto commentPutRequestDto) {
         try {
-            commentService.putComment(commentId, commentPutRequestDto);
+            commentService.putComment(userToken, commentId, commentPutRequestDto);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);
         }
         return new Response("success", "댓글 수정 성공", null);
     }
 
-    // 댓글 삭제
+
+    @ApiOperation(value = "댓글 삭제")
     @DeleteMapping("/{id}")
-    public Response deleteComment(@PathVariable("id") int commentId) {
+    public Response deleteComment(@ApiParam(value = "유저 토큰") @RequestHeader String userToken, @ApiParam(value = "삭제할 댓글 인덱스") @PathVariable("id") int commentId) {
         try {
-            commentService.deleteComment(commentId);
+            commentService.deleteComment(userToken, commentId);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);
         }
