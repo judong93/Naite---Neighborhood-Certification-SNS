@@ -14,12 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-//@AllArgsConstructor
 @Service
 public class UserService {
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
-//    private final Salt saltService;
     private  final Salt saltUtil;
 
     /** 로그인 */
@@ -37,15 +34,12 @@ public class UserService {
         }
     }
 
-    /**
-     * 회원가입
-     * @param requestDto
-     * @return
-     */
+    /** 회원가입 */
     @Transactional
     public User save(UserSignUpRequestDto requestDto) throws Exception{
-        Optional<User> existed = userRepository.findByUserEmail(requestDto.getUserEmail());
-        if (!existed.isPresent()) {
+        Optional<User> existedId = userRepository.findByUserId(requestDto.getUserId());
+        Optional<User> existedEmail = userRepository.findByUserEmail(requestDto.getUserEmail());
+        if (!existedEmail.isPresent() && !existedId.isPresent()) {
             // 패스워드 암호화
             String salt = BCrypt.gensalt();
             String encodedPw = BCrypt.hashpw(requestDto.getUserPw(), salt);
@@ -57,7 +51,9 @@ public class UserService {
             // 회원가입 진행
             return userRepository.save(user);
         } else {
-            throw new Exception("이미 가입된 회원입니다.");
+            if (existedEmail.isPresent() && existedId.isPresent()) throw new Exception("DuplicatedAll");
+            else if (existedEmail.isPresent()) throw new Exception("DuplicatedEmail");
+            else throw new Exception("DuplicatedId");
         }
     }
 
