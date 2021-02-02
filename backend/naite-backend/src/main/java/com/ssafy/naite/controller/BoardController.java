@@ -174,7 +174,7 @@ public class BoardController {
 
     public int getUserNo(HttpServletRequest req) {
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.putAll(jwtService.get("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoLXRva2VuIiwiZXhwIjoxNjEyMjQyNTY1LCJ1c2VyIjp7InVzZXJObyI6MywidXNlcklkIjoic3RyaW5nIiwidXNlck5hbWUiOiJzdHJpbmciLCJ1c2VyRW1haWwiOiJzdHJpbmciLCJ1c2VyUHciOiIkMmEkMTAkSDl6TXR2VFJJa01jWDlJcEM5RFhYZXlKbzBqaEVWSUhmeGVkcGJPT3M2TDJNbTJGODRsNHEiLCJ1c2VyU2FsdCI6IiQyYSQxMCRIOXpNdHZUUklrTWNYOUlwQzlEWFhlIiwidXNlckJhc2ljQWRkcmVzcyI6InN0cmluZyIsInVzZXJEZXRhaWxBZGRyZXNzIjoic3RyaW5nIiwidXNlck5pY2siOiJzdHJpbmciLCJ1c2VyU2NvcmUiOjQyLCJ1c2VyUmVwb3J0Q250IjowLCJ1c2VyUGljIjoic3RyaW5nIiwidXNlckFjdGl2ZSI6MX0sImdyZWV0aW5nIjoic3RyaW5n64uYIO2ZmOyYge2VqeuLiOuLpC4ifQ.KGwjdxVv8sZYdutw0R2ETfdolcDwu3HR8Pf5kHvzgzQ"));
+        resultMap.putAll(jwtService.get(req.getHeader("auth-token")));
         return (int) ((Map<String, Object>) resultMap.get("user")).get("userNo");
     }
 }
