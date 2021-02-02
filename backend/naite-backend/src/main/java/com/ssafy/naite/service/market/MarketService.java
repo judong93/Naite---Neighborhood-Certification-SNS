@@ -52,20 +52,24 @@ public class MarketService {
      * 장터 게시글 등록
      */
     @Transactional
-    public int insertMarket(MarketDto.MarketSaveRequestDto marketSaveRequestDto) {
-        return marketRepository.save(marketSaveRequestDto.toEntity()).getMarketNo();
+    public int insertMarket(MarketDto.MarketSaveRequestDto marketSaveRequestDto, int userNo) {
+        return marketRepository.save(marketSaveRequestDto.toEntity(userNo)).getMarketNo();
     }
 
     /**
      * 장터 게시글 수정
      */
     @Transactional
-    public int updateMarket(int marketNo, MarketDto.MarketUpdateRequestDto marketUpdateRequestDto) {
+    public int updateMarket(int marketNo, MarketDto.MarketUpdateRequestDto marketUpdateRequestDto, int userNo) {
         Market market = marketRepository.findById(marketNo).orElseThrow(() -> new IllegalAccessError("[market_no=" + marketNo + "] 해당 게시글이 존재하지 않습니다."));
-        market.update(marketUpdateRequestDto.getSmallCategoryNo(), marketUpdateRequestDto.getMarketCost(), marketUpdateRequestDto.getMarketIsCompleted(), marketUpdateRequestDto.getMarketPlace(), marketUpdateRequestDto.getMarketPerson(), marketUpdateRequestDto.getTime());
 
         Board newBoard = marketUpdateRequestDto.getBoard();
+        newBoard.setBoardNo(market.getBoard().getBoardNo());
         Board board = boardRepository.findById(newBoard.getBoardNo()).orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
+        if(board.getUserNo() != userNo) {
+            return -1;
+        }
+        market.update(marketUpdateRequestDto.getSmallCategoryNo(), marketUpdateRequestDto.getMarketCost(), marketUpdateRequestDto.getMarketIsCompleted());
         board.update(newBoard.getBoardTitle(), newBoard.getBoardContent(), newBoard.getBoardPic(), newBoard.getUnknownFlag(), newBoard.getOpenFlag());
 
         return marketNo;
