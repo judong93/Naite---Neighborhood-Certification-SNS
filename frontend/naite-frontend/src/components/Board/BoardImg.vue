@@ -67,7 +67,7 @@ export default {
     border-radius: 20px;
     /* background-color: #ffb5b5; */
     background-color:#3F9F47;
-    background-image: url('../assets/boardimg-main.png');
+    background-image: url('../../assets/boardimg-main.jpg');
     text-align: center;
     font-size: 40px;
     color: rgb(255, 255, 255);

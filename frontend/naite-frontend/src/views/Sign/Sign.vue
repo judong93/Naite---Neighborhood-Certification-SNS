@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import Login from '@/components/Login'
-import Signup from '@/components/Signup'
+import Login from '@/components/Sign/Login'
+import Signup from '@/components/Sign/Signup'
 
 
 
@@ -43,7 +43,8 @@ export default {
 <style>
 #sign {
     position:relative;
-    background: url('../assets/sign.jpg') no-repeat center center;
+    background: url('../../assets/sign.jpg') no-repeat center center;
+    background-size: 100vw 100vh;
     height: 100vh;   
     width:100vw;
     overflow:hidden; 

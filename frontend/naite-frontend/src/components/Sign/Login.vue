@@ -7,7 +7,7 @@
             <label for="id">ID</label><br>
             <input type="text" id='id' placeholder="아이디를 입력해주세요" v-model="params.userId"><br>
             <label for="password">PASSWORD</label><br>
-            <input type="password" id='password' placeholder="비밀번호를 입력해주세요" v-model="params.userPw"><br>
+            <input type="password" id='password' @keypress.enter="loginById" placeholder="비밀번호를 입력해주세요" v-model="params.userPw"><br>
         </form>
         <div id='login-checkbox'>
             <label for="id-save">아이디 저장</label>
@@ -59,8 +59,9 @@ export default {
             if (this.params.userId && this.params.userPw) {
                 axios.post(`${SERVER_URL}/user/sign/signin`,this.params)
                     .then(res=>{
-                        console.log(res.data)
-                        // localStorage.setItem('jwt',res.data.auth-token)
+                        
+                        localStorage.setItem('jwt',res.data['auth-token'])
+                        console.log('jwt',res.data['auth-token'])
                         this.$router.push({name:'Main'})
                         
                     })
@@ -130,6 +131,7 @@ export default {
     transform: translate(-50%,-55%);
     /* -webkit-animation: fadeout 2s; */
     transition: 0.3s;
+    /* background-color: #3f9f4773; */
     /* animation-fill-mode: forwards; */
     /* animation-fill-mode: none; */
 }

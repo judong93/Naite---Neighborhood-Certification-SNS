@@ -31,7 +31,7 @@
 <script>
 import Navbar from '@/components/Navbar'
 import Message from '@/components/Message'
-import BoardImg from '@/components/BoardImg'
+import BoardImg from '@/components/Board/BoardImg'
 
 export default {
   name: "GroupBuying",

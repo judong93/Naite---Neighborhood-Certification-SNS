@@ -1,33 +1,26 @@
 <template>
-    <div id="main">
-        <!-- <Navbar /> -->
+    <div id="maincategory">
+       
         <BoardImg :messagetitle='messagetitle' :message='message' :imgsrc='imgsrc' :onDetail='onDetail'/>
-        <BoardDetail :onDetail='onDetail'/>
-        <BoardList :onDetail='onDetail' @onDetailMethod='onDetailMethod' />
+        <BoardDetail :onDetail='onDetail' :boardNo='boardNo' />
+        <BoardList :onDetail='onDetail' :bigCategoryNo='bigCategoryNo' @onDetailMethod='onDetailMethod' />
         <CategoryBar />
-
-
-
         <button class="toDetail" @click='toDetail'>디테일보기</button>
         <button class="backdetail" @click='backdetail'>돌아가기</button>
-        <Message />
-        <button @click='t'>test</button>
+        <button @click='t' style='position:absolute;z-index:100'>tesast</button>
     </div>
     
 </template>
 <script>
-// import Navbar from '@/components/Navbar'
-import Message from '@/components/Message'
-import BoardImg from '@/components/BoardImg'
-import BoardDetail from '@/components/BoardDetail'
-import BoardList from '@/components/BoardList'
+
+import BoardImg from '@/components/Board/BoardImg'
+import BoardDetail from '@/components/Board/BoardDetail'
+import BoardList from '@/components/Board/BoardList'
 import CategoryBar from '@/components/CategoryBar'
 
 export default {
-    name:'Main',
+    name:'MainCategory',
     components:{
-        // Navbar,
-        Message,
         BoardImg,
         BoardDetail,
         BoardList,
@@ -35,10 +28,13 @@ export default {
     },
     data: function() {
         return {
+            bigCategoryNo:0,
             messagetitle:'나의 이웃테두리: 나이테',
             message:'당신이 모르는 동네이야기',
             imgsrc: 'boardimg-main.png',
             onDetail: false,
+            dumydata: ['#','번화가 번화가는 자유게시판','동사무소 동사무소는 질문게시판 질문해보세용',],
+            boardNo: 0,
             
         }
     },
@@ -54,12 +50,18 @@ export default {
         backdetail:function(){
             this.onDetail=false
         },
-        onDetailMethod:function(){
+        onDetailMethod:function(n){
             this.toDetail()
-            console.log('??')
+            this.boardNo = n
+        },
+        renderingList:function(){
+            this.bigCategoryNo = this.$route.params.bigCategoryNo
+            console.log(this.bigCategoryNo,'라우트변경')
+            this.message = this.dumydata[this.bigCategoryNo]
+
         },
         t:function() {
-            this.$router.push({name:'PostingForm'})
+            this.$router.push({name:'TestPosting'})
         }
 
         
@@ -67,13 +69,21 @@ export default {
     computed: {
 
     },
-
-    
+    watch: {
+        $route(to,from){
+            if (to.path !== from.path){
+                this.renderingList()
+            }
+        }
+    },
+    created(){        
+        this.renderingList()
+    } 
 }
 </script>
 
 <style>
-#main {
+#maincategory {
     position:relative;
     width: 1920px;
     height:969px;
@@ -93,4 +103,11 @@ export default {
     bottom:5%;
     left:0%;
 }
+
+.backdetail + button {
+    position:fixed;
+    bottom: 0%;
+    left: 0%;
+}
+
 </style>

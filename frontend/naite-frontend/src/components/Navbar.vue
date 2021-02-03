@@ -5,14 +5,13 @@
             나의 이웃테두리: 나이테
         </div>
         <div class="nav-link">
-            <a href="#">골목길</a>
-            <a href="#">번화가</a>
-            <a href="#">동사무소</a>
-            <a href="#">수군수군</a>
-            <a href="#">소리소문</a>
-            <a href="#">장터</a>
-            <a href="#">확성기</a>
-            
+            <a href="#" @click='showCategory(0)'>골목길</a>
+            <a href="#" @click='showCategory(1)'>번화가</a>
+            <a href="#" @click='showCategory(2)'>동사무소</a>
+            <a href="#" @click='showCategory(3)'>수군수군</a>
+            <a href="#" @click='showCategory(4)'>소리소문</a>
+            <a href="#" @click='showCategory(5)'>장터</a>
+            <a href="#" @click='showCategory(6)'>확성기</a>
         </div>
         <div class="nav-right">
             <!-- <input type="text" readonly/>
@@ -46,6 +45,17 @@ export default {
         }
     },
     methods:{
+        showCategory:function(num){
+            if (num===0) {
+                this.$router.push({name:'MainBoard'})
+            } else {
+                const nowNo = this.$route.params.bigCategoryNo
+                console.log(nowNo,num)
+                if (nowNo !== num){
+                    this.$router.push({name:'Board',params:{bigCategoryNo:num}})
+                }
+            }
+        }
     },
     computed: {
 
@@ -66,15 +76,13 @@ export default {
 
 }
 #navbar {
-    position:relative;
-    /* background-color: #C5E99B; */
+    position:absolute;
     background-color: rgb(250, 246, 240);
-    width:100%;
-    height:8%;    
+    width:1920px;
+    height:77.52px;    
     display: flex;
     font-family: font1; 
-     
-    
+    z-index: 1;
 }
 
 .nav-title {
