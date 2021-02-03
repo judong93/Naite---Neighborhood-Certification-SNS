@@ -1,10 +1,14 @@
 package com.ssafy.naite.controller;
 
+import com.ssafy.naite.domain.user.User;
+import com.ssafy.naite.dto.board.BoardDto;
 import com.ssafy.naite.dto.comment.CommentGetResponseDto;
 import com.ssafy.naite.dto.comment.CommentPostRequestDto;
 import com.ssafy.naite.dto.comment.CommentPutRequestDto;
+import com.ssafy.naite.dto.user.UserGetProfileResponseDto;
 import com.ssafy.naite.dto.util.Response;
 import com.ssafy.naite.service.comment.CommentService;
+import com.ssafy.naite.service.user.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
@@ -18,6 +22,7 @@ import java.util.List;
 @RequestMapping("/comment")
 public class CommentController {
     private final CommentService commentService;
+    private final UserService userService;
 
     @ApiOperation(value = "댓글 조회")
     @GetMapping("/{id}")
@@ -67,4 +72,16 @@ public class CommentController {
         return new Response("success", "댓글 삭제 성공", null);
     }
 
+    @ApiOperation(value = "유저별 댓글 쓴 게시글 조회")
+    @GetMapping("/user")
+    public Response getBoardByUserComment(@ApiParam(value = "유저 토큰") @RequestHeader("auth-token") String userToken,
+                                          @ApiParam(value = "유저 아이디") @RequestHeader("userId") String userId) {
+        try {
+            User user = userService.findByUserId(userId);
+            List<BoardDto.BoardResponseDto> result = commentService.getBoardByUserComment(user);
+            return new Response("success", "댓글 쓴 게시글 조회 성공", result);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+    }
 }
