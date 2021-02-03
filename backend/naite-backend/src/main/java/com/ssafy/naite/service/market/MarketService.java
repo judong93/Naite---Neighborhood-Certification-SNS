@@ -4,12 +4,15 @@ import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.board.BoardRepository;
 import com.ssafy.naite.domain.market.Market;
 import com.ssafy.naite.domain.market.MarketRepository;
+import com.ssafy.naite.domain.user.User;
+import com.ssafy.naite.dto.board.BoardDto;
 import com.ssafy.naite.dto.market.MarketDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,5 +76,13 @@ public class MarketService {
         board.update(newBoard.getBoardTitle(), newBoard.getBoardContent(), newBoard.getBoardPic(), newBoard.getUnknownFlag(), newBoard.getOpenFlag());
 
         return marketNo;
+    }
+
+    /**
+     * 유저별 장터 게시글 수 조회
+     */
+    public int getMarketByUser(int userNo) {
+        List<Board> boards = marketRepository.getMarketsByUserNo(userNo);
+        return boards.size();
     }
 }
