@@ -1,0 +1,137 @@
+<template>
+    <div id="mainboardlist">
+        <div class='mainboardBack' >
+            <div class="mainBoardFree" v-for='(no,idx) in boardNo' :key="idx">
+                <div class="mainBoardHead">
+                    <div class='leftPin'></div>
+                    <div class='mainBoardHeadTitle'>{{boardTitle[idx]}}</div>
+                    <div class='rightPin'></div>
+                </div>
+                <hr>
+                <div class="mainBoardBody" v-for='(data,idx2) in apiData[`${idx}`]' :key='idx2'> 
+                    <img src="../../assets/cha2.png" alt="" width='30px' height="30px">                    
+                    <p>{{data.boardTitle}}</p>
+                    <div>
+                        <i class="far fa-thumbs-up"></i>
+                        {{data.boardLikeCnt}}
+                        <i class="far fa-comment-dots"></i>
+                        {{data.boardReportCnt}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+import axios from 'axios'
+
+const SERVER_URL = 'http://localhost:8080'
+
+
+export default {
+    name:'MainBoardList',
+    data: function(){
+        return {
+            boardNo:[1,2,4],
+            boardTitle:['골목길소식','번화가소식','소리소문'],
+            apiData: {
+                '0': {},
+                '1': {},
+                '2': {},
+            }
+        }
+    },
+    created(){
+        for (let i=0;i<3;i++){
+            axios.get(`${SERVER_URL}/board/list/${this.boardNo[i]}`)
+                .then(res => {
+                    this.apiData[`${i}`] = res.data
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
+            }
+        console.log(this.apiData)
+
+    }
+    
+
+}
+</script>
+<style>
+#mainboardlist {
+    position:absolute;
+    top: 33%;
+    left: 20%;
+    width: 60%;
+    height:65%;
+    overflow:auto;
+    font-family: font1;
+}
+
+
+.mainboardBack {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-color:#3F9F47;
+    transform: translate(-50%,-50%);
+    border-top: 20px solid  #d69960;
+    border-bottom: 20px solid #d69960;
+    border-left: 20px solid #A87A4F;
+    border-right: 20px solid  #A87A4F;
+    display:flex;
+}
+
+.mainboardBack > div {
+    position:relative;
+    border-radius: 10px;
+    width: 30%;
+    height: 90%;    
+    margin: auto;
+    background-color: white;
+}
+.mainBoardHead {
+    display:flex;
+    justify-content: space-between;
+    
+}
+
+.mainBoardHeadTitle {
+    margin-top: 10px;
+}
+
+.mainBoardHead + hr {
+    width: 100%;
+}
+
+.leftPin, .rightPin {
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    border-radius: 10px;
+}
+
+.mainBoardBody {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid black;
+    
+}
+
+.mainBoardBody > p {
+    text-align: left;
+    width:200px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+
+
+</style>

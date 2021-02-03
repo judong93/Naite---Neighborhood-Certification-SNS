@@ -1,11 +1,13 @@
 <template>
     <div id="boarddetail">
-
+        {{apiData}}
     </div>
     
 </template>
 <script>
+import axios from 'axios'
 
+const SERVER_URL = 'http://localhost:8080'
 
 
 export default {
@@ -15,11 +17,12 @@ export default {
     },
     data: function() {
         return {
-
+            apiData:{},
         }
     },
     props:{
         onDetail:Boolean,
+        boardNo: Number,
     },
     methods:{
 
@@ -37,6 +40,16 @@ export default {
             } else {
                 detailWindow.style.right='-100%'
             }
+        },
+        boardNo: function(){
+            axios.get(`${SERVER_URL}/board/list/detail/${this.boardNo}`)
+                .then(res => {
+                    this.apiData = res.data
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
         }
     },
 

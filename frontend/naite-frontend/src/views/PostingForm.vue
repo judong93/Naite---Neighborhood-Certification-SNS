@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- <Navbar /> -->
-    <BoardImg :messagetitle='messagetitle' :message='message' :imgsrc='imgsrc' :onDetail='onDetail'/>
     <Message />
     <div style="display: flex; justify-content: center;">
       <div class="postingform-box">
@@ -60,18 +58,14 @@
 </template>
 
 <script>
-// import Navbar from '@/components/Navbar'
 import Message from '@/components/Message'
-import BoardImg from '@/components/BoardImg'
 import StarRating from '@/components/StarRating'
 import axios from 'axios'
 
 export default {  
   name: 'PostingForm',
   components: {
-    // Navbar,
     Message,
-    BoardImg,
     StarRating,
   },
   data: function () {

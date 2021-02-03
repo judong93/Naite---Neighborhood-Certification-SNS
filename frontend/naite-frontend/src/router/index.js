@@ -1,30 +1,31 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Firstpage from '@/views/Firstpage'
-import Sign from '@/views/Sign'
-import Main from '@/views/Main'
+import Sign from '@/views/Sign/Sign'
+import MainBoard from '@/views/Board/MainBoard'
+import Board from '@/views/Board/Board'
 import Profile from '@/views/Profile'
 import GroupBuying from '@/views/GroupBuying'
 import PostingForm from '@/views/PostingForm'
+import TestPosting from '@/views/TestPosting'
 import Test from '@/views/Test'
 import ProfileSettings from '@/views/ProfileSettings'
 
 Vue.use(VueRouter)
 const routes = [
   {
-    path: '/',
-    name: 'Firstpage',
-    component: Firstpage
-  },
-  {
     path:'/sign',
     name: 'Sign',
     component: Sign,
   },
   {
-    path:'/main',
-    name: 'Main',
-    component: Main,
+    path:'/mainboard',
+    name: 'MainBoard',
+    component: MainBoard,
+  },
+  {
+    path:'/board/:bigCategoryNo',
+    name: 'Board',
+    component: Board,
   },
   {
     path:'/profile',
@@ -40,6 +41,11 @@ const routes = [
     path:'/postingform',
     name: 'PostingForm',
     component: PostingForm,
+  },
+  {
+    path:'/testposting',
+    name: 'TestPosting',
+    component: TestPosting,
   },
   {
     path:'/test',

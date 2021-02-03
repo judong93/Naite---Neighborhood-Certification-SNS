@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Location from '@/components/Location'
+import Location from '@/components/Sign/Location'
 import axios from 'axios'
 
 const SERVER_URL = 'http://localhost:8080'
@@ -74,7 +74,10 @@ export default {
     },
     methods:{
         toLogin:function(){
-            this.$emit('changeLogin')            
+            this.$emit('changeLogin')    
+            for (let key in this.params) {
+                this.params[key] = ''
+            }   
         },
         openSearchLocation:function(){
             if (this.searchLocation) {
@@ -116,9 +119,14 @@ export default {
             }
             axios.get(`${SERVER_URL}/user/sign/email/auth`,{params})
                 .then(res => {
-                    console.log(res.data.message)
-                    this.emailConfirm = true
-                    alert('이메일 인증이 완료되었습니다!')
+                    if (res.data.response==='error') {
+                        alert(res.data.message)
+                    } else {
+                        this.emailConfirm = true
+                        alert('이메일 인증이 완료되었습니다!')
+                    }
+                    console.log(res.data)
+                    
                 })
                 .catch(err => {
                     alert(err.data.message)
@@ -140,9 +148,13 @@ export default {
                 
                 axios.post(`${SERVER_URL}/user/sign/signup`,this.params)
                     .then(res => {
-                        alert('회원가입이 완료되었습니다!')
-                        console.log(res)
-                        this.toLogin()
+                        if (res.data.response==='success'){
+                            alert('회원가입이 완료되었습니다!')    
+                            this.toLogin()
+                        } else {
+                            alert(res.data.message)
+                        }
+                        
                     })
                     .catch(err=>{
                         console.log(err)

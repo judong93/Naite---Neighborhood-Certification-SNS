@@ -1,27 +1,27 @@
 <template>
     <div id="boardlist">
-        <div class="listTitle" v-for='(list,idx) in test' :key='idx'> 
+        <div class="listTitle" v-for='(list,idx) in apiData' :key='idx'> 
             <div class="leftSide" v-if='idx%2===0'>
                 <div class='listUser'>
-                    <img src="../assets/cha2.png" alt="">
-                    <span>{{list.user}}</span>
+                    <img src="../../assets/cha2.png" alt="">
+                    <span>{{list.userNo}}</span>
                 </div>
-                <div class='listBasicInfo' @click='onDetailMethod'>
+                <div class='listBasicInfo' @click='onDetailMethod(list.boardNo)'>
                     <div class='title'>
-                        {{list.title}}
+                        {{list.boardTitle}}
                     </div>
                     <div class="listInfo">
                         <div>
                             <i class="far fa-comment-dots"></i>
-                            {{list.comment}}
+                            {{list.boardReportCnt}}
                         </div>
                         <div>
                             <i class="far fa-thumbs-up"></i>
-                            {{list.like}}
+                            {{list.boardLikeCnt}}
                         </div>
                         <div>
                             <i class="far fa-clock"></i>
-                            {{list.created}}
+                            {{list.boardCreatedAt}}
                         </div>
                         
                     </div>
@@ -31,27 +31,27 @@
                 
                 <div class='listBasicInfo' @click='onDetailMethod'>
                     <div class='title'>
-                        {{list.title}}
+                        {{list.boardTitle}}
                     </div>
                     <div class="listInfo">
                         <div>
                             <i class="far fa-comment-dots"></i>
-                            {{list.comment}}
+                            {{list.boardReportCnt}}
                         </div>
                         <div>
                             <i class="far fa-thumbs-up"></i>
-                            {{list.like}}
+                            {{list.boardLikeCnt}}
                         </div>
                         <div>
                             <i class="far fa-clock"></i>
-                            {{list.created}}
+                            {{list.boardCreatedAt}}
                         </div>
                         
                     </div>
                 </div>
                 <div class='listUser'>
-                    <img src="../assets/cha2.png" alt="">
-                    <span>{{list.user}}</span>
+                    <img src="../../assets/cha2.png" alt="">
+                    <span>{{list.userNo}}</span>
                 </div>
             </div>
         </div>
@@ -62,6 +62,10 @@
     
 </template>
 <script>
+import axios from 'axios'
+
+const SERVER_URL = 'http://localhost:8080'
+
 
 
 
@@ -72,20 +76,26 @@ export default {
     },
     data: function() {
         return {
-            test:[
-                {'title':'안녕하세요 이번에 여기로 이사온 이동희에요 호호호','user':'이동희','like':3,'comment':5,'created':'15:51'},
-                {'title':'여기 맛집아시는분?','user':'김민경','like':3,'comment':5,'created':'15:51'},
-                {'title':'동네 괜찮나요?','user':'박주동','like':1,'comment':2,'created':'15:56'},               
-                
-            ]
+            apiData: {},
         }
     },
     props:{
         onDetail:Boolean,
+        bigCategoryNo: [Number,String],
     },
     methods:{
-        onDetailMethod : function(){
-            this.$emit('onDetailMethod')
+        onDetailMethod : function(boardNo){
+            this.$emit('onDetailMethod',boardNo)
+        },
+        loadList: function(){
+            axios.get(`${SERVER_URL}/board/list/${this.bigCategoryNo}`)
+                .then(res=>{
+                    console.log(res.data)
+                    this.apiData = res.data
+                })
+                .catch(err=> {
+                    console.log(err)
+                })
         }
 
         
@@ -94,6 +104,10 @@ export default {
 
     },
     watch:{
+        bigCategoryNo:function(){
+            console.log('변경!')
+            this.loadList()
+        },
         onDetail:function(){
             const listbox=document.getElementById('boardlist')
             const titles = document.querySelectorAll('.title')
@@ -155,6 +169,9 @@ export default {
 
         }
     },
+    created:function(){
+        this.loadList()
+    }
 
     
 }
