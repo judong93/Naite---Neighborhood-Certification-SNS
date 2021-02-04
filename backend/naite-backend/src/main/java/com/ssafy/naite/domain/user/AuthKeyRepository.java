@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface AuthKeyRepository extends JpaRepository<AuthKey, Integer> {
-    Optional<AuthKey> findByUser(User user);
-    Optional<AuthKey> findByUserAndAuthType(User user, Integer authType);
+    Optional<AuthKey> findByUserEmail(String userEmail);
+    Optional<AuthKey> findByUserEmailAndAuthType(String userEmail, Integer authType);
 }

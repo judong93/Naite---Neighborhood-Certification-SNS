@@ -19,9 +19,7 @@ public class AuthKey {
 //    @Column(name = "user_no")
 //    private Integer userNo;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_no")
-    private User user;
+    private String userEmail;
 
     @Column(nullable = false, length = 200)
     private String authKey;
@@ -30,9 +28,8 @@ public class AuthKey {
     private Integer authType;
 
     @Builder
-    public AuthKey(User user, String authKey, @NotNull Integer authType) {
-//        this.userNo = userNo;
-        this.user = user;
+    public AuthKey(String userEmail, String authKey, @NotNull Integer authType) {
+        this.userEmail = userEmail;
         this.authKey = authKey;
         this.authType = authType;
     }

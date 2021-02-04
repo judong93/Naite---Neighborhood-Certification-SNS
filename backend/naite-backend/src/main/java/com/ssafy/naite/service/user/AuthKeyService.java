@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @RequiredArgsConstructor
 @Service
@@ -18,22 +20,26 @@ public class AuthKeyService {
 
     @Transactional
     public void save(AuthKeySaveRequestDto authKeySaveRequestDto) {
-        authKeyRepository.save(authKeySaveRequestDto.toEntity());
+        AuthKey existed = authKeyRepository.findByUserEmail(authKeySaveRequestDto.getUserEmail()).get();
+        if (existed != null) {
+            existed.updateKey(authKeySaveRequestDto.getAuthKey());
+            authKeyRepository.save(existed);
+        } else {
+            authKeyRepository.save(authKeySaveRequestDto.toEntity());
+        }
     }
 
-    @Transactional
-    public void update(Integer type, String email, String key) throws Exception{
-        User user = userRepository.findByUserEmail(email).get();
-        AuthKey authKey = authKeyRepository.findByUserAndAuthType(user,type).orElseThrow(() ->
-                new Exception("존재하지 않는 회원입니다."));
-        authKey.updateKey(key);
-    }
+//    @Transactional
+//    public void update(Integer type, String email, String key) throws Exception{
+//        User user = userRepository.findByUserEmail(email).get();
+//        AuthKey authKey = authKeyRepository.findByUserEmailAndAuthType(email,type).orElseThrow(() ->
+//                new Exception("존재하지 않는 회원입니다."));
+//        authKey.updateKey(key);
+//    }
 
-    @Transactional
+//    @Transactional
     public void compare(String userEmail, String certified, Integer keyType) throws Exception{
-        User user = userRepository.findByUserEmail(userEmail).orElseThrow(() ->
-                new Exception("존재하지 않는 회원입니다."));
-        AuthKey authKey = authKeyRepository.findByUserAndAuthType(user,keyType).get();
+        AuthKey authKey = authKeyRepository.findByUserEmailAndAuthType(userEmail,keyType).get();
         if (certified.equals(authKey.getAuthKey())) {
             authKey.updateKey("success");
             authKeyRepository.save(authKey);

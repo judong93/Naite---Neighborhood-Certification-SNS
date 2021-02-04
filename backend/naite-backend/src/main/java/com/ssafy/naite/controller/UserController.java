@@ -92,7 +92,7 @@ public class UserController {
         try {
             User user = userService.save(userSignUpRequestDto);
             // 이메일 인증 키 auth_key에 "empty"로 저장 -> 미인증 상태
-            authKeyService.save(new AuthKeySaveRequestDto(user, "empty", 0));
+            authKeyService.save(new AuthKeySaveRequestDto(user.getUserEmail(), "empty", 0));
             villageService.saveVillage(user, userSignUpRequestDto.getUserDong());
             return new Response("success", "회원가입 완료", null);
         } catch (Exception e) {
@@ -108,7 +108,8 @@ public class UserController {
 
         // user에 해당 user_email 있는지 확인
         User user = userService.findByEmail(emailSendRequestDto.getUserEmail());
-        if (user != null) {
+        if (user == null) {
+
             // 랜덤키 생성
             Random random = new Random();
             StringBuffer buffer = new StringBuffer();
@@ -120,13 +121,8 @@ public class UserController {
                 buffer.append(num);
             }
             String key = buffer.toString();
-
-            // auth_key 테이블 업데이트
-            try {
-                authKeyService.update(emailSendRequestDto.getType(), user.getUserEmail(), key);
-            } catch (Exception e) {
-                return new Response("error", e.getMessage(), null);
-            }
+            System.out.println("key " + key);
+            authKeyService.save(new AuthKeySaveRequestDto(emailSendRequestDto.getUserEmail(), key, 0));
 
             // 이메일 전송
             StringBuffer emailcontent = new StringBuffer();
@@ -143,8 +139,7 @@ public class UserController {
                             "		<span style=\"color: #02b875\">메일인증</span> 안내입니다." +
                             "	</h1>\n" +
                             "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">" +
-                            user.getUserName() +
-                            "		님 안녕하세요.<br />" +
+                            "		안녕하세요.<br />" +
 //                            "		나이테에 가입해 주셔서 진심으로 감사드립니다.<br />" +
                             "		아래의 인증 번호를 나이테 홈페이지에서 입력해주세요.<br />" +
                             "		감사합니다." +
@@ -155,12 +150,11 @@ public class UserController {
             );
             emailcontent.append("</body>");
             emailcontent.append("</html>");
-            emailService.sendMail(user.getUserEmail(), "[나이테] 이메일 인증", emailcontent.toString());
+            emailService.sendMail(emailSendRequestDto.getUserEmail(), "[나이테] 이메일 인증", emailcontent.toString());
 
             return new Response("success", "이메일 인증 코드 전송 완료", null);
         } else {
-            // 없으면 존재하지 않는 회원이라고 에러 보냄
-            return new Response("error", "존재하지 않는 회원입니다.", null);
+            return new Response("error", "이미 가입된 회원입니다.", null);
         }
 
     }
@@ -225,7 +219,7 @@ public class UserController {
     public ResponseEntity<String> updatePassword(@PathVariable String userId,@RequestBody PwUpdateRequestDto pwUpdateRequestDto) {
         try {
             User user = userService.updateUserPw(userId, pwUpdateRequestDto);
-            authKeyService.save(new AuthKeySaveRequestDto(user, "empty", 1));
+            authKeyService.save(new AuthKeySaveRequestDto(user.getUserEmail(), "empty", 1));
             return new ResponseEntity<String>("비밀번호 재설정 완료", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<String>("비밀번호 재설정 실패", HttpStatus.NOT_ACCEPTABLE);

@@ -80,7 +80,8 @@ public class UserService {
     @Transactional
     public User findByEmail(String email) {
         Optional<User> existed = userRepository.findByUserEmail(email);
-        return existed.get();
+        if (existed.isPresent()) return existed.get();
+        else return null;
     }
 
     /**
