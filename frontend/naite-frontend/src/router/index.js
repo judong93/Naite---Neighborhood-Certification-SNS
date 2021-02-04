@@ -6,7 +6,7 @@ import Board from '@/views/Board/Board'
 import Profile from '@/views/Profile'
 import GroupBuying from '@/views/GroupBuying'
 import PostingForm from '@/views/PostingForm'
-import TestPosting from '@/views/TestPosting'
+import Posting from '@/views/Posting'
 import Test from '@/views/Test'
 import ProfileSettings from '@/views/ProfileSettings'
 
@@ -43,9 +43,9 @@ const routes = [
     component: PostingForm,
   },
   {
-    path:'/testposting',
-    name: 'TestPosting',
-    component: TestPosting,
+    path:'/posting',
+    name: 'Posting',
+    component: Posting,
   },
   {
     path:'/test',
