@@ -13,23 +13,45 @@
             </div>
           </div>
           <div class="activities">
-            <p @click="postingList" :class="{ underline: activityCheckNum===1}" class="activity"> {{ posting }} </p><p>|</p>
-            <p @click="groupBuyingList" :class="{ underline: activityCheckNum===2}" class="activity"> {{ groupBuying }} </p><p>|</p>
-            <p @click="commentList" :class="{ underline: activityCheckNum===3}" class="activity"> {{ comment }} </p>
+            <p @click="postingList" :class="{ underline: activityCheckNum===1}" class="activity"> 게시글{{ postingCount }} </p><p>|</p>
+            <p @click="groupBuyingList" :class="{ underline: activityCheckNum===2}" class="activity"> 장터거래{{ marketCount }} </p><p>|</p>
+            <p @click="commentList" :class="{ underline: activityCheckNum===3}" class="activity"> 댓글단 글{{ commentCount }} </p>
           </div>
         </div>  
       </div>
       <hr>
-      <div class="profile-cards">
-        <div v-for="(card,idx) in Cards" :key="idx" class="profile-card">
-          <div>
-            <img :src="card.img" alt="" class="posting-img">
-          </div>
+      <div v-if="activityCheckNum===1" class="profile-cards">
+        <div v-for="(card,idx) in userPostings" :key="idx" class="profile-card">
+          <img :src="card.boardpic" alt="이미지가 없습니다!" class="posting-img">
           <div class="card-title">
-            {{ card.title }}
+            {{ card.boardTitle }}
           </div>
           <div class="card-content">
-            {{ card.content }}
+            {{ card.boardContent }}
+          </div>
+          <button class="card-delete-button">DELETE</button>
+        </div>
+      </div>
+      <div v-if="activityCheckNum===2" class="profile-cards">
+        <div v-for="(card,idx) in userMarketPostings" :key="idx" class="profile-card">
+          <img :src="card.img" alt="이미지가 없습니다!" class="posting-img">
+          <div class="card-title">
+            {{ card.board.boardTitle }}
+          </div>
+          <div class="card-content">
+            {{ card.board.boardContent }}
+          </div>
+          <button class="card-delete-button">DELETE</button>
+        </div>
+      </div>
+      <div v-if="activityCheckNum===3" class="profile-cards">
+        <div v-for="(card,idx) in userCommentPostings" :key="idx" class="profile-card">
+          <img :src="card.img" alt="이미지가 없습니다!" class="posting-img">
+          <div class="card-title">
+            {{ card.board.boardTitle }}
+          </div>
+          <div class="card-content">
+            {{ card.board.boardContent }}
           </div>
           <button class="card-delete-button">DELETE</button>
         </div>
@@ -42,6 +64,7 @@
 <script>
 import Navbar from '@/components/Basic/Navbar'
 import Message from '@/components/Basic/Message'
+import axios from 'axios'
 
 export default {
   name: 'Profile',
@@ -49,15 +72,17 @@ export default {
     return {
       imgData: "https://picsum.photos/200/300",
       userName: "user1",
-      posting: "게시글 6",
-      groupBuying: "장터거래 6",
-      comment: "댓글 6",
-      Cards: [],
+      postingCount: 0,
+      marketCount: 0,
+      commentCount: 0,
+      userPostings: [],
+      userMarketPostings: [],
+      userCommentPostings: [],
       postingCards: [
         {title: "**공원 뒤에서 공사한대요", img: "https://picsum.photos/200/300", content: "아이고.. 공사가 겹쳤네요. 더 시끄러워..."},
         {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
         {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
-        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
+        {title: "공사한대요", img: "", content: "시끄러울 것 같아요"},
         {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
         {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
       ],
@@ -96,7 +121,17 @@ export default {
     },
     selectSettings: function () {
       this.$router.push({ name: 'ProfileSettings' })
-    }
+    },
+    setToken:function(){
+      const token=localStorage.getItem('jwt')
+      const config = {
+          headers: {
+          'auth-token':`${token}`
+          }
+      }
+      console.log(config)
+      return config
+    },
   },
   components: {
     Navbar,
@@ -104,6 +139,32 @@ export default {
   },
   created: function () {
     this.Cards = this.postingCards
+    const config = this.setToken()
+    axios.get('http://i4a402.p.ssafy.io:8080/board/list/user', config)
+      .then((res) => {
+        this.postingCount = res.data.length
+        this.userPostings = res.data.slice(-7, -1)
+        console.log(this.userPostings)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    axios.get('http://i4a402.p.ssafy.io:8080/market/list/user', config)
+      .then((res) => {
+        this.marketCount = res.data.length
+        this.userMarketPostings = res.data
+        console.log(this.userMarketPostings)
+      })
+      .catch((err) => {s
+        console.log(err)
+      })
+    axios.get('http://i4a402.p.ssafy.io:8080/comment/user', config)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 }
 </script>
@@ -158,7 +219,7 @@ hr {
 .username-settings {
   display: flex;
   justify-content: center;
-  padding-left: 105px;
+  padding-left: 60px;
 }
 #settings-icon {
   margin-left: 20px;
@@ -166,7 +227,7 @@ hr {
 }
 .profile-info {
   position: relative;
-  width: 400px;
+  width: 450px;
 }
 .activities {
   display: flex;
@@ -198,19 +259,37 @@ hr {
   /* border-radius: 10%; */
 }
 .card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-wrap:break-word; 
+  line-height: 1.5em;
+  overflow: hidden;
   text-align: left;
   margin-top: 14px;
-  margin-left: 20px;
+  margin-left: 10px;
   font-weight: bold;
   font-size: 110%;
   height: 52px;
+  /* white-space: pre-line; */
+  text-overflow: ellipsis;
+  /* word-break: normal; */
 }
 .card-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-wrap:break-word; 
+  line-height: 1.5em;
+  overflow: hidden;
   text-align: left;
   margin-top: 8px;
-  padding-left: 20px;  
+  padding-left: 10px;  
   padding-right: 20px;  
   height: 48px;
+  white-space: normal;
+  text-overflow: ellipsis;
+  /* white-space: normal; */
 }
 .card-delete-button {
   margin-left: 55%;
