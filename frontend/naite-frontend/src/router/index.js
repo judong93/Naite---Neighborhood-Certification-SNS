@@ -3,12 +3,14 @@ import VueRouter from 'vue-router'
 import Sign from '@/views/Sign/Sign'
 import MainBoard from '@/views/Board/MainBoard'
 import Board from '@/views/Board/Board'
+import BoardDetail from '@/views/Board/BoardDetail'
 import Profile from '@/views/Profile'
 import MarketBoard from '@/views/MarketBoard'
 import PostingForm from '@/views/PostingForm'
 import Posting from '@/views/Posting'
 import Test from '@/views/Test'
 import ProfileSettings from '@/views/ProfileSettings'
+
 
 Vue.use(VueRouter)
 const routes = [
@@ -26,6 +28,11 @@ const routes = [
     path:'/board/:bigCategoryNo',
     name: 'Board',
     component: Board,
+  },
+  {
+    path:'/board/detail/:boardNo',
+    name: 'BoardDetail',
+    component: BoardDetail,
   },
   {
     path:'/profile',

@@ -29,16 +29,16 @@ export default {
         this.signNav = false
       }
     },
-    // token:function(){
-    //   const jwt = localStorage.getItem('jwt')
-    //   if (jwt&&window.location.pathname==='/sign') {
-    //     this.$router.push({name:'MainBoard'})
-    //   } else if (jwt&&window.location.pathname==='/'){
-    //     this.$router.push({name:'MainBoard'})
-    //   } else if (!jwt) {
-    //     this.$router.push({name:'Sign'})
-    //   }
-    // }
+    token:function(){
+      const jwt = localStorage.getItem('jwt')
+      if (jwt&&window.location.pathname==='/sign') {
+        this.$router.push({name:'MainBoard'})
+      } else if (jwt&&window.location.pathname==='/'){
+        this.$router.push({name:'MainBoard'})
+      } else if (!jwt) {
+        this.$router.push({name:'Sign'})
+      }
+    }
   },
   updated:function(){
     this.token()
@@ -48,7 +48,7 @@ export default {
   created:function(){
     this.token()
     this.showing()
-  }
+  },
 }
 
 </script>

@@ -20,8 +20,8 @@
             </select>
             <select name="소카테고리" v-model='smallCategoryNo' v-if='params.bigCategoryNo ==="5"'>
                 <option value="" selected disabled hidden >세부카테고리</option>
-                <option value="1">공동구매</option>
-                <option value="2">중고거래</option>
+                <option value="6">공동구매</option>
+                <option value="7">중고거래</option>
             </select>
             <select class='star' name="별점" v-model='reviewStar' v-if='params.bigCategoryNo==="3"'>
                 <option value="" selected disabled hidden >별점을 선택해주세요!</option>
@@ -31,17 +31,25 @@
                 <option value="4">&#xf005;&#xf005;&#xf005;&#xf005;</option>
                 <option value="5">&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;</option>
             </select>
+            <input type="text"
+            v-if='params.bigCategoryNo==="5"' 
+            v-model='marketCost' 
+            onKeyup='this.value=this.value.replace(/[^0-9]/g,"")'
+            style='color:white;'
+            class='marketCost'
+            placeholder="가격을 적어주세요(숫자)"
+            > <span style='color:white;' v-if='params.bigCategoryNo==="5"' >원</span>
         </div>
         <div class="postingBody">            
             <textarea id="postingContent" cols="87" rows="18" v-model="params.boardContent" :placeholder="contentExplain"></textarea>
             
         </div>
         <footer class='postingFooter'>
-            <div class="postingImg">&#xf302;</div>
-            <div>
-                익명으로 게시하기
-                <input type="checkbox">
-                <button>작성완료</button>
+            <div class="postingImg" @click='uploadImg'>&#xf302;</div>
+            <div style='color:white'>
+                <span v-if='params.bigCategoryNo === "1"'>익명으로 게시하기</span>
+                <input v-if='params.bigCategoryNo === "1"' type="checkbox" style='margin-left:5px'>
+                <button class='postingBtn' @click='createForm'>게시하기</button>
             </div>
 
         </footer>
@@ -57,39 +65,49 @@ export default {
             params:{
                 "bigCategoryNo": "",
                 "boardContent": "",
-                "boardPic": "",
+                "boardPic": "asd",
                 "boardTitle": "",
                 "openFlag": 0,
                 "unknownFlag": 0,
-                "userNo": 2,
             },
             smallCategoryNo:0,
             reviewStar:0,
             contentExplain:'',
-            flag:'실명'
+            marketCost:'',
         }
     },
     methods:{
         createForm:function(){
-            // 추후 널값확인필요
-            this.$emit('createForm',this.params)
+            const unKnown = document.querySelector('.postingFooter input')
 
-        },
-        toggleFlag:function(){
-            const btn = document.querySelector('.postingFlag')
-            if (this.flag==='실명'){
-                this.flag='익명'
-                this.params.openFlag = 0
+            if (this.params.bigCategoryNo==='1' && unKnown.checked) {
                 this.params.unknownFlag = 1
-                btn.style.backgroundColor='red'
-
             } else {
-                this.flag='실명'
-                this.params.openFlag = 1
                 this.params.unknownFlag = 0
-                btn.style.backgroundColor='rgb(167, 167, 245)'
+            } 
+
+            if(!this.params.boardTitle) {
+                alert('제목을 입력해주세요')
+            } else if(!this.params.bigCategoryNo) {
+                alert('카테고리를 선택해주세요!')
+            } else if (!this.params.boardContent){
+                alert('내용을 입력해주세요!')
+            } else if (this.params.bigCategoryNo === '3' && !this.smallCategoryNo){
+                alert('어떤 시설에 대한 리뷰인지 선택해주세요!')
+            } else if (this.params.bigCategoryNo ==='5'&& !this.smallCategoryNo){
+                alert('공동구매인지 중고거래인지 선택해주세요!') 
+            } else if (this.params.bigCategoryNo==='3' && this.smallCategoryNo && !this.reviewStar){
+                alert('평점을 선택해주세요!')
+            } else if (this.params.bigCategoryNo==='5' && this.smallCategoryNo && !this.marketCost){
+                alert('가격을 입력해주세요')
+            } else {
+                this.$emit('createForm',this.params,this.smallCategoryNo,this.reviewStar,this.marketCost)
             }
+        },
+        uploadImg:function(){
+            alert('이미지 업로드는 서비스 준비중입니다. 빠른 시일내로 수정하겠습니다.')
         }
+
     },
     watch:{
         params : function(){
@@ -99,7 +117,7 @@ export default {
         }
     },
     created:function(){
-        this.contentExplain = '카테고리를 선택해주세요!'+'\n*수군수군 및 장터는 세부 카테고리를 추가로 선택해주세요!*\n\n'+'1.번화가 : 번화가는 자유게시판 입니다. 자유롭고 다양한 글을 남겨주세요!\n\n2.동사무소 : 동사무소는 질문게시판입니다. 우리동네 혹은 이웃에게 궁금한 것을 적어보세요. \n\n 3. 수군수군 : 수군수군은 리뷰게시판입니다. 우리동네 시설을 이용하고 느끼신점을 작성해주세요!\n\n 4. 소리소문 : 소리소문은 핫이슈게시판입니다. 우리동네 할인정보/교통/동네 뉴스 등 여러 소식을 작성해주세요. \n\n 5.장터 : 장터는 공동구매 혹은 중고거래를 위한 게시판입니다. 이 게시판을 통해 알뜰한 소비하세요! \n\n **일부게시물은 익명사용이 제한됩니다.**'
+        this.contentExplain = '카테고리를 선택해주세요!'+'\n*수군수군 및 장터는 세부 카테고리를 추가로 선택해주세요!*\n\n'+'1.번화가 : 번화가는 자유게시판 입니다. 자유롭고 다양한 글을 남겨주세요!\n\n2.동사무소 : 동사무소는 질문게시판입니다. 우리동네 혹은 이웃에게 궁금한 것을 적어보세요. \n\n 3. 수군수군 : 수군수군은 리뷰게시판입니다. 우리동네 시설을 이용하고 느끼신점을 작성해주세요!\n\n 4. 소리소문 : 소리소문은 핫이슈게시판입니다. 우리동네 할인정보/교통/동네 뉴스 등 여러 소식을 작성해주세요. \n\n 5.장터 : 장터는 공동구매 혹은 중고거래를 위한 게시판입니다. 이 게시판을 통해 알뜰한 소비하세요! \n\n **번화가를 제외한 게시물은 익명사용이 제한됩니다.**'
         }
 }
 </script>
@@ -136,6 +154,8 @@ export default {
     height: 50px;
     margin-right: 20px;
     font-size: 32px;
+    color:white;
+    background-color: transparent;
     
     
 }
@@ -167,7 +187,6 @@ export default {
     outline: none;
     padding:10px;
     resize:none;
-
 }
 
 .postingFlag {
@@ -190,8 +209,10 @@ export default {
 
 .postingImg {
     font-family: 'Font Awesome 5 Free';
-    font-size: 30px;
+    font-size: 40px;
     margin: 10px 20px 0;
+    color:white;
+    cursor:pointer;
 }
 .postingImg + div{
     margin-top: 20px;
@@ -201,8 +222,17 @@ export default {
 }
 
 
+.postingBtn {
+    border:none;
+    outline: none;
+    border-radius: 10px;
+    color:white;
+    background-color: rgb(123, 123, 243);
+    height:30px;
+}
 
-
-
+.marketCost {
+    text-align: right;
+}
 
 </style>

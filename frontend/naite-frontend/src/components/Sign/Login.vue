@@ -40,7 +40,7 @@
 <script>
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:8080'
+const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 
 
@@ -72,7 +72,6 @@ export default {
                     .then(res=>{
                         
                         localStorage.setItem('jwt',res.data['auth-token'])
-                        console.log('jwt',res.data['auth-token'])
                         this.$router.push({name:'Main'})
                         
                     })

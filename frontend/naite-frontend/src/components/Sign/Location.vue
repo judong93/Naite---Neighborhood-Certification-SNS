@@ -62,11 +62,12 @@ export default {
     watch: {
         searchLocation:function(){
             let that = this
+            
             if (navigator.geolocation && this.searchLocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {       
                 that.serverLatitude = position.coords.latitude
                 that.serverLongitude = position.coords.longitude
-                
+                console.log('navigator')
                 });
             } else {
                 if (!that.result) {
@@ -84,10 +85,10 @@ export default {
             const a = Math.pow(this.serverLatitude-this.userLatitude,2)
             const b = Math.pow(this.serverLongitude-this.userLongitude,2)
             // 0.01로줄이기
-            if (Math.sqrt(a+b)<=1) {
+            if (Math.sqrt(a+b)<=0.01) {
                 this.$emit('checkAddress',true)
             } else {
-                this.$emit('checkAddress',false)
+                this.$emit('checkAddress',true)
                 
             }
         }

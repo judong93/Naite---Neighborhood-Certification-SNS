@@ -6,7 +6,7 @@
         <div class="listBox"> 
             <div class="Box">
                 <div v-for='(list,idx) in apiData' :key='idx'>
-                    <div class='list'>                                      
+                    <div class='list' @click='toDetail(list.boardNo)'>                                      
                         <div class='listInfo'>
                             <div class='listTitle'>
                                 <div>
@@ -19,8 +19,8 @@
                             
                             <div class='subList'>
                                 <div class='listUser'>
-                                    <div v-if='list.unKnownFlag'>익명</div>
-                                    <div v-else>{{list.userNo}}님의 글</div>
+                                    <div v-if='list.unknownFlag'>익명님이 {{categoryName[list.bigCategoryNo]}}에 남긴 글</div>
+                                    <div v-else>{{list.userNick}}님이 {{categoryName[list.bigCategoryNo]}}에 남긴 글</div>
                                 </div>
                                 <div>
                                     <i class="far fa-images"></i>
@@ -44,7 +44,7 @@
 <script>
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:8080'
+const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 export default {
     name:'BoardList',
@@ -54,6 +54,7 @@ export default {
     data: function() {
         return {
             apiData: {},
+            categoryName:['','번화가','동사무소','수군수군','소리소문','장터']
         }
     },
     props:{
@@ -63,9 +64,7 @@ export default {
         loadList: function(){
             axios.get(`${SERVER_URL}/board/list/${this.bigCategoryNo}`)
                 .then(res=>{
-                    console.log(res.data)
                     this.apiData = res.data
-                    console.log(res.data)
                 })
                 .catch(err=> {
                     console.log(err)
@@ -73,11 +72,13 @@ export default {
         },
         writeBoard:function(){
             this.$router.push({name:'Posting'})
-        }   
+        } ,
+        toDetail:function(num){
+            this.$router.push({name:'BoardDetail',params:{boardNo:num}})
+        }  
     },
     watch:{
         bigCategoryNo:function(){
-            console.log('변경!')
             this.loadList()
         },
     },
@@ -146,6 +147,7 @@ export default {
     justify-content: space-between;
     /* margin-left: 100px; */
     margin-left: 20px;
+    cursor: pointer;
 }
 
 .subList{    
@@ -177,6 +179,9 @@ export default {
 .listContent{
     font-size: 14px;
     margin: 5px 0;
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     
 }
 

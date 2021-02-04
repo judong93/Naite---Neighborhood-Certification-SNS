@@ -4,23 +4,24 @@
             <div class='signuphead'>회원가입</div>
             <div class="signupleftdiv">
                 <label for="#" >아이디</label><br>
-                <input type="text" v-model='params.userId' @keypress.space="checkSpace"><br>
+                <input id='idInput' type="text" v-model='params.userId' @keypress.space="checkSpace" @keypress.enter='idComfirmMet'><button  v-if='!idConfirm' class="idConfirm" @click='idComfirmMet'>중복확인</button><br>
                 <label for="#">비밀번호</label><br>
-                <input type="password" v-model='params.userPw' @keypress.space="checkSpace"><br>
+                <input type="password" v-model='params.userPw' @keypress.enter="checkSpace"><br>
                 <label for="#">비밀번호확인</label><br>
                 <input type="password" v-model='pwConfirm' @keypress.space="checkSpace"><br>   
                 <label for="#">닉네임</label><br>
-                <input type="text"  v-model='params.userNick' @keypress.space="checkSpace"><br>   
+                <input id='nickInput' type="text"  v-model='params.userNick' @keypress.space="checkSpace" @keypress.enter='nickemailComfirmMet'><button  v-if='!nickConfirm' class="nickConfirm" @click='nickemailComfirmMet'>중복확인</button><br>   
                 <label for="#">프로필사진</label><br>
-                <input type="text"  v-model='params.userPic' @keypress.space="checkSpace"><br>                
+                <input type="text"  v-model='params.userPic' @keypress.space="checkSpace"><br>   
+                <button class='backBtn' @click='toLogin'>뒤로가기</button>             
             </div>
             <div class="signuprightdiv">
                 <label for="#" >이름</label><br>
                 <input type="text"  v-model='params.userName' @keypress.space="checkSpace"><br>                
                 <label for="#">이메일</label><br>
-                <input class='emailInput' type="text"  v-model='params.userEmail' @keypress.space="checkSpace"><button  v-if='!emailConfirm' class="emailSend" @click='emailComfirm'>인증메일보내기</button><br>            
+                <input class='emailInput' type="text"  v-model='params.userEmail' @keypress.space="checkSpace" @keypress.enter='emailComfirm'><button  v-if='!emailConfirm' class="emailSend" @click='emailComfirm'>메일보내기</button><br>            
                 <label for="#">이메일인증</label><br>
-                <input class='emailInput' type="text"  v-model='userEmailConfirm' @keypress.space="checkSpace"><button v-if='!emailConfirm' class="emailSend" @click='emailMatching'>인증요청보내기</button><br>            
+                <input id='emailConfirmInput' type="text"  v-model='userEmailConfirm' @keypress.space="checkSpace" @keypress.enter='emailConfirmSend'><button v-if='!emailConfirm' class="emailConfirmSend" @click='emailMatching'>인증요청</button><br>            
                 <label for="#">주소</label><br>
                 <input type="text" 
                 placeholder="클릭하여 주소를 검색해주세요" 
@@ -32,7 +33,7 @@
                 <button class="signupComplete" @click='completeSignup'>회원가입</button>
             </div>
         </div>
-        <button @click='toLogin'>test: back to login or complete signup</button>
+       
 
         <Location :searchLocation='searchLocation' @selectAddress = 'selectAddress' @checkAddress='checkAddress' />
         
@@ -46,7 +47,7 @@
 import Location from '@/components/Sign/Location'
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:8080'
+const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 export default {
     name:'Signup',
@@ -59,6 +60,7 @@ export default {
             params: {
                 "userBasicAddress": "",
                 "userDetailAddress": "",
+                'userDong':'',
                 "userEmail": "",
                 "userId": "",
                 "userName": "",
@@ -70,6 +72,8 @@ export default {
             emailConfirm:false,
             userEmailConfirm:'',
             addressConfirm: false,
+            idConfirm:false,
+            nickConfirm:false,
         }
     },
     methods:{
@@ -78,6 +82,38 @@ export default {
             for (let key in this.params) {
                 this.params[key] = ''
             }   
+        },
+        idComfirmMet:function(){
+            const btn = document.getElementById('idInput')
+            axios.post(`${SERVER_URL}/user/sign/id/${this.params.userId}`)
+                .then(res=>{
+                    if(res.data.response==='error'){
+                        alert(res.data.message)
+                    } else {
+                        this.idConfirm = true
+                        alert(res.data.message)
+                        btn.style.width='80%'
+                    }
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
+        },
+        nickemailComfirmMet:function(){
+            const btn = document.getElementById('nickInput')
+            axios.post(`${SERVER_URL}/user/sign/nick/${this.params.userNick}`)
+                .then(res => {
+                    if(res.data.response==='error'){
+                        alert(res.data.message)
+                    } else {
+                        btn.style.width='80%'
+                        alert(res.data.message)
+                        this.nickConfirm = true
+                    }
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
         },
         openSearchLocation:function(){
             if (this.searchLocation) {
@@ -89,17 +125,23 @@ export default {
         selectAddress:function(result) {
             this.searchLocation = false
             this.params.userBasicAddress = result.address
+            this.params.userDong = result.bname2
         },
         emailComfirm:function(){
             const params = {
-                'type':0,
-                'userEmail':this.params.userEmail
+                'type':0,                
+                'userEmail':this.params.userEmail,
+                'userId': this.params.userId,
             }
-            console.log(params)
+            alert('메일을 보내는중입니다.')
             axios.post(`${SERVER_URL}/user/sign/email/send`,params)
-                .then(res => {
-                    console.log(res)
-                    alert('메일을 확인해주세요!')
+                .then(res => {   
+                    if (res.data.response ==='error'){
+                        alert(res.data.message)
+                    } else {
+
+                        alert('메일을 확인해주세요!')
+                    }
                     
                 })
                 .catch(err => {
@@ -116,6 +158,7 @@ export default {
             const params = {
                 'email':this.params.userEmail,
                 'key':this.userEmailConfirm,
+                'type':0,
             }
             axios.get(`${SERVER_URL}/user/sign/email/auth`,{params})
                 .then(res => {
@@ -124,6 +167,7 @@ export default {
                     } else {
                         this.emailConfirm = true
                         alert('이메일 인증이 완료되었습니다!')
+                        document.getElementById('emailConfirmInput').style.width='80%'
                     }
                     console.log(res.data)
                     
@@ -136,7 +180,7 @@ export default {
             let nullCheck = true
             let pwCheck = false
             for (let key in this.params) {
-                if (!this.params[key]) {
+                if (key!='userPic' &&!this.params[key]) {
                     nullCheck = false
                 }
             }
@@ -144,8 +188,10 @@ export default {
                 pwCheck = true
             }
 
-            if (pwCheck&&nullCheck&&this.emailConfirm&&this.addressConfirm) {
-                
+
+            if(!this.idConfirm || !this.nickConfirm){
+                alert('아이디 및 닉네임 중복확인을 진행해주세요')
+            } else if (pwCheck&&nullCheck&&this.emailConfirm&&this.addressConfirm) {
                 axios.post(`${SERVER_URL}/user/sign/signup`,this.params)
                     .then(res => {
                         if (res.data.response==='success'){
@@ -169,15 +215,7 @@ export default {
             } else if (!this.addressConfirm) {
                 alert('주소를 정확히 입력해주세요!')
             }
-            
-            
-
-
-
-
         },
-  
-      
     },
     computed: {
 
@@ -191,7 +229,7 @@ export default {
             if (this.toSignup){
                 showSignup.style.top = '0%'
             } else {
-                showSignup.style.top = '-100%'
+                showSignup.style.top = '-200%'
             }
         },
         emailConfirm:function(){
@@ -205,6 +243,18 @@ export default {
                 inputBox.forEach(function(box){
                     box.style.width='65%'
                 })
+            }
+        },
+        'params.userId':function(){
+            if (this.idConfirm) {
+                this.idConfirm = false
+                document.getElementById('idInput').style.width='70%'
+            }
+        },
+        'params.userNick':function(){
+            if(this.nickConfirm){
+                this.nickConfirm = false
+                document.getElementById('nickInput').style.width='70%'
             }
         }
     }
@@ -223,7 +273,7 @@ export default {
 #signup {
     position: absolute;
     height: 100%;
-    top:-100%;
+    top:-200%;
     width:100%;      
     transition: 0.3s;  
     font-family: font1;
@@ -285,7 +335,7 @@ export default {
     color:white
 }
 .signuprightdiv > .emailInput{
-    width: 65%;
+    width: 70%;
     
 }
 
@@ -303,19 +353,36 @@ export default {
     cursor:pointer;
 }
 
+.backBtn {
+    margin-top: 10%;
+    background-color: yellowgreen;
+    border: none;
+    color:white;
+    border-radius: 10px;
+    cursor:pointer;
+}
 
-.emailSend {
+.emailSend, .idConfirm, .nickConfirm, .emailConfirmSend {    
     font-size: 15px;
     border:none;
     border-radius: 10px;
-    height:5%;    
+    height:5%; 
+    background-color: rgb(114, 114, 114);   
+    color:white;
 }   
 
-
-
-button {
-    z-index: 100;
+#idInput {
+    width: 70%
 }
+
+#nickInput {
+    width: 70%;
+}
+
+#emailConfirmInput {
+    width: 72%;
+}
+
 
 
 
