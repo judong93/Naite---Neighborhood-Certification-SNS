@@ -155,7 +155,7 @@ export default {
         this.userMarketPostings = res.data
         console.log(this.userMarketPostings)
       })
-      .catch((err) => {s
+      .catch((err) => {
         console.log(err)
       })
     axios.get('http://i4a402.p.ssafy.io:8080/comment/user', config)
