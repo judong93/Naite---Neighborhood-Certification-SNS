@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
+import com.ssafy.naite.dto.user.PwUpdateRequestDto;
 import com.ssafy.naite.dto.user.UserGetProfileResponseDto;
 import com.ssafy.naite.dto.user.UserSignInRequestDto;
 import com.ssafy.naite.dto.user.UserSignUpRequestDto;
@@ -85,6 +86,7 @@ public class UserService {
     public User findByUserId(String id) {
         return userRepository.findByUserId(id).get();
     }
+
     /**
      * 유저 프로필 조회
      */
@@ -102,6 +104,23 @@ public class UserService {
                 .boardCnt(boardCnt)
                 .dealCnt(dealCnt)
                 .build();
+    }
+
+    /** 비밀번호 변경 */
+    @Transactional
+    public User updateUserPw(String id, PwUpdateRequestDto requestDto) throws Exception {
+        Optional<User> existed = userRepository.findByUserId(id);
+
+        if (!existed.isPresent()) throw new Exception("등록된 아이디가 없습니다.");
+        else {
+            User user = existed.get();
+            String salt = BCrypt.gensalt();
+            String encodedPw = BCrypt.hashpw(requestDto.getUserPw(), salt);
+
+            user.setUserPw(encodedPw);
+            user.setUserSalt(salt);
+            return user;
+        }
     }
 
 }
