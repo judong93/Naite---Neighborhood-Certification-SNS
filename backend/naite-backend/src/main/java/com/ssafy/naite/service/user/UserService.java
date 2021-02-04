@@ -1,9 +1,14 @@
 package com.ssafy.naite.service.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
+import com.ssafy.naite.dto.user.UserGetProfileResponseDto;
 import com.ssafy.naite.dto.user.UserSignInRequestDto;
 import com.ssafy.naite.dto.user.UserSignUpRequestDto;
+import com.ssafy.naite.service.board.BoardService;
+import com.ssafy.naite.service.market.MarketService;
 import com.ssafy.naite.service.util.Salt;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +22,15 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private  final Salt saltUtil;
+    private final CommentRepository commentRepository;
+    private final Salt saltUtil;
+    private final JwtService jwtService;
+    private final BoardService boardService;
+    private final MarketService marketService;
 
-    /** 로그인 */
+    /** 
+     * 로그인 
+     */
     public User signin(UserSignInRequestDto requestDto) throws  Exception{
         Optional<User> existed = userRepository.findByUserId(requestDto.getUserId());
         if(!existed.isPresent()) throw new Exception("등록된 아이디가 없습니다.");
@@ -34,7 +45,9 @@ public class UserService {
         }
     }
 
-    /** 회원가입 */
+    /** 
+     * 회원가입 
+     */
     @Transactional
     public User save(UserSignUpRequestDto requestDto) throws Exception{
         Optional<User> existedId = userRepository.findByUserId(requestDto.getUserId());
@@ -64,6 +77,31 @@ public class UserService {
     public User findByEmail(String email) {
         Optional<User> existed = userRepository.findByUserEmail(email);
         return existed.get();
+    }
+
+    /**
+     * 유저 아이디로 User 찾기
+     */
+    public User findByUserId(String id) {
+        return userRepository.findByUserId(id).get();
+    }
+    /**
+     * 유저 프로필 조회
+     */
+    @Transactional
+    public UserGetProfileResponseDto getProfile(String userId) throws Exception{
+        User user = userRepository.findByUserId(userId).get();
+        int commentCnt = commentRepository.findByUser(new User(user.getUserNo())).size(); // 댓글 수
+        int boardCnt = boardService.findAllBoardsByUserNo(user.getUserNo()).size(); // 게시글 수
+        int dealCnt = marketService.getMarketByUser(user.getUserNo()); // 장터거래 수
+
+        return UserGetProfileResponseDto.builder()
+                .userName(user.getUserName())
+                .userNick(user.getUserNick())
+                .commentCnt(commentCnt)
+                .boardCnt(boardCnt)
+                .dealCnt(dealCnt)
+                .build();
     }
 
 }
