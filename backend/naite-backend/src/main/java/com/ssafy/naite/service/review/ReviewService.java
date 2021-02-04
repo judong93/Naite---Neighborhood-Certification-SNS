@@ -107,4 +107,19 @@ public class ReviewService {
 
         return review_no;
     }
+
+    /**
+     * 유저별 리뷰 게시글 조회
+     */
+    public List<ReviewDto.ReviewResponseDto> getMarketListByUser(int userNo) {
+        return reviewRepository.findAll()
+                .stream()
+                .filter(review -> review.getBoard().getUserNo() == userNo)
+                .map(ReviewDto.ReviewResponseDto::new)
+                .map(reviewResponseDto -> {
+                    reviewResponseDto.setUserNick(userRepository.findById(userNo).get().getUserNick());
+                    return reviewResponseDto;
+                })
+                .collect(Collectors.toList());
+    }
 }

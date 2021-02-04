@@ -2,9 +2,11 @@ package com.ssafy.naite.service.market;
 
 import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.board.BoardRepository;
+import com.ssafy.naite.domain.like.LikeRepository;
 import com.ssafy.naite.domain.market.Market;
 import com.ssafy.naite.domain.market.MarketRepository;
 import com.ssafy.naite.domain.user.User;
+import com.ssafy.naite.domain.user.UserRepository;
 import com.ssafy.naite.dto.board.BoardDto;
 import com.ssafy.naite.dto.market.MarketDto;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ public class MarketService {
 
     private final MarketRepository marketRepository;
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
 
     private final Comparator<Market> comp = (m1,m2) -> m2.getBoard().getBoardCreatedAt().compareTo(m1.getBoard().getBoardCreatedAt());
 
@@ -31,7 +35,16 @@ public class MarketService {
      */
     @Transactional(readOnly = true)
     public List<MarketDto.MarketResponseDto> findAllMarkets() {
-        return marketRepository.findAll().stream().filter(market -> market.getBoard().getBoardIsDeleted() == 0).sorted(comp).map(MarketDto.MarketResponseDto::new).collect(Collectors.toList());
+        return marketRepository.findAll()
+                .stream()
+                .filter(market -> market.getBoard().getBoardIsDeleted() == 0)
+                .sorted(comp)
+                .map(MarketDto.MarketResponseDto::new)
+                .map(marketResponseDto -> {
+                    marketResponseDto.setUserNick(userRepository.findById(marketResponseDto.getBoard().getUserNo()).get().getUserNick());
+                    return marketResponseDto;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -39,7 +52,17 @@ public class MarketService {
      */
     @Transactional(readOnly = true)
     public List<MarketDto.MarketResponseDto> findAllMarketsByCategory(int smallCategoryNo) {
-        return marketRepository.findAll().stream().filter(market -> market.getBoard().getBoardIsDeleted() == 0).filter(market -> market.getSmallCategoryNo() == smallCategoryNo).sorted(comp).map(MarketDto.MarketResponseDto::new).collect(Collectors.toList());
+        return marketRepository.findAll()
+                .stream()
+                .filter(market -> market.getBoard().getBoardIsDeleted() == 0)
+                .filter(market -> market.getSmallCategoryNo() == smallCategoryNo)
+                .sorted(comp)
+                .map(MarketDto.MarketResponseDto::new)
+                .map(marketResponseDto -> {
+                    marketResponseDto.setUserNick(userRepository.findById(marketResponseDto.getBoard().getUserNo()).get().getUserNick());
+                    return marketResponseDto;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -48,7 +71,16 @@ public class MarketService {
     @Transactional(readOnly = true)
     public MarketDto.MarketResponseDto findMarketById(int marketNo) {
         Market market = marketRepository.findById(marketNo).orElseThrow(() -> new IllegalAccessError("[market_no=" + marketNo + "] 해당 게시글이 존재하지 않습니다."));
-        return new MarketDto.MarketResponseDto(market);
+        MarketDto.MarketResponseDto marketResponseDto = new MarketDto.MarketResponseDto(market);
+        marketResponseDto.setUserNick(userRepository.findById(marketResponseDto.getBoard().getUserNo()).get().getUserNick());
+
+        List<BoardDto.LikeResponseDto> likeResponseDtoList = likeRepository.findAll().stream().filter(boardLike -> boardLike.getBoardNo() == marketResponseDto.getBoard().getBoardNo()).map(BoardDto.LikeResponseDto::new).collect(Collectors.toList());
+        List<String> likeUserList = new ArrayList<String>();
+        for (BoardDto.LikeResponseDto likeResponseDto : likeResponseDtoList) {
+            likeUserList.add(userRepository.findById(likeResponseDto.getUserNo()).get().getUserNick());
+        }
+        marketResponseDto.setUsersWithLike(likeUserList);
+        return marketResponseDto;
     }
 
     /**
@@ -94,6 +126,10 @@ public class MarketService {
                 .stream()
                 .filter(market -> market.getBoard().getUserNo() == userNo)
                 .map(MarketDto.MarketResponseDto::new)
+                .map(marketResponseDto -> {
+                    marketResponseDto.setUserNick(userRepository.findById(userNo).get().getUserNick());
+                    return marketResponseDto;
+                })
                 .collect(Collectors.toList());
     }
 }
