@@ -140,7 +140,6 @@ public class UserController {
                             "	</h1>\n" +
                             "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">" +
                             "		안녕하세요.<br />" +
-//                            "		나이테에 가입해 주셔서 진심으로 감사드립니다.<br />" +
                             "		아래의 인증 번호를 나이테 홈페이지에서 입력해주세요.<br />" +
                             "		감사합니다." +
                             "	</p>"

@@ -16,9 +16,6 @@ public class AuthKey {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer authNo;
 
-//    @Column(name = "user_no")
-//    private Integer userNo;
-
     private String userEmail;
 
     @Column(nullable = false, length = 200)

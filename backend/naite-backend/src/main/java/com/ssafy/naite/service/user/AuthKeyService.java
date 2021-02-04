@@ -29,15 +29,6 @@ public class AuthKeyService {
         }
     }
 
-//    @Transactional
-//    public void update(Integer type, String email, String key) throws Exception{
-//        User user = userRepository.findByUserEmail(email).get();
-//        AuthKey authKey = authKeyRepository.findByUserEmailAndAuthType(email,type).orElseThrow(() ->
-//                new Exception("존재하지 않는 회원입니다."));
-//        authKey.updateKey(key);
-//    }
-
-//    @Transactional
     public void compare(String userEmail, String certified, Integer keyType) throws Exception{
         AuthKey authKey = authKeyRepository.findByUserEmailAndAuthType(userEmail,keyType).get();
         if (certified.equals(authKey.getAuthKey())) {
