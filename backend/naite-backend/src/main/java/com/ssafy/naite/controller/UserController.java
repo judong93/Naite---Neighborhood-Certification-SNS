@@ -2,19 +2,18 @@ package com.ssafy.naite.controller;
 
 import com.ssafy.naite.domain.user.User;
 //import com.ssafy.naite.dto.user.AuthKeySaveRequestDto;
-import com.ssafy.naite.dto.user.AuthKeySaveRequestDto;
-import com.ssafy.naite.dto.user.EmailSendRequestDto;
-import com.ssafy.naite.dto.user.UserSignInRequestDto;
-import com.ssafy.naite.dto.user.UserSignUpRequestDto;
+import com.ssafy.naite.dto.user.*;
 //import com.ssafy.naite.service.user.AuthKeyService;
 import com.ssafy.naite.dto.util.Response;
 
+import com.ssafy.naite.service.market.MarketService;
 import com.ssafy.naite.service.user.AuthKeyService;
 import com.ssafy.naite.service.user.EmailService;
 import com.ssafy.naite.service.user.JwtService;
 import com.ssafy.naite.service.user.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,6 +37,7 @@ import java.util.Random;
 public class UserController {
     private final UserService userService;
     private final AuthKeyService authKeyService;
+    private final MarketService marketService;
     private final EmailService emailService;
     private final JwtService jwtService;
 
@@ -170,6 +170,18 @@ public class UserController {
         try {
             authKeyService.compare(userEmail, certified);
             return new Response("success", "이메일 인증 완료", null);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/profile")
+    @ApiOperation(value = "프로필 조회")
+    public Response getProfile(@ApiParam(value = "유저 토큰") @RequestHeader("auth-token") String userToken,
+                               @ApiParam(value = "유저 아이디") @RequestHeader("userId") String userId) {
+        try {
+            UserGetProfileResponseDto dto = userService.getProfile(userId);
+            return new Response("success", "프로필 조회 성공", dto);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);
         }

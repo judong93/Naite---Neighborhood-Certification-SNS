@@ -3,9 +3,11 @@ package com.ssafy.naite.service.comment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.ssafy.naite.domain.board.Board;
+import com.ssafy.naite.domain.board.BoardRepository;
 import com.ssafy.naite.domain.comment.Comment;
 import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.user.User;
+import com.ssafy.naite.dto.board.BoardDto;
 import com.ssafy.naite.dto.comment.CommentGetResponseDto;
 import com.ssafy.naite.dto.comment.CommentPostRequestDto;
 import com.ssafy.naite.dto.comment.CommentPutRequestDto;
@@ -19,13 +21,16 @@ import springfox.documentation.spring.web.json.JsonSerializer;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final BoardRepository boardRepository;
     private final JwtService jwtService;
 
     @Transactional
@@ -58,7 +63,6 @@ public class CommentService {
         return returnList;
     }
 
-    //@Transactional
     public void postComment(String userToken, CommentPostRequestDto commentPostRequestDto) throws Exception {
         jwtService.checkValid(userToken);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -121,5 +125,18 @@ public class CommentService {
         } catch (Exception e) {
             throw new Exception("댓글 삭제 실패");
         }
+    }
+
+    public List<BoardDto.BoardResponseDto> getBoardByUserComment(User user) {
+        List<Board> boards = commentRepository.findByUserComment(user);
+        List<BoardDto.BoardResponseDto> result = new ArrayList<>();
+
+        for (int i = 0; i < boards.size(); i++) {
+            if (boards.get(i).getBoardIsDeleted() == 1) continue;
+            Board b = boardRepository.findById(boards.get(i).getBoardNo()).get();
+            result.add(new BoardDto.BoardResponseDto(b));
+        }
+
+        return result;
     }
 }
