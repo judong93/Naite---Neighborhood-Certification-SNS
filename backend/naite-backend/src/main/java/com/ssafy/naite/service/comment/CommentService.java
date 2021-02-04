@@ -34,19 +34,14 @@ public class CommentService {
     private final JwtService jwtService;
 
     @Transactional
-    public List<CommentGetResponseDto> getComments(String userToken, int boardId) throws Exception{
+    public List<CommentGetResponseDto> getComments(int userNo, int boardId) throws Exception{
         List<Comment> list = commentRepository.getCommentsByBoardId(new Board(boardId));
         List<CommentGetResponseDto> returnList = new ArrayList<>();
-
-        jwtService.checkValid(userToken);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(jwtService.get(userToken).get("user"));
-        User user = objectMapper.readValue(json, User.class);
 
         for (int i = 0; i < list.size(); i++) {
             Comment c = list.get(i);
             boolean userOwn = false;
-            if (c.getUser().getUserNo() == user.getUserNo()) {
+            if (c.getUser().getUserNo() == userNo) {
                 userOwn = true;
             }
             CommentGetResponseDto dto = CommentGetResponseDto.builder()
@@ -56,6 +51,7 @@ public class CommentService {
                     .userNick(c.getUser().getUserNick())
                     .parentId(c.getCommentParentId())
                     .userOwn(userOwn)
+                    .isUnknown(c.getCommentIsUnknown())
                     .build();
             returnList.add(dto);
         }
@@ -63,38 +59,29 @@ public class CommentService {
         return returnList;
     }
 
-    public void postComment(String userToken, CommentPostRequestDto commentPostRequestDto) throws Exception {
-        jwtService.checkValid(userToken);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(jwtService.get(userToken).get("user"));
-        User user = objectMapper.readValue(json, User.class);
-
+    public void postComment(int userNo, CommentPostRequestDto commentPostRequestDto) throws Exception {
         Comment comment = Comment.builder()
                 .commentContent(commentPostRequestDto.getContent())
                 .commentParentId(commentPostRequestDto.getParentId())
                 .commentReportCnt(0)
                 .commentIsDeleted(Byte.parseByte("0"))
                 .board(new Board(commentPostRequestDto.getBoardId()))
-                .user(new User(user.getUserNo()))
+                .user(new User(userNo))
                 .commentCreatedAt(new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9)))
+                .commentIsUnknown(Byte.valueOf(String.valueOf(commentPostRequestDto.getIsUnknown())))
                 .build();
 
         try {
             commentRepository.save(comment);
         } catch (Exception e) {
-            throw new Exception("댓글 등록 실패");
+            throw new Exception("댓글 작성 실패");
         }
     }
 
     @Transactional
-    public void putComment(String userToken, int commentId, CommentPutRequestDto commentPutRequestDto) throws Exception{
-        jwtService.checkValid(userToken);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(jwtService.get(userToken).get("user"));
-        User user = objectMapper.readValue(json, User.class);
-
+    public void putComment(int userNo, int commentId, CommentPutRequestDto commentPutRequestDto) throws Exception{
         Comment comment = commentRepository.findById(commentId).get();
-        if (comment.getUser().getUserNo() != user.getUserNo()) {
+        if (comment.getUser().getUserNo() != userNo) {
             throw new Exception("댓글을 쓴 사용자가 아닙니다.");
         }
         comment.updateTime();
@@ -108,14 +95,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(String userToken, int commentId) throws Exception{
-        jwtService.checkValid(userToken);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(jwtService.get(userToken).get("user"));
-        User user = objectMapper.readValue(json, User.class);
-
+    public void deleteComment(int userNo, int commentId) throws Exception{
         Comment comment = commentRepository.findById(commentId).get();
-        if (comment.getUser().getUserNo() != user.getUserNo()) {
+        if (comment.getUser().getUserNo() != userNo) {
             throw new Exception("댓글을 쓴 사용자가 아닙니다.");
         }
 

@@ -17,15 +17,17 @@ public class CommentGetResponseDto {
     private String content;
     private int parentId;
     private boolean userOwn;
+    private byte isUnknown;
 
     @Builder
-    public CommentGetResponseDto(String userNick, Timestamp createdAt, Timestamp updatedAt, String content, int parentId, boolean userOwn) {
+    public CommentGetResponseDto(String userNick, Timestamp createdAt, Timestamp updatedAt, String content, int parentId, boolean userOwn, byte isUnknown) {
         this.userNick = userNick;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.content = content;
         this.parentId = parentId;
         this.userOwn = userOwn;
+        this.isUnknown = isUnknown;
     }
 
 }

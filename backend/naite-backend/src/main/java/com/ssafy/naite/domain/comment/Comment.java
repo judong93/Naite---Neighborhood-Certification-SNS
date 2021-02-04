@@ -17,11 +17,11 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentNo;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "user_no")
     private User user;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "board_no")
     private Board board;
 
@@ -33,9 +33,10 @@ public class Comment {
     private Byte commentIsDeleted;
     private Integer commentReportCnt;
     private Integer commentParentId;
+    private Byte commentIsUnknown;
 
     @Builder
-    public Comment(Integer commentNo, User user, Board board, String commentContent, Timestamp commentCreatedAt, Timestamp commentUpdatedAt, Byte commentIsDeleted, Integer commentReportCnt, Integer commentParentId) {
+    public Comment(Integer commentNo, User user, Board board, String commentContent, Timestamp commentCreatedAt, Timestamp commentUpdatedAt, Byte commentIsDeleted, Integer commentReportCnt, Integer commentParentId, Byte commentIsUnknown) {
         this.commentNo = commentNo;
         this.board = board;
         this.user = user;
@@ -45,6 +46,7 @@ public class Comment {
         this.commentIsDeleted = commentIsDeleted;
         this.commentReportCnt = commentReportCnt;
         this.commentParentId = commentParentId;
+        this.commentIsUnknown = commentIsUnknown;
     }
 
     public void updateContent(String content) {

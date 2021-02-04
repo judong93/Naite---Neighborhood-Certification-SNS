@@ -85,6 +85,13 @@ public class UserService {
     }
 
     /**
+     * userNo로 user 찾기
+     */
+    public User findByUserNo(int userNo) {
+        return userRepository.findById(userNo).get();
+    }
+
+    /**
      * 유저 아이디로 User 찾기
      */
     public User findByUserId(String id) {
