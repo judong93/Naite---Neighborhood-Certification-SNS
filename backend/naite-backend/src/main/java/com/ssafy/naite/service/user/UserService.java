@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
+import com.ssafy.naite.domain.village.VillageRepository;
+
 import com.ssafy.naite.dto.user.PwUpdateRequestDto;
 import com.ssafy.naite.dto.user.UserGetProfileResponseDto;
 import com.ssafy.naite.dto.user.UserSignInRequestDto;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final VillageRepository villageRepository;
     private final Salt saltUtil;
     private final JwtService jwtService;
     private final BoardService boardService;
@@ -104,6 +107,24 @@ public class UserService {
                 .boardCnt(boardCnt)
                 .dealCnt(dealCnt)
                 .build();
+    }
+
+    /**
+     * 닉네임 중복 체크
+     */
+    public boolean checkDuplicateNick(String userNick){
+        Optional<User> existed = userRepository.findByUserNick(userNick);
+        if (existed.isPresent()) return true;
+        else return false;
+    }
+
+    /**
+     * 아이디 중복 체크
+     */
+    public boolean checkDuplicateId(String userId){
+        Optional<User> existed = userRepository.findByUserId(userId);
+        if (existed.isPresent()) return true;
+        else return false;
     }
 
     /** 비밀번호 변경 */

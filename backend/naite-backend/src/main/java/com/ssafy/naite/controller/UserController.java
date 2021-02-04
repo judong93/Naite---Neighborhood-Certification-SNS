@@ -11,6 +11,7 @@ import com.ssafy.naite.service.user.AuthKeyService;
 import com.ssafy.naite.service.user.EmailService;
 import com.ssafy.naite.service.user.JwtService;
 import com.ssafy.naite.service.user.UserService;
+import com.ssafy.naite.service.village.VillageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -40,6 +41,7 @@ public class UserController {
     private final MarketService marketService;
     private final EmailService emailService;
     private final JwtService jwtService;
+    private final VillageService villageService;
 
     @PostMapping("/sign/signin")
     @ApiOperation(value = "회원 로그인")
@@ -91,6 +93,7 @@ public class UserController {
             User user = userService.save(userSignUpRequestDto);
             // 이메일 인증 키 auth_key에 "empty"로 저장 -> 미인증 상태
             authKeyService.save(new AuthKeySaveRequestDto(user, "empty", 0));
+            villageService.saveVillage(user, userSignUpRequestDto.getUserDong());
             return new Response("success", "회원가입 완료", null);
         } catch (Exception e) {
             if (e.getMessage().equals("DuplicatedAll")) return new Response("error", "모두 중복", null);
@@ -185,6 +188,24 @@ public class UserController {
             return new Response("error", e.getMessage(), null);
         }
     }
+
+    @PostMapping("/sign/nick/{nick}")
+    @ApiOperation(value = "닉네임 중복 체크")
+    public Response checkDuplicateNick(@ApiParam(value = "닉네임") @PathVariable("nick") String userNick) throws Exception{
+       if (userService.checkDuplicateNick(userNick)) {
+           return new Response("error", "이미 존재하는 닉네임입니다.", null);
+       } else {
+           return new Response("success", "사용 가능한 닉네임 입니다.", null);
+       }
+    }
+
+    @PostMapping("/sign/id/{id}")
+    @ApiOperation(value = "아이디 중복 체크")
+    public Response checkDuplicateId(@ApiParam(value = "아이디") @PathVariable("id") String userId) throws Exception{
+        if (userService.checkDuplicateId(userId)) {
+            return new Response("error", "이미 존재하는 아이디 입니다.", null);
+        } else {
+            return new Response("success", "사용 가능한 아이디 입니다.", null);
 
     @GetMapping("/sign/{userEmail}")
     @ApiOperation(value = "아이디 찾기", notes = "이메일을 조회하여 사용자 아이디를 조회합니다.")
