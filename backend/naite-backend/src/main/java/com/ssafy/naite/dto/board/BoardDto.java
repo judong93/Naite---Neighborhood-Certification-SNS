@@ -86,6 +86,7 @@ public class BoardDto {
         private String boardContent;
         private String boardCreatedAt;
         private String boardUpdatedAt;
+        private String boardPic;
         private int boardLikeCnt;
         private int unknownFlag;
         private int boardReportCnt;
@@ -100,6 +101,7 @@ public class BoardDto {
             this.bigCategoryNo = board.getBigCategoryNo();
             this.boardTitle = board.getBoardTitle();
             this.boardContent = board.getBoardContent();
+            this.boardPic = board.getBoardPic();
             this.boardCreatedAt = board.getBoardCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
             this.boardUpdatedAt = board.getBoardUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
             this.boardLikeCnt = board.getBoardLikeCnt();
