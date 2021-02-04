@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 public class EmailSendRequestDto {
     private Integer type;
     private String userEmail;
+    private String userId;
 
     @Builder
-    public EmailSendRequestDto(Integer type, String userEmail) {
+    public EmailSendRequestDto(Integer type, String userEmail, String userId) {
         this.type = type;
         this.userEmail = userEmail;
+        this.userId = userId;
     }
 }

@@ -30,10 +30,4 @@ public class UserSignInRequestDto {
                 '}';
     }
 
-    public User toEntity(){
-        return User.builder()
-                .userId(userId)
-                .userPw(userPw)
-                .build();
-    }
 }
