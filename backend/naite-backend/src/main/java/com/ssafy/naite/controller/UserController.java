@@ -206,6 +206,8 @@ public class UserController {
             return new Response("error", "이미 존재하는 아이디 입니다.", null);
         } else {
             return new Response("success", "사용 가능한 아이디 입니다.", null);
+        }
+    }
 
     @GetMapping("/sign/{userEmail}")
     @ApiOperation(value = "아이디 찾기", notes = "이메일을 조회하여 사용자 아이디를 조회합니다.")
