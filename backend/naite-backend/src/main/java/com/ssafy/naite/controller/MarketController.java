@@ -46,6 +46,17 @@ public class MarketController {
     }
 
     /**
+     * 장터 게시글 유저별 조회
+     */
+    @GetMapping("/list/user")
+    @ApiOperation(value = "장터 게시글 유저별 조회")
+    public ResponseEntity<List<MarketDto.MarketResponseDto>> findAllMarketsByUser(HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        List<MarketDto.MarketResponseDto> result = marketService.getMarketListByUser(userNo);
+        return new ResponseEntity<List<MarketDto.MarketResponseDto>>(result, HttpStatus.OK);
+    }
+
+    /**
      * 장터 게시글 상세 조회
      */
     @GetMapping("/detail/{marketNo}")

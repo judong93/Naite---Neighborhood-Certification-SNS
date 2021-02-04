@@ -85,4 +85,15 @@ public class MarketService {
         List<Board> boards = marketRepository.getMarketsByUserNo(userNo);
         return boards.size();
     }
+
+    /**
+     * 유저별 장터 게시글 조회
+     */
+    public List<MarketDto.MarketResponseDto> getMarketListByUser(int userNo) {
+        return marketRepository.findAll()
+                .stream()
+                .filter(market -> market.getBoard().getUserNo() == userNo)
+                .map(MarketDto.MarketResponseDto::new)
+                .collect(Collectors.toList());
+    }
 }
