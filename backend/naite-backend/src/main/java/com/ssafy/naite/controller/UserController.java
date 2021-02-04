@@ -45,12 +45,12 @@ public class UserController {
 
     @PostMapping("/sign/signin")
     @ApiOperation(value = "회원 로그인")
-    public ResponseEntity<Map<String,Object>> signin(@RequestBody UserSignInRequestDto userSignInRequestDto, HttpServletResponse res){
-        Map<String,Object> resultMap = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> signin(@RequestBody UserSignInRequestDto userSignInRequestDto, HttpServletResponse res) {
+        Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
-        try{
+        try {
             User loginUser = userService.signin(userSignInRequestDto);
-            if(loginUser!=null) {
+            if (loginUser != null) {
                 // 토큰 생성
                 String token = jwtService.create(loginUser);
                 System.out.println(token);
@@ -66,7 +66,7 @@ public class UserController {
             resultMap.put("message", e.getMessage());
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<Map<String,Object>>(resultMap,status);
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
     @ApiOperation(value = "회원 정보 조회")
@@ -115,7 +115,7 @@ public class UserController {
             int num = 0;
             int size = 6; // 인증 키 자릿수
 
-            while(buffer.length() < size) {
+            while (buffer.length() < size) {
                 num = random.nextInt(10);
                 buffer.append(num);
             }
@@ -123,9 +123,9 @@ public class UserController {
 
             // auth_key 테이블 업데이트
             try {
-                authKeyService.update(user.getUserEmail(), key);
+                authKeyService.update(emailSendRequestDto.getType(), user.getUserEmail(), key);
             } catch (Exception e) {
-                return new Response("error",e.getMessage(),null);
+                return new Response("error", e.getMessage(), null);
             }
 
             // 이메일 전송
@@ -136,30 +136,29 @@ public class UserController {
             emailcontent.append("</head>");
             emailcontent.append("<body>");
             emailcontent.append(
-                    " <div" 																																																	+
-                            "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 400px; height: 600px; border-top: 4px solid #02b875; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"		+
-                            "	<h1 style=\"margin: 0; padding: 0 5px; font-size: 28px; font-weight: 400;\">"																															+
-                            "		<span style=\"font-size: 15px; margin: 0 0 10px 3px;\">NAITE</span><br />"																													+
-                            "		<span style=\"color: #02b875\">메일인증</span> 안내입니다."																																				+
-                            "	</h1>\n"																																																+
-                            "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">"																													+
-                            user.getUserName()																																																+
-                            "		님 안녕하세요.<br />"																																													+
-                            "		나이테에 가입해 주셔서 진심으로 감사드립니다.<br />"																																						+
-                            "		아래의 인증 번호를 가입 페이지에서 입력해주세요.<br />"																													+
-                            "		감사합니다."																																															+
+                    " <div" +
+                            "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 400px; height: 600px; border-top: 4px solid #02b875; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">" +
+                            "	<h1 style=\"margin: 0; padding: 0 5px; font-size: 28px; font-weight: 400;\">" +
+                            "		<span style=\"font-size: 15px; margin: 0 0 10px 3px;\">NAITE</span><br />" +
+                            "		<span style=\"color: #02b875\">메일인증</span> 안내입니다." +
+                            "	</h1>\n" +
+                            "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">" +
+                            user.getUserName() +
+                            "		님 안녕하세요.<br />" +
+//                            "		나이테에 가입해 주셔서 진심으로 감사드립니다.<br />" +
+                            "		아래의 인증 번호를 나이테 홈페이지에서 입력해주세요.<br />" +
+                            "		감사합니다." +
                             "	</p>"
-                            + "<b style=\"font-size: 20px; color: #02b875\"> 인증번호 : "+key+"</b>" +
-                            "	<div style=\"border-top: 1px solid #DDD; padding: 5px;\"></div>"																																		+
+                            + "<b style=\"font-size: 20px; color: #02b875\"> 인증번호 : " + key + "</b>" +
+                            "	<div style=\"border-top: 1px solid #DDD; padding: 5px;\"></div>" +
                             " </div>"
             );
             emailcontent.append("</body>");
             emailcontent.append("</html>");
-            emailService.sendMail(user.getUserEmail(), "[나이테] 회원가입 이메일 인증", emailcontent.toString());
+            emailService.sendMail(user.getUserEmail(), "[나이테] 이메일 인증", emailcontent.toString());
 
             return new Response("success", "이메일 인증 코드 전송 완료", null);
-        }
-        else {
+        } else {
             // 없으면 존재하지 않는 회원이라고 에러 보냄
             return new Response("error", "존재하지 않는 회원입니다.", null);
         }
@@ -168,10 +167,10 @@ public class UserController {
 
     @GetMapping("/sign/email/auth")
     @ApiOperation(value = "이메일 인증")
-    public Response update(@RequestParam("email") String userEmail, @RequestParam("key") String certified) throws Exception{
+    public Response update(@RequestParam("email") String userEmail, @RequestParam("key") String certified, @RequestParam("type") Integer keyType) throws Exception {
         // auth_key에 있는 값과 비교
         try {
-            authKeyService.compare(userEmail, certified);
+            authKeyService.compare(userEmail, certified, keyType);
             return new Response("success", "이메일 인증 완료", null);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);
@@ -207,6 +206,27 @@ public class UserController {
             return new Response("error", "이미 존재하는 아이디 입니다.", null);
         } else {
             return new Response("success", "사용 가능한 아이디 입니다.", null);
+
+    @GetMapping("/sign/{userEmail}")
+    @ApiOperation(value = "아이디 찾기", notes = "이메일을 조회하여 사용자 아이디를 조회합니다.")
+    public ResponseEntity<String> findUserIdByEmail(@PathVariable String userEmail) throws Exception {
+        try {
+            User user = userService.findByEmail(userEmail);
+            return new ResponseEntity<String>(user.getUserId(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("아이디 찾기 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "비밀번호 재설정", notes = "사용자의 인증 후 비밀번호를 재설정합니다.")
+    @PutMapping("/sign/password/{userId}")
+    public ResponseEntity<String> updatePassword(@PathVariable String userId,@RequestBody PwUpdateRequestDto pwUpdateRequestDto) {
+        try {
+            User user = userService.updateUserPw(userId, pwUpdateRequestDto);
+            authKeyService.save(new AuthKeySaveRequestDto(user, "empty", 1));
+            return new ResponseEntity<String>("비밀번호 재설정 완료", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("비밀번호 재설정 실패", HttpStatus.NOT_ACCEPTABLE);
         }
     }
 

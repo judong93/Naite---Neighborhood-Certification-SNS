@@ -78,8 +78,8 @@ public class BoardService {
                                                                             })
                                                                             .collect(Collectors.toList());
         int index = boardResponseDtoList.size();
-        if(index > 5) {
-            index = 5;
+        if(index > 6) {
+            index = 6;
         }
         return boardResponseDtoList.subList(0,index);
     }
