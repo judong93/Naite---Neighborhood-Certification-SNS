@@ -5,9 +5,17 @@
 
         <form action="#" class='login-form'>
             <label for="id">ID</label><br>
-            <input type="text" id='id' placeholder="아이디를 입력해주세요" v-model="params.userId"><br>
+            <input type="text" 
+            id='id' placeholder="아이디를 입력해주세요" 
+            @keypress.space='checkSpace'
+            v-model="params.userId"><br>
             <label for="password">PASSWORD</label><br>
-            <input type="password" id='password' @keypress.enter="loginById" placeholder="비밀번호를 입력해주세요" v-model="params.userPw"><br>
+            <input type="password" 
+            id='password' 
+            @keypress.enter="loginById" 
+            @keypress.space='checkSpace'
+            placeholder="비밀번호를 입력해주세요" 
+            v-model="params.userPw"><br>
         </form>
         <div id='login-checkbox'>
             <label for="id-save">아이디 저장</label>
@@ -54,6 +62,9 @@ export default {
             const loginDiv = document.getElementById('login')
             loginDiv.style.top = '200%'
             this.$emit('changeSignup')
+        },
+        checkSpace:function(){
+            event.returnValue=false;
         },
         loginById:function(){
             if (this.params.userId && this.params.userPw) {

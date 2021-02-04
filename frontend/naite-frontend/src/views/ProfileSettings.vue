@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar'
+import Navbar from '@/components/Basic/Navbar'
 
 export default {
   name: 'ProfileSettings',

@@ -37,7 +37,7 @@ export default {
 <style>
 #mainboardimg {
     position: absolute;
-    top:10%;
+    top:13%;
     height: 20%;
     width:60%;
     left: 20%;

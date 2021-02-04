@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import Message from '@/components/Message'
+import Message from '@/components/Basic/Message'
 import StarRating from '@/components/StarRating'
 import axios from 'axios'
 

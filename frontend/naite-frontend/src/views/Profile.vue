@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar'
-import Message from '@/components/Message'
+import Navbar from '@/components/Basic/Navbar'
+import Message from '@/components/Basic/Message'
 
 export default {
   name: 'Profile',

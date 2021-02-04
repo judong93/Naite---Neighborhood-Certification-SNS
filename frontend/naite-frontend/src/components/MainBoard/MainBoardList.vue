@@ -61,10 +61,10 @@ export default {
 <style>
 #mainboardlist {
     position:absolute;
-    top: 33%;
+    top: 36%;
     left: 20%;
     width: 60%;
-    height:65%;
+    height:62%;
     overflow:auto;
     font-family: font1;
 }

@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar'
-import Message from '@/components/Message'
+import Navbar from '@/components/Basic/Navbar'
+import Message from '@/components/Basic/Message'
 import BoardImg from '@/components/Board/BoardImg'
 
 export default {

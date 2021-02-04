@@ -1,63 +1,43 @@
 <template>
     <div id="boardlist">
-        <div class="listTitle" v-for='(list,idx) in apiData' :key='idx'> 
-            <div class="leftSide" v-if='idx%2===0'>
-                <div class='listUser'>
-                    <img src="../../assets/cha2.png" alt="">
-                    <span>{{list.userNo}}</span>
-                </div>
-                <div class='listBasicInfo' @click='onDetailMethod(list.boardNo)'>
-                    <div class='title'>
-                        {{list.boardTitle}}
-                    </div>
-                    <div class="listInfo">
-                        <div>
-                            <i class="far fa-comment-dots"></i>
-                            {{list.boardReportCnt}}
-                        </div>
-                        <div>
-                            <i class="far fa-thumbs-up"></i>
-                            {{list.boardLikeCnt}}
-                        </div>
-                        <div>
-                            <i class="far fa-clock"></i>
-                            {{list.boardCreatedAt}}
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="rightSide" v-else>
-                
-                <div class='listBasicInfo' @click='onDetailMethod'>
-                    <div class='title'>
-                        {{list.boardTitle}}
-                    </div>
-                    <div class="listInfo">
-                        <div>
-                            <i class="far fa-comment-dots"></i>
-                            {{list.boardReportCnt}}
-                        </div>
-                        <div>
-                            <i class="far fa-thumbs-up"></i>
-                            {{list.boardLikeCnt}}
-                        </div>
-                        <div>
-                            <i class="far fa-clock"></i>
-                            {{list.boardCreatedAt}}
-                        </div>
-                        
-                    </div>
-                </div>
-                <div class='listUser'>
-                    <img src="../../assets/cha2.png" alt="">
-                    <span>{{list.userNo}}</span>
-                </div>
-            </div>
+        <div class="writeBoard">
+            <span class='writeBoardNext' @click='writeBoard'>글 쓰기 </span>
         </div>
+        <div class="listBox"> 
+            <div class="Box">
+                <div v-for='(list,idx) in apiData' :key='idx'>
+                    <div class='list'>                                      
+                        <div class='listInfo'>
+                            <div class='listTitle'>
+                                <div>
+                                    {{list.boardTitle}}
+                                </div>
+                                <div class='listContent'>
+                                    {{list.boardContent}}
+                                </div>
+                            </div>
+                            
+                            <div class='subList'>
+                                <div class='listUser'>
+                                    <div v-if='list.unKnownFlag'>익명</div>
+                                    <div v-else>{{list.userNo}}님의 글</div>
+                                </div>
+                                <div>
+                                    <i class="far fa-images"></i>
+                                    이미지갯수보여주는식
+                                    <i class="far fa-thumbs-up"></i>
+                                    {{list.boardLikeCnt}}&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <i class="far fa-comment-dots"></i>
+                                    {{list.boardReportCnt}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-
-
+            </div>
+            
+        </div>
     </div>
     
 </template>
@@ -65,9 +45,6 @@
 import axios from 'axios'
 
 const SERVER_URL = 'http://localhost:8080'
-
-
-
 
 export default {
     name:'BoardList',
@@ -80,220 +57,139 @@ export default {
         }
     },
     props:{
-        onDetail:Boolean,
         bigCategoryNo: [Number,String],
     },
     methods:{
-        onDetailMethod : function(boardNo){
-            this.$emit('onDetailMethod',boardNo)
-        },
         loadList: function(){
             axios.get(`${SERVER_URL}/board/list/${this.bigCategoryNo}`)
                 .then(res=>{
                     console.log(res.data)
                     this.apiData = res.data
+                    console.log(res.data)
                 })
                 .catch(err=> {
                     console.log(err)
                 })
-        }
-
-        
-    },
-    computed: {
-
+        },
+        writeBoard:function(){
+            this.$router.push({name:'Posting'})
+        }   
     },
     watch:{
         bigCategoryNo:function(){
             console.log('변경!')
             this.loadList()
         },
-        onDetail:function(){
-            const listbox=document.getElementById('boardlist')
-            const titles = document.querySelectorAll('.title')
-            const imgs = document.querySelectorAll('.listUser>img')
-            const userName = document.querySelectorAll('.listUser>span')
-            const listInfos = document.querySelectorAll('.listInfo')
-            const bigLists = document.querySelectorAll('.listTitle')
-            if (this.onDetail){
-                listbox.style.width ='20%'
-                listbox.style.maxHeight ='75%'
-                listbox.style.left = '1%'
-                listbox.style.top = '23%'
-                
-                titles.forEach(function(title) {
-                    title.style.fontSize = '12px'
-                    title.style.height = '50px'
-                })
-                
-                imgs.forEach(function(img) {
-                    img.style.width = '40px';
-                    img.style.height = '40px';
-                })
-
-                userName.forEach(function(name) {
-                    name.style.fontSize = '5px';
-                })
-
-                listInfos.forEach(function(listInfo) {
-                    listInfo.style.display = 'none'
-                })
-                bigLists.forEach(function(bigList) {
-                    bigList.style.display='none'
-                })
-
-            } else {
-                listbox.style.width ='60%'
-                listbox.style.left = '20%'
-                listbox.style.top = '33%'
-                listbox.style.maxHeight ='65%'
-                titles.forEach(function(title) {
-                    title.style.fontSize = '20px'
-                })
-                imgs.forEach(function(img) {
-                    img.style.width = '80px';
-                    img.style.height = '80px';
-                })
-                
-                userName.forEach(function(name) {
-                    name.style.fontSize = '16px';
-                })
-                listInfos.forEach(function(listInfo) {
-                    listInfo.style.display = 'flex'
-                })
-                bigLists.forEach(function(bigList) {
-                    bigList.style.display='block'
-                })
-      
-            }
-
-        }
     },
     created:function(){
         this.loadList()
     }
-
-    
 }
 </script>
 
 <style>
 #boardlist {
+    font-family: font1;
+}
+
+
+.writeBoard {
+    position:absolute;
+    top: 24%;
+    left:19.7%;
+    width: 60%;
+    height: 2%;
+    text-align: right;
+}
+
+.writeBoardNext{
+    cursor:pointer;
+    font-size: 20px;
+    background-color: #3F9F47;
+    color:white;
+    padding: 5px 15px;
+    border-radius: 10px;
+    
+}
+
+
+.listBox{
     position:absolute;
     width: 60%;
-    max-height: 65%;
-    background-color:rgb(255, 255, 255);    
+    height: 70%;
+    /* background-color:#e5c09d; */
+    background-color:#Ffffff;
     left: 20%;
     border-radius: 20px;
-    top: 33%; 
+    top: 28%; 
     transition: 0.3s;
     overflow:auto;
+    overflow-x: hidden;
     border: 1px solid rgb(224, 224, 224);
-    display: block;
-}
-
-
-.leftSide {
-    position: relative;
     display:flex;
-    margin: 2% 2% 5%;
-    height: 80px;
-    border-radius: 20px;
-    padding: 1%;
 }
 
-
-.rightSide {
-    position: relative;
-    display:flex;
-    margin: 2% 2% 5%;
-    height: 80px;
-    border-radius: 20px;
-    padding: 1%;
-    justify-content: flex-end;
-}
-
-.listUser {
-    position:relative;
-    width: 100px;
-    height:100px;
-    overflow: hidden;
-    margin: 0 10px;
-    cursor:pointer;
-    transition:0.1s;
-    
-    
-}
-
-.listUser > img {
-    width: 80px;
-    height: 80px;
-    border: 1px solid rgb(184, 184, 184);
-    border-radius: 100px;
-}
-
-.listUser > span {
-    font-family: font1;
-    display: block;
-}
-
-
-
-.listBasicInfo {
-    font-family: font1;
-    position:relative;
-    margin-top: 1%;
+.Box {
     width: 100%;
     height: 100%;
-    cursor:pointer;
-}
-
-.title {
-    position:relative;
-    border-radius: 20px;
-    padding: 10px;
-    font-size: 20px;
-    background-color:rgba(168,122,79,0.5);
-    height: 100%;
-    max-width:80%;
+    border-right: 0.1px solid rgb(255, 255, 255);
+    padding-top: 10px;
 }
 
 
-.leftSide > .listBasicInfo > .title {
-    text-align: left;
+.list {   
+    display:flex;
+    /* border-bottom: 1px solid #ffffff; */
+    border-bottom: 1px solid #6e6e6e;
+    /* width:80%; */
+    width:100%;
+    justify-content: space-between;
+    /* margin-left: 100px; */
+    margin-left: 20px;
 }
 
-
-.rightSide > .listBasicInfo > .title {
-    text-align: right;
-    right:-20%;
+.subList{    
+    justify-content: space-between;
+    /* width: 550px; */
+    height:55px;
+    /* width:300px; */
+    width:480px;
 }
 
 .listInfo {
-    position: relative;
-    height:45%;
-    width: 80%;
-    margin-top: 1%;
+    margin:10px;
     display:flex;
 }
 
-.listInfo > div {
-    margin: 0 10px;
+
+
+.listTitle{
+    font-size: 23px;
+    text-align: left;
+    width:600px;
+    height:55px;
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
-.leftSide > .listBasicInfo > .listInfo {
-    justify-content: flex-start;
+
+.listContent{
+    font-size: 14px;
+    margin: 5px 0;
+    
 }
 
-.rightSide > .listBasicInfo > .listInfo {
-    left:20%;
-    justify-content: flex-end;
+
+.subList {
+    /* font-size: 10px; */
+    font-size: 12px;
+    text-align: right;
 }
 
-
-
-
-
-
+.listUser {
+    height:37px;
+    font-size: 15px;
+}
 
 </style>

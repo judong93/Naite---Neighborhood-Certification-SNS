@@ -69,7 +69,7 @@ export default {
 .navBorder {
     position:absolute;
     left:2%;
-    top:100%;
+    top:110%;
     width: 96%;
     border-bottom: 1px solid rgb(179, 179, 179);
     z-index: 0;
@@ -134,7 +134,7 @@ export default {
     position: absolute;
     border: solid 1px rgb(214, 213, 213);
     overflow: hidden;
-    background-image: url('../assets/cha2.png');
+    background-image: url('../../assets/cha2.png');
     background-size: 60px;
     background-repeat: no-repeat;
     background-position: center;
