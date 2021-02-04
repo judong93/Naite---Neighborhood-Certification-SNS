@@ -102,8 +102,8 @@ public class BoardDto {
             this.boardTitle = board.getBoardTitle();
             this.boardContent = board.getBoardContent();
             this.boardPic = board.getBoardPic();
-            this.boardCreatedAt = board.getBoardCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
-            this.boardUpdatedAt = board.getBoardUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
+            this.boardCreatedAt = board.getBoardCreatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
+            this.boardUpdatedAt = board.getBoardUpdatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
             this.boardLikeCnt = board.getBoardLikeCnt();
             this.unknownFlag = board.getUnknownFlag();
             this.boardReportCnt = board.getBoardReportCnt();
