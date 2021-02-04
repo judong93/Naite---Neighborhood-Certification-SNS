@@ -11,4 +11,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // null에 의한 오류를 최소화 하기 위해 리턴으로 Optional<T>를 받는다.
     Optional<User> findByUserEmail(String userEmail);
     Optional<User> findByUserId(String userId);
+    Optional<User> findByUserNick(String userNick);
 }

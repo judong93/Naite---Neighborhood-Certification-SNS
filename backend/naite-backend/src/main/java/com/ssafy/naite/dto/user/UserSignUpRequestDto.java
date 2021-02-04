@@ -29,6 +29,9 @@ public class UserSignUpRequestDto {
     @ApiParam(value = "유저 상세주소", required = true)
     private String userDetailAddress;
 
+    @ApiParam(value = "유저 법정동", required = true)
+    private String userDong;
+
     @ApiParam(value = "유저 닉네임", required = true)
     private String userNick;
 
@@ -36,13 +39,14 @@ public class UserSignUpRequestDto {
     private String userPic;
 
     @Builder
-    public UserSignUpRequestDto(String userId, String userName, String userEmail, String userPw, String userBasicAddress, String userDetailAddress, String userNick, String userPic) {
+    public UserSignUpRequestDto(String userId, String userName, String userEmail, String userPw, String userBasicAddress, String userDetailAddress, String userDong, String userNick, String userPic) {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPw = userPw;
         this.userBasicAddress = userBasicAddress;
         this.userDetailAddress = userDetailAddress;
+        this.userDong = userDong;
         this.userNick = userNick;
         this.userPic = userPic;
     }
@@ -56,6 +60,7 @@ public class UserSignUpRequestDto {
                 ", userPw='" + userPw + '\'' +
                 ", userBasicAddress='" + userBasicAddress + '\'' +
                 ", userDetailAddress='" + userDetailAddress + '\'' +
+                ", userDong='" + userDong + '\'' +
                 ", userNick='" + userNick + '\'' +
                 ", userPic='" + userPic + '\'' +
                 '}';
