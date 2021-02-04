@@ -10,8 +10,8 @@
                 <hr>
                 <div class="mainBoardBody" v-for='(data,idx2) in apiData[`${idx}`]' :key='idx2'> 
                     <img src="../../assets/cha2.png" alt="" width='30px' height="30px">                    
-                    <p>{{data.boardTitle}}</p>
-                    <div>
+                    <p @click='toDetail(data.boardNo)' style='cursor:pointer'>{{data.boardTitle}}</p>
+                    <div @click='toDetail(data.boardNo)' style='cursor:pointer'>
                         <i class="far fa-thumbs-up"></i>
                         {{data.boardLikeCnt}}
                         <i class="far fa-comment-dots"></i>
@@ -25,7 +25,7 @@
 <script>
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:8080'
+const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 
 export default {
@@ -41,9 +41,14 @@ export default {
             }
         }
     },
+    methods:{
+        toDetail:function(num){
+            this.$router.push({name:'BoardDetail',params:{boardNo:num}})
+        }  
+    },
     created(){
         for (let i=0;i<3;i++){
-            axios.get(`${SERVER_URL}/board/list/${this.boardNo[i]}`)
+            axios.get(`${SERVER_URL}/board/list/top/${this.boardNo[i]}`)
                 .then(res => {
                     this.apiData[`${i}`] = res.data
                 })

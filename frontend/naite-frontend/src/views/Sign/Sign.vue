@@ -52,16 +52,16 @@ export default {
 }
 
 .bgColor {
-  width:100%;
-  height:100%;
+  width:1000%;
+  height:1000%;
   background-color: rgba(0, 0, 0, 0.7);
 
 }
 
-@media screen and (max-width: 1800px) {
+/* @media screen and (max-width: 1800px) {
   #sign {
     overflow: auto;
   }
-}
+} */
 
 </style>

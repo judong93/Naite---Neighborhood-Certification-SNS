@@ -1,7 +1,7 @@
 <template>
     <nav id="navbar">
         <div class="navBorder"></div>
-        <div class="nav-title">
+        <div class="nav-title" @click='showCategory(0)'>
             나의 이웃테두리: 나이테
         </div>
         <div class="nav-link">
@@ -23,8 +23,8 @@
             <span>user1 님</span>
             <div class="nav-status">
                 <div class="statusHover">   
-                    <a href="#">내 프로필</a> <br>
-                    <a href="#">로그아웃</a>
+                    <a href="#" @click='profile'>내 프로필</a> <br>
+                    <a href="#" @click='logout'>로그아웃</a>
                 </div>
             </div>
         </div>
@@ -48,13 +48,23 @@ export default {
         showCategory:function(num){
             if (num===0) {
                 this.$router.push({name:'MainBoard'})
-            } else {
+            } else if (num===5){
+                this.$router.push({name:'MarketBoard'})
+            } 
+            else {
                 const nowNo = this.$route.params.bigCategoryNo
                 console.log(nowNo,num)
                 if (nowNo !== num){
                     this.$router.push({name:'Board',params:{bigCategoryNo:num}})
                 }
             }
+        },
+        logout:function(){
+            localStorage.removeItem('jwt')
+            this.$router.push({name:'Sign'})
+        },
+        profile:function(){
+            this.$router.push({name:'Profile'})
         }
     },
     computed: {
