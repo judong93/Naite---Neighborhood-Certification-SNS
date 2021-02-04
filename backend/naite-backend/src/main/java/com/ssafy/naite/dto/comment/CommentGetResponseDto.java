@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 @Getter
 @NoArgsConstructor
 public class CommentGetResponseDto {
+    private Integer commentNo;
     @ApiParam(value = "유저 닉네임")
     private String userNick;
     private Timestamp createdAt;
@@ -20,7 +21,8 @@ public class CommentGetResponseDto {
     private byte isUnknown;
 
     @Builder
-    public CommentGetResponseDto(String userNick, Timestamp createdAt, Timestamp updatedAt, String content, int parentId, boolean userOwn, byte isUnknown) {
+    public CommentGetResponseDto(Integer commentNo, String userNick, Timestamp createdAt, Timestamp updatedAt, String content, int parentId, boolean userOwn, byte isUnknown) {
+        this.commentNo = commentNo;
         this.userNick = userNick;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;

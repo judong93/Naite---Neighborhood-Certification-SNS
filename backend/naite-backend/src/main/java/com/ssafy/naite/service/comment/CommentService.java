@@ -45,6 +45,7 @@ public class CommentService {
                 userOwn = true;
             }
             CommentGetResponseDto dto = CommentGetResponseDto.builder()
+                    .commentNo(c.getCommentNo())
                     .content(c.getCommentContent())
                     .createdAt(c.getCommentCreatedAt())
                     .updatedAt(c.getCommentUpdatedAt())
