@@ -34,7 +34,7 @@ public class BoardService {
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
-                    boardResponseDto.setUserName(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                     boardResponseDto.setUserNo(0);
                     return boardResponseDto;
                 })
@@ -53,7 +53,7 @@ public class BoardService {
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
-                    boardResponseDto.setUserName(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                     boardResponseDto.setUserNo(0);
                     return boardResponseDto;
                 })
@@ -72,7 +72,7 @@ public class BoardService {
                                                                             .sorted(Comparator.comparingInt(Board::getBoardLikeCnt).reversed())
                                                                             .map(BoardDto.BoardResponseDto::new)
                                                                             .map(boardResponseDto -> {
-                                                                                boardResponseDto.setUserName(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                                                                                boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                                                                                 boardResponseDto.setUserNo(0);
                                                                                 return boardResponseDto;
                                                                             })
@@ -96,7 +96,7 @@ public class BoardService {
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
-                    boardResponseDto.setUserName(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                     boardResponseDto.setUserNo(0);
                     return boardResponseDto;
                 })
@@ -115,7 +115,7 @@ public class BoardService {
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
-                    boardResponseDto.setUserName(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                     boardResponseDto.setUserNo(0);
                     return boardResponseDto;
                 })
@@ -129,7 +129,7 @@ public class BoardService {
     public BoardDto.BoardResponseDto findBoardById(int boardNo) {
         Board board = boardRepository.findById(boardNo).orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
         BoardDto.BoardResponseDto boardResponseDto = new BoardDto.BoardResponseDto(board);
-        boardResponseDto.setUserName(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+        boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
         boardResponseDto.setUserNo(0);
         boardResponseDto.setUsersWithLike(findAllLikesByBoardNo(boardNo));
         return boardResponseDto;
@@ -214,11 +214,11 @@ public class BoardService {
      * 해당 게시글 좋아요 누른 유저 조회
      */
     @Transactional(readOnly = true)
-    public List<Integer> findAllLikesByBoardNo(int boardNo) {
+    public List<String> findAllLikesByBoardNo(int boardNo) {
         List<BoardDto.LikeResponseDto> likeResponseDtoList = likeRepository.findAll().stream().filter(boardLike -> boardLike.getBoardNo() == boardNo).map(BoardDto.LikeResponseDto::new).collect(Collectors.toList());
-        List<Integer> likeUserList = new ArrayList<Integer>();
+        List<String> likeUserList = new ArrayList<String>();
         for (BoardDto.LikeResponseDto likeResponseDto : likeResponseDtoList) {
-            likeUserList.add(likeResponseDto.getUserNo());
+            likeUserList.add(userRepository.findById(likeResponseDto.getUserNo()).get().getUserNick());
         }
         return likeUserList;
     }
@@ -240,7 +240,7 @@ public class BoardService {
                                                                             .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                                                                             .map(BoardDto.BoardResponseDto::new)
                                                                             .map(boardResponseDto -> {
-                                                                                boardResponseDto.setUserName(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                                                                                boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                                                                                 boardResponseDto.setUserNo(0);
                                                                                 return boardResponseDto;
                                                                             })

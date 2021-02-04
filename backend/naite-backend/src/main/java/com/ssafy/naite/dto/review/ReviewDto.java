@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReviewDto {
 
     /**
@@ -64,6 +67,8 @@ public class ReviewDto {
         private Board board;
         private int reviewStar;
         private int smallCategoryNo;
+        private List<String> usersWithLike = new ArrayList<String>();
+        private String userNick;
 
         public ReviewResponseDto(Review review) {
             this.reviewNo = review.getReviewNo();

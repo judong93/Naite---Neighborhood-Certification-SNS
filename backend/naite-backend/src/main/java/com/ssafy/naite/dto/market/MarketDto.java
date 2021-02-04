@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MarketDto {
 
@@ -69,6 +71,8 @@ public class MarketDto {
         private int smallCategoryNo;
         private int marketCost;
         private int marketIsCompleted;
+        private List<String> usersWithLike = new ArrayList<String>();
+        private String userNick;
 
         public MarketResponseDto(Market market) {
             this.marketNo = market.getMarketNo();

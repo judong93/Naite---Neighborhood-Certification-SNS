@@ -91,8 +91,8 @@ public class BoardDto {
         private int boardReportCnt;
         private int openFlag;
         private int boardIsDeleted;
-        private List<Integer> usersWithLike = new ArrayList<Integer>();
-        private String userName;
+        private List<String> usersWithLike = new ArrayList<String>();
+        private String userNick;
 
         public BoardResponseDto(Board board) {
             this.boardNo = board.getBoardNo();
