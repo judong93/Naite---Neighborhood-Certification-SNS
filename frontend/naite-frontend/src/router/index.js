@@ -4,7 +4,7 @@ import Sign from '@/views/Sign/Sign'
 import MainBoard from '@/views/Board/MainBoard'
 import Board from '@/views/Board/Board'
 import Profile from '@/views/Profile'
-import GroupBuying from '@/views/GroupBuying'
+import MarketBoard from '@/views/MarketBoard'
 import PostingForm from '@/views/PostingForm'
 import Posting from '@/views/Posting'
 import Test from '@/views/Test'
@@ -33,9 +33,9 @@ const routes = [
     component: Profile,
   },
   {
-    path:'/groupbuying',
-    name: 'GroupBuying',
-    component: GroupBuying,
+    path:'/marketboard',
+    name: 'MarketBoard',
+    component: MarketBoard,
   },
   {
     path:'/postingform',

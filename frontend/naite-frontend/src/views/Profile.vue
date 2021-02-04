@@ -23,14 +23,15 @@
       <div class="profile-cards">
         <div v-for="(card,idx) in Cards" :key="idx" class="profile-card">
           <div>
-            {{ card.title }}
-          </div>
-          <div>
             <img :src="card.img" alt="" class="posting-img">
           </div>
-          <div>
+          <div class="card-title">
+            {{ card.title }}
+          </div>
+          <div class="card-content">
             {{ card.content }}
           </div>
+          <button class="card-delete-button">DELETE</button>
         </div>
       </div>
     </div>
@@ -53,7 +54,7 @@ export default {
       comment: "댓글 6",
       Cards: [],
       postingCards: [
-        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
+        {title: "**공원 뒤에서 공사한대요", img: "https://picsum.photos/200/300", content: "아이고.. 공사가 겹쳤네요. 더 시끄러워..."},
         {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
         {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
         {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
@@ -126,7 +127,7 @@ hr {
   align-items: center;
   flex-direction: column;
   height: 15%;
-  top: 110px;
+  top: 20%;
 }
 .profile-box {
   /* position: relative; */
@@ -184,16 +185,40 @@ hr {
 .profile-card {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  overflow: hidden;
+  /* justify-content: space-between; */
   border: 2px solid lightgray;
-  border-radius: 10%;
+  /* border-radius: 10%; */
   width: 170px;
-  height: 250px;
+  height: 280px;
 }
 .posting-img {
-  height: 120px;
-  width: 75%;
-  border-radius: 10%;
+  height: 95px;
+  width: 100%;
+  /* border-radius: 10%; */
+}
+.card-title {
+  text-align: left;
+  margin-top: 14px;
+  margin-left: 20px;
+  font-weight: bold;
+  font-size: 110%;
+  height: 52px;
+}
+.card-content {
+  text-align: left;
+  margin-top: 8px;
+  padding-left: 20px;  
+  padding-right: 20px;  
+  height: 48px;
+}
+.card-delete-button {
+  margin-left: 55%;
+  position: relative;
+  margin-top: 17px;
+  width: 45%;
+  /* border-radius: 10%; */
+  color: rgb(199, 5, 5);
 }
 .underline {
   text-decoration: underline;
