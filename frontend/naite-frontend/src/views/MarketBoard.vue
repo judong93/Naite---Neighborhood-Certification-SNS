@@ -1,7 +1,7 @@
 <template>
   <div id="market-board">
-    <Navbar />
-    <BoardImg :messagetitle='messagetitle' :message='message' :imgsrc='imgsrc' :onDetail='onDetail'/>
+    
+    <BoardImg :message='message' :imgsrc='imgsrc'/>
     <div style="display: flex; justify-content: center;">
       <div class="group-buying">
         <div v-for="(posting, idx) in postings1" :key="idx" class="posting-box">
@@ -28,13 +28,11 @@
     </div>
 
 
-    <Message />
+    
   </div>
 </template>
 
 <script>
-import Navbar from '@/components/Basic/Navbar'
-import Message from '@/components/Basic/Message'
 import BoardImg from '@/components/Board/BoardImg'
 import axios from 'axios'
 
@@ -46,7 +44,7 @@ export default {
     return {
       messagetitle:'나의 이웃테두리: 나이테',
       message:'당신이 모르는 동네이야기',
-      imgsrc: 'boardimg-main.png',
+      imgsrc: '5',
       onDetail: false,
       postings1: [
         {title: "아기헤어밴드 팝니다!", area: 10000, created: "15분 전", thumbnail: "https://picsum.photos/200/300"},
@@ -64,15 +62,12 @@ export default {
     }
   },
   components: {
-    Navbar,
-    Message,
     BoardImg,
   },
   created: function () {
     axios.get('http://i4a402.p.ssafy.io:8080/market/list')
       .then((res) => {
         this.marketPostings = res.data
-        console.log(this.marketPostings)
       })
       .catch((err) => {
         console.log(err)

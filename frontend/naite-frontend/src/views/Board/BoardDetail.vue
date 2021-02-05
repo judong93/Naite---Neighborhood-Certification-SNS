@@ -1,26 +1,30 @@
 <template>
     <div id="boarddetail">
-        <BoardListDetail :apiData='apiData'/>
+        <BoardListDetail :apiData='apiData' :boardNo='boardNo'/>
+        <BoardComment />
     </div>
     
 </template>
 <script>
 import BoardListDetail from '@/components/Board/BoardListDetail'
+import BoardComment from '@/components/Board/BoardComment'
+
 import axios from 'axios'
 
-// const SERVER_URL = 'http://localhost:8080'
 const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 
 export default {
     name:'BoardDetail',
     components:{
-        BoardListDetail
+        BoardListDetail,
+        BoardComment,
             
     },
     data: function() {
         return {
             apiData:{},
+            boardNo:0,
         }
     },
     props:{
@@ -37,9 +41,11 @@ export default {
     },
     created(){
         const boardNo = this.$route.params.boardNo
+        this.boardNo = boardNo
         axios.get(`${SERVER_URL}/board/list/detail/${boardNo}`)
             .then(res => {
                 this.apiData = res.data
+                console.log(res.data)
             })
             .catch(err=>{
                 console.log(err)
@@ -56,7 +62,7 @@ export default {
     position:relative;
     width: 1920px;
     height:969px;
-    overflow:hidden;
+    overflow:auto;
     background-color: rgb(250, 246, 240);
     
 }

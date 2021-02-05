@@ -55,8 +55,8 @@ const routes = [
     component: Posting,
   },
   {
-    path:'/test',
-    name: 'Test',
+    path:'/',
+    name: 'Main',
     component: Test,
   },
   {

@@ -65,7 +65,7 @@ export default {
             params:{
                 "bigCategoryNo": "",
                 "boardContent": "",
-                "boardPic": "asd",
+                "boardPic": "",
                 "boardTitle": "",
                 "openFlag": 0,
                 "unknownFlag": 0,

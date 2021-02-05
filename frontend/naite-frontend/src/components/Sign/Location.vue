@@ -67,7 +67,7 @@ export default {
                 navigator.geolocation.getCurrentPosition(function(position) {       
                 that.serverLatitude = position.coords.latitude
                 that.serverLongitude = position.coords.longitude
-                console.log('navigator')
+                alert('사용자위치정보 확인')
                 });
             } else {
                 if (!that.result) {

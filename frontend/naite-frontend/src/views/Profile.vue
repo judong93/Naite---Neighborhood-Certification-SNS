@@ -47,7 +47,7 @@ export default {
   name: 'Profile',
   data: function () {
     return {
-      imgData: "https://picsum.photos/200/300",
+      imgData: "http://picsum.photos/200/300",
       userName: "user1",
       posting: "게시글 6",
       groupBuying: "장터거래 6",
