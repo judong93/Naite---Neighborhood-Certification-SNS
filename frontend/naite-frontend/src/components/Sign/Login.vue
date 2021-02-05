@@ -39,6 +39,7 @@
 
 <script>
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 
 const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
@@ -70,10 +71,11 @@ export default {
             if (this.params.userId && this.params.userPw) {
                 axios.post(`${SERVER_URL}/user/sign/signin`,this.params)
                     .then(res=>{
-                        
-                        localStorage.setItem('jwt',res.data['auth-token'])
+                        const token = res.data['auth-token']
+                        const decoded = jwt_decode(token)
                         this.$router.push({name:'Main'})
-                        
+                        this.$store.dispatch('saveuserinfo',decoded)                        
+                        localStorage.setItem('jwt',res.data['auth-token'])
                     })
                     .catch(err=>{
                         console.log(err)

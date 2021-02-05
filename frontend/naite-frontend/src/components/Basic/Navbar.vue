@@ -20,7 +20,7 @@
             <!-- <div class='statusHover'>
                 
             </div> -->
-            <span>user1 님</span>
+            <span>{{greeting}}</span>
             <div class="nav-status">
                 <div class="statusHover">   
                     <a href="#" @click='profile'>내 프로필</a> <br>
@@ -35,6 +35,9 @@
     
 </template>
 <script>
+import jwt_decode from 'jwt-decode'
+
+
 export default {
     name:'Navbar',
     components:{
@@ -42,6 +45,7 @@ export default {
     },
     data: function() {
         return {
+            greeting:'',
         }
     },
     methods:{
@@ -70,6 +74,11 @@ export default {
     computed: {
 
     },
+    created(){
+        const token = localStorage.getItem('jwt')
+        const decode = jwt_decode(token)
+        this.greeting = decode.greeting
+    }
 
     
 }
@@ -81,18 +90,23 @@ export default {
     left:2%;
     top:110%;
     width: 96%;
+    height:0;
     border-bottom: 1px solid rgb(179, 179, 179);
     z-index: 0;
+    
+    
 
 }
 #navbar {
     position:absolute;
     background-color: rgb(250, 246, 240);
     width:1920px;
-    height:77.52px;    
+    /* height:77.52px;     */
+    height:80px;
     display: flex;
     font-family: font1; 
     z-index: 1;
+    
 }
 
 .nav-title {
@@ -138,6 +152,11 @@ export default {
     width:20%;
     display:flex;
     justify-content: space-evenly;
+}
+
+.nav-right > span {
+    margin-top: 30px;
+    margin-right: 130px;
 }
 
 .nav-status{

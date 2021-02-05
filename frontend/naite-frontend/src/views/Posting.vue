@@ -55,7 +55,6 @@ export default {
                 axios.post(`${SERVER_URL}/board/insert`,params,this.setToken())
                     .then(res => {
                         console.log(res)
-                        
                         this.$router.push({name:'Board',params:{bigCategoryNo:params.bigCategoryNo}})
                     })
                     .catch(err=>{

@@ -35,7 +35,7 @@ export default {
         this.$router.push({name:'MainBoard'})
       } else if (jwt&&window.location.pathname==='/'){
         this.$router.push({name:'MainBoard'})
-      } else if (!jwt) {
+      } else if (!jwt && window.location.pathname !=='/sign') {
         this.$router.push({name:'Sign'})
       }
     }

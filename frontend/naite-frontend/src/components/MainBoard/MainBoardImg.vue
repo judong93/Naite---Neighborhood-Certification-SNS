@@ -1,7 +1,6 @@
 <template>
     <div id="mainboardimg">
-        <span>{{messagetitle}}</span><br>
-        <span>{{message}}</span>
+        
     </div>
     
 </template>
@@ -46,7 +45,6 @@ export default {
     text-align: center;
     font-size: 40px;
     color: rgb(73, 69, 69);
-    background-size: 1600px;
     background-repeat: no-repeat;
     background-position: 50% 85%;
     transition:0.3s;

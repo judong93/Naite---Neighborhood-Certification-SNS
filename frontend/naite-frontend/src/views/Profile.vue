@@ -71,7 +71,7 @@ export default {
   name: 'Profile',
   data: function () {
     return {
-      imgData: "https://picsum.photos/200/300",
+      imgData: "http://picsum.photos/200/300",
       userName: "user1",
       postingCount: 0,
       marketCount: 0,
