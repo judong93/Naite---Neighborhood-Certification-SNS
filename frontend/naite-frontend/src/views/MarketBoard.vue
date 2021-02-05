@@ -18,7 +18,7 @@
                 {{ posting.board.boardCreatedAt }} 
               </div> -->
               <div class="marks">
-                <i class="market-thumbs far fa-thumbs-up" >1</i>
+                <i class="market-thumbs far fa-thumbs-up" >0</i>
                 <i class="market-comments far fa-comment-dots">0</i>
               </div>
             </div>
