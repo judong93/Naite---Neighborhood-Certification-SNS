@@ -123,6 +123,7 @@ export default {
   left: 180px;
   white-space: nowrap;
   text-overflow: ellipsis;
+  text-align: left;
 }
 .area-created {
   position: absolute;
