@@ -8,7 +8,7 @@
         <div class="profile-info">
           <div class="username-settings">
             <div class="username">
-            {{ userName }}
+            {{ userNick }}
             <i id="settings-icon" class="fas fa-user-cog" @click="selectSettings"></i>
             </div>
           </div>
@@ -66,6 +66,7 @@
 import Navbar from '@/components/Basic/Navbar'
 import Message from '@/components/Basic/Message'
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 
 export default {
   name: 'Profile',
@@ -81,6 +82,7 @@ export default {
       userCommentPostings: [],
       postingImg: "https://picsum.photos/200/300",
       activityCheckNum: 1,
+      userNick: '',
     }
   },
   methods: {
@@ -145,6 +147,8 @@ export default {
   created: function () {
     this.Cards = this.postingCards
     const config = this.setToken()
+    const decode = jwt_decode(localStorage.getItem('jwt'))
+    this.userNick = decode.user.userNick
     axios.get('http://i4a402.p.ssafy.io:8080/board/list/user', config)
       .then((res) => {
         this.postingCount = res.data.length
@@ -177,7 +181,7 @@ export default {
       .catch((err) => {
         console.log(err)
       })
-  }
+  },
 }
 </script>
   
