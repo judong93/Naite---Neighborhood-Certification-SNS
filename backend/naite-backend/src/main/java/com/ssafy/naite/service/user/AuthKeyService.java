@@ -20,10 +20,11 @@ public class AuthKeyService {
 
     @Transactional
     public void save(AuthKeySaveRequestDto authKeySaveRequestDto) {
-        AuthKey existed = authKeyRepository.findByUserEmail(authKeySaveRequestDto.getUserEmail()).get();
-        if (existed != null) {
-            existed.updateKey(authKeySaveRequestDto.getAuthKey());
-            authKeyRepository.save(existed);
+        Optional<AuthKey> existed = authKeyRepository.findByUserEmail(authKeySaveRequestDto.getUserEmail());
+        if (existed.isPresent()) {
+            AuthKey authKey = existed.get();
+            authKey.updateKey(authKeySaveRequestDto.getAuthKey());
+            authKeyRepository.save(authKey);
         } else {
             authKeyRepository.save(authKeySaveRequestDto.toEntity());
         }
