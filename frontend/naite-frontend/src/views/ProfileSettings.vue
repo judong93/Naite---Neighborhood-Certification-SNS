@@ -15,6 +15,7 @@
 
 <script>
 import Navbar from '@/components/Basic/Navbar'
+// import axios from 'axios'
 
 export default {
   name: 'ProfileSettings',
@@ -24,7 +25,16 @@ export default {
   methods: {
     backToProfile: function () {
       this.$router.push({ name: 'Profile' })
-    }
+    },
+    // deleteAccount: function () {
+    //   axios.put(`http://i4a402.p.ssafy.io:8080/board/delete/${boardNo}`, config)
+    //     .then((res) => {
+    //       console.log(res)
+    //     })
+    //     .catch((err) => {
+    //       console.log(err)
+    //     })
+    // },
   }
 }
 </script>
