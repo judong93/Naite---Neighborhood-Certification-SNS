@@ -22,31 +22,32 @@
       <hr>
       <div v-if="activityCheckNum===1" class="profile-cards">
         <div v-for="(card,idx) in userPostings" :key="idx" class="profile-card">
-          <img :src="card.boardpic" alt="이미지가 없습니다!" class="posting-img">
-          <div class="card-title">
+          <img @click="toBoardDetail(card.boardNo)" :src="imgData" alt="이미지가 없습니다!" class="posting-img">
+          <div @click="toBoardDetail(card.boardNo)" class="card-title">
             {{ card.boardTitle }}
           </div>
-          <div class="card-content">
+          <div @click="toBoardDetail(card.boardNo)" class="card-content">
             {{ card.boardContent }}
           </div>
-          <button class="card-delete-button">DELETE</button>
+          <button @click="deletePosting(card.boardNo)" class="card-delete-button">삭제하기</button>
         </div>
       </div>
       <div v-if="activityCheckNum===2" class="profile-cards">
         <div v-for="(card,idx) in userMarketPostings" :key="idx" class="profile-card">
-          <img :src="card.img" alt="이미지가 없습니다!" class="posting-img">
+          <img :src="imgData" alt="이미지가 없습니다!" class="posting-img">
           <div class="card-title">
             {{ card.board.boardTitle }}
           </div>
           <div class="card-content">
             {{ card.board.boardContent }}
           </div>
-          <button class="card-delete-button">DELETE</button>
+          <div v-if="card.marketIsCompleted===0" class="market-is-completed">모집중</div>
+          <div v-if="card.marketIsCompleted===1" class="font-yellow market-is-completed">거래완료</div>
         </div>
       </div>
       <div v-if="activityCheckNum===3" class="profile-cards">
         <div v-for="(card,idx) in userCommentPostings" :key="idx" class="profile-card">
-          <img :src="card.img" alt="이미지가 없습니다!" class="posting-img">
+          <img :src="imgData" alt="이미지가 없습니다!" class="posting-img">
           <div class="card-title">
             {{ card.board.boardTitle }}
           </div>
@@ -78,30 +79,6 @@ export default {
       userPostings: [],
       userMarketPostings: [],
       userCommentPostings: [],
-      postingCards: [
-        {title: "**공원 뒤에서 공사한대요", img: "https://picsum.photos/200/300", content: "아이고.. 공사가 겹쳤네요. 더 시끄러워..."},
-        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
-        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
-        {title: "공사한대요", img: "", content: "시끄러울 것 같아요"},
-        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
-        {title: "공사한대요", img: "https://picsum.photos/200/300", content: "시끄러울 것 같아요"},
-      ],
-      groupBuyingCards: [
-        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
-        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
-        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
-        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
-        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
-        {title: "장터거래", img: "https://picsum.photos/200/300", content: "장터거래"},
-      ],
-      commentCards: [
-        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
-        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
-        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
-        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
-        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
-        {title: "댓글단 글", img: "https://picsum.photos/200/300", content: "댓글단 글"},
-      ],
       postingImg: "https://picsum.photos/200/300",
       activityCheckNum: 1,
     }
@@ -132,6 +109,33 @@ export default {
       console.log(config)
       return config
     },
+    deletePosting: function (boardNo) { 
+      const config = this.setToken()
+      const result = confirm("정말 삭제하시겠습니까?")
+      if (!result) {
+        console.log(boardNo)
+      } else {
+          axios.put(`http://i4a402.p.ssafy.io:8080/board/delete/${boardNo}`, {}, config)
+            .then((res) => {
+              console.log(res)
+              axios.get('http://i4a402.p.ssafy.io:8080/board/list/user', config)
+                .then((res) => {
+                  this.postingCount = res.data.length
+                  this.userPostings = res.data
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+      }
+
+    },
+    toBoardDetail: function (boardNo) {
+      this.$router.push({ name: 'BoardDetail', params: {boardNo: boardNo} })
+    },
   },
   components: {
     Navbar,
@@ -143,8 +147,11 @@ export default {
     axios.get('http://i4a402.p.ssafy.io:8080/board/list/user', config)
       .then((res) => {
         this.postingCount = res.data.length
-        this.userPostings = res.data.slice(-7, -1)
-        console.log(this.userPostings)
+        if (this.postingCount > 5) {
+          this.userPostings = res.data.slice(-6, -1)
+        } else {
+          this.userPostings = res.data
+        }
       })
       .catch((err) => {
         console.log(err)
@@ -152,7 +159,11 @@ export default {
     axios.get('http://i4a402.p.ssafy.io:8080/market/list/user', config)
       .then((res) => {
         this.marketCount = res.data.length
-        this.userMarketPostings = res.data
+        if (this.marketCount > 5) {
+          this.userMarketPostings = res.data.slice(-6, -1)
+        } else {
+          this.userMarketPostings = res.data
+        }
         console.log(this.userMarketPostings)
       })
       .catch((err) => {
@@ -238,9 +249,10 @@ hr {
 }
 .profile-cards {
   /* overflow: hidden; */
+  margin-left: 80px;
   margin-top: 20px;
   display: flex;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   width: 60%;
 }
 .profile-card {
@@ -248,30 +260,33 @@ hr {
   flex-direction: column;
   overflow: hidden;
   /* justify-content: space-between; */
-  border: 2px solid lightgray;
+  border: 1px solid palegoldenrod;
   /* border-radius: 10%; */
-  width: 170px;
+  width: 190px;
   height: 280px;
+  margin-right: 30px;
+  /* box-shadow: inset 0 0 5px rosybrown; */
+  cursor: pointer;
 }
 .posting-img {
-  height: 95px;
+  height: 38%;
   width: 100%;
   /* border-radius: 10%; */
 }
 .card-title {
-  display: -webkit-box;
+  /* display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  word-wrap:break-word; 
+  word-wrap:break-word;  */
   line-height: 1.5em;
   overflow: hidden;
   text-align: left;
   margin-top: 14px;
   margin-left: 10px;
   font-weight: bold;
-  font-size: 110%;
+  font-size: 125%;
   height: 52px;
-  /* white-space: pre-line; */
+  white-space: nowrap;
   text-overflow: ellipsis;
   /* word-break: normal; */
 }
@@ -286,18 +301,21 @@ hr {
   margin-top: 8px;
   padding-left: 10px;  
   padding-right: 20px;  
-  height: 48px;
+  height: 52px;
   white-space: normal;
   text-overflow: ellipsis;
   /* white-space: normal; */
 }
-.card-delete-button {
+/* .card-delete-button {
   margin-left: 55%;
   position: relative;
   margin-top: 17px;
   width: 45%;
-  /* border-radius: 10%; */
+  border-radius: 10%;
   color: rgb(199, 5, 5);
+} */
+.font-yellow {
+  color: rgb(112, 112, 28);
 }
 .underline {
   text-decoration: underline;
@@ -309,6 +327,62 @@ hr {
 .activity:hover {
   background-color: rgb(223, 217, 217);
   opacity: 0.7;
+}
+.card-delete-button{
+  /* margin-left: 100%; */
+  margin-top: 17px;
+  width: 100%; 
+  text-align: center;
+  background:#DB4455;
+  color:#fff;
+  border:none;
+  position:relative;
+  height: 40px;
+  font-size:1.3em;
+  padding:0;
+  cursor:pointer;
+  transition:800ms ease all;
+  outline:none;
+}
+.card-delete-button:hover{
+  background:#fff;
+  color:#DB4455;
+}
+.card-delete-button:before,.card-delete-button:after{
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  height:2px;
+  width:0;
+  background: #DB4455;
+  transition:400ms ease all;
+}
+.card-delete-button:after{
+  right:inherit;
+  top:inherit;
+  left:0;
+  bottom:0;
+}
+.card-delete-button:hover:before,.card-delete-button:hover:after{
+  width:100%;
+  transition:800ms ease all;
+}
+.market-is-completed{
+  /* margin-left: 100%; */
+  margin-top: 17px;
+  width: 100%; 
+  text-align: center;
+  background:#1AABBA;
+  color:#fff;
+  border:none;
+  position:relative;
+  height: 40px;
+  font-size:1.3em;
+  padding: 5px;
+  /* cursor:pointer; */
+  transition:800ms ease all;
+  outline:none;
 }
 
 
