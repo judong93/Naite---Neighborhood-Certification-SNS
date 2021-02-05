@@ -121,10 +121,11 @@ export default {
               axios.get('http://i4a402.p.ssafy.io:8080/board/list/user', config)
                 .then((res) => {
                   this.postingCount = res.data.length
-                  this.userPostings = res.data
-                })
-                .catch((err) => {
-                  console.log(err)
+                  if (this.postingCount > 5) {
+                    this.userPostings = res.data.slice(0, 5)
+                  } else {
+                    this.userPostings = res.data
+                  }
                 })
             })
             .catch((err) => {
@@ -148,7 +149,7 @@ export default {
       .then((res) => {
         this.postingCount = res.data.length
         if (this.postingCount > 5) {
-          this.userPostings = res.data.slice(-6, -1)
+          this.userPostings = res.data.slice(0, 5)
         } else {
           this.userPostings = res.data
         }
@@ -379,7 +380,7 @@ hr {
   position:relative;
   height: 40px;
   font-size:1.3em;
-  padding: 5px;
+  padding: 0 5px;
   /* cursor:pointer; */
   transition:800ms ease all;
   outline:none;
