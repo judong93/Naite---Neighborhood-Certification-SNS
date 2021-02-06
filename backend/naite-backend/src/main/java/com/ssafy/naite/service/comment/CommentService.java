@@ -53,6 +53,7 @@ public class CommentService {
                     .parentId(c.getCommentParentId())
                     .userOwn(userOwn)
                     .isUnknown(c.getCommentIsUnknown())
+                    .isDeleted(c.getCommentIsDeleted())
                     .build();
             returnList.add(dto);
         }

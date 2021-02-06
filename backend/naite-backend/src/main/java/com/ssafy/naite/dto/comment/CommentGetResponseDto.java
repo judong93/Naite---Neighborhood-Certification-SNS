@@ -19,9 +19,10 @@ public class CommentGetResponseDto {
     private int parentId;
     private boolean userOwn;
     private byte isUnknown;
+    private byte isDeleted;
 
     @Builder
-    public CommentGetResponseDto(Integer commentNo, String userNick, Timestamp createdAt, Timestamp updatedAt, String content, int parentId, boolean userOwn, byte isUnknown) {
+    public CommentGetResponseDto(Integer commentNo, String userNick, Timestamp createdAt, Timestamp updatedAt, String content, int parentId, boolean userOwn, byte isUnknown, byte isDeleted) {
         this.commentNo = commentNo;
         this.userNick = userNick;
         this.createdAt = createdAt;
@@ -30,6 +31,7 @@ public class CommentGetResponseDto {
         this.parentId = parentId;
         this.userOwn = userOwn;
         this.isUnknown = isUnknown;
+        this.isDeleted = isDeleted;
     }
 
 }
