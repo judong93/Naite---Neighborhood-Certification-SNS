@@ -29,6 +29,7 @@
         <button class="login-btn-sns">네이버로 로그인 하기</button>
         <span class='find-pw'>아이디/비밀번호 찾기</span>
     </div>
+           
     
     
 
@@ -59,6 +60,7 @@ export default {
         }
     },
     methods:{
+
         look_signup: function(){
             const loginDiv = document.getElementById('login')
             loginDiv.style.top = '200%'

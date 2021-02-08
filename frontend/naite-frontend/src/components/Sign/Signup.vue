@@ -1,5 +1,7 @@
 <template>
   <div id="signup">       
+        <input type="file" class='testff' name='files'>
+        <button @click='test'>test</button>
         <div class="signupform">
             <div class='signuphead'>회원가입</div>
             <div class="signupleftdiv">
@@ -33,7 +35,6 @@
                 <button class="signupComplete" @click='completeSignup'>회원가입</button>
             </div>
         </div>
-       
 
         <Location :searchLocation='searchLocation' @selectAddress = 'selectAddress' @checkAddress='checkAddress' />
         
@@ -75,9 +76,33 @@ export default {
             addressConfirm: false,
             idConfirm:false,
             nickConfirm:false,
+            testPic:'',
         }
     },
     methods:{
+        test:function(){
+            const list = ["userBasicAddress","userDetailAddress",'userDong',"userEmail","userId","userName","userNick","userPic","userPw"]
+            const signupForm = document.createElement('form')
+            
+            for (let i =0;i<9;i++){
+                if (i===7){ 
+                    var addPic = document.querySelector('.testff')
+                    signupForm.appendChild(addPic)
+
+                } else {
+                    var addInput = document.createElement('input')
+                    addInput.value = this.params[`${list[i]}`]
+                    addInput.name = `${list[i]}`
+                    signupForm.appendChild(addInput)
+                }
+            }
+            signupForm.enctype='multipart/form-data'
+            signupForm.method = 'post'
+            signupForm.action=`${SERVER_URL}/user/sign/signup`
+            console.log(signupForm)
+            document.body.appendChild(signupForm)
+            signupForm.submit()
+        },
         toLogin:function(){
             this.$emit('changeLogin')    
             for (let key in this.params) {

@@ -24,17 +24,18 @@ export default {
                 const param = {
                     'board':params,
                     'reviewStar':reviewStar,
-                    'samllCategoryNo':smallCategoryNo
+                    'smallCategoryNo':smallCategoryNo                    
                 }
                 console.log(param)
                 axios.post(`${SERVER_URL}/review/insert`,param,this.$store.getters.setToken)
                     .then(res=>{
-                        console.log(res.data) 
+                        console.log(res) 
+                        this.$router.push({name:'Board',params:{bigCategoryNo:params.bigCategoryNo}})
                         
                     })
                     .catch(err=> {
                         console.log(err)
-                        localStorage.removeItem('jwt')
+                        // localStorage.removeItem('jwt')
                         alert('해당 게시물은 현재 사용할 수 없습니다!')
                         // this.$router.push({name:'Sign'})
                         })

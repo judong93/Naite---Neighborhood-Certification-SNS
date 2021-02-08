@@ -40,14 +40,19 @@ export default {
         this.$router.push({name:'Sign'})
       }
     },
+    // usingToken:function(){
+    //   axios.get(``)
+    // }
   },
   updated:function(){
     this.token()
     this.showing()
+    // this.usingToken()
   },
   created:function(){
     this.token()
     this.showing()
+    // this.usingToken()
 
   }
 }
