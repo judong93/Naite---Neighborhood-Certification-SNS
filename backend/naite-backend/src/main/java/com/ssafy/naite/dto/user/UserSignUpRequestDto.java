@@ -6,8 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class UserSignUpRequestDto {
 
@@ -37,6 +41,8 @@ public class UserSignUpRequestDto {
 
     @ApiParam(value = "유저 프로필 사진", required = false)
     private String userPic;
+
+    private List<MultipartFile> files;
 
     @Builder
     public UserSignUpRequestDto(String userId, String userName, String userEmail, String userPw, String userBasicAddress, String userDetailAddress, String userDong, String userNick, String userPic) {
