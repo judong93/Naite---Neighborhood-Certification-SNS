@@ -94,7 +94,6 @@ public class BoardDto {
         private int boardIsDeleted;
         private List<String> usersWithLike = new ArrayList<String>();
         private String userNick;
-        private int boardCommentCnt;
 
         public BoardResponseDto(Board board) {
             this.boardNo = board.getBoardNo();
@@ -103,33 +102,13 @@ public class BoardDto {
             this.boardTitle = board.getBoardTitle();
             this.boardContent = board.getBoardContent();
             this.boardPic = board.getBoardPic();
-            if(board.getBoardCreatedAt().plusHours(1).isAfter(LocalDateTime.now())) {
-                this.boardCreatedAt = "방금 전";
-            } else if (board.getBoardCreatedAt().plusDays(1).isAfter(LocalDateTime.now())) {
-                this.boardCreatedAt = (LocalDateTime.now().getHour() - board.getBoardCreatedAt().getHour()) + "시간 전";
-            } else {
-                this.boardCreatedAt = board.getBoardCreatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
-            }
+            this.boardCreatedAt = board.getBoardCreatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
             this.boardUpdatedAt = board.getBoardUpdatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
             this.boardLikeCnt = board.getBoardLikeCnt();
             this.unknownFlag = board.getUnknownFlag();
             this.boardReportCnt = board.getBoardReportCnt();
             this.openFlag = board.getOpenFlag();
             this.boardIsDeleted = board.getBoardIsDeleted();
-        }
-
-        public Board toEntity(int userNo) {
-            return Board.builder()
-                    .userNo(userNo)
-                    .bigCategoryNo(bigCategoryNo)
-                    .boardTitle(boardTitle)
-                    .boardContent(boardContent)
-                    .boardPic(boardPic)
-                    .boardCreatedAt(LocalDateTime.now())
-                    .boardUpdatedAt(LocalDateTime.now())
-                    .unknownFlag(unknownFlag)
-                    .openFlag(openFlag)
-                    .build();
         }
     }
 

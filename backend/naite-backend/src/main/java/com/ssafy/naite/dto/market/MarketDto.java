@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +73,6 @@ public class MarketDto {
         private int marketIsCompleted;
         private List<String> usersWithLike = new ArrayList<String>();
         private String userNick;
-        private String boardCreatedAt;
 
         public MarketResponseDto(Market market) {
             this.marketNo = market.getMarketNo();
@@ -83,13 +80,6 @@ public class MarketDto {
             this.smallCategoryNo = market.getSmallCategoryNo();
             this.marketCost = market.getMarketCost();
             this.marketIsCompleted = market.getMarketIsCompleted();
-            if(this.board.getBoardCreatedAt().plusHours(1).isAfter(LocalDateTime.now())) {
-                this.boardCreatedAt = "방금 전";
-            } else if (this.board.getBoardCreatedAt().plusDays(1).isAfter(LocalDateTime.now())) {
-                this.boardCreatedAt = (LocalDateTime.now().getHour() - this.board.getBoardCreatedAt().getHour()) + "시간 전";
-            } else {
-                this.boardCreatedAt = this.board.getBoardCreatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
-            }
         }
     }
 }
