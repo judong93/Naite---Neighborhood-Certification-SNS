@@ -12,11 +12,17 @@
                         <span @click='sendMessage'  v-if='thisBoardUserNo !== apiData.userNo'>메세지</span>
                         <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.userNo'></i>
                         <span v-if='thisBoardUserNo !== apiData.userNo'>신고</span>
-                        <i class="far fa-edit"  v-if='thisBoardUserNo === apiData.userNo'></i>
-                        <span v-if='thisBoardUserNo === apiData.userNo' @click='updateBoard'>수정</span>
-                        <i class="far fa-trash-alt" v-if='thisBoardUserNo === apiData.userNo'></i>
-                        <span v-if='thisBoardUserNo === apiData.userNo' @click='deleteBoard'>삭제</span>
-                        
+                        <div v-if='thisBoardUserNo === apiData.userNo' style='display:flex'>
+                            <div  @click='updateBoard' style='margin-right:10px'>
+                                <i class="far fa-edit"  ></i>
+                                <span>수정</span>
+                            </div>
+                            <div @click='deleteBoard'>
+                                <i class="far fa-trash-alt"></i>
+                                <span >삭제</span>
+                            </div>
+                            
+                        </div>
 
                     </div>
                     <div class='detailHeadInfo'>
@@ -92,7 +98,7 @@ export default {
                 'boardNo':this.boardNo
             }
             if (!this.liked){
-                axios.post(`${SERVER_URL}/board/like`,params,this.setToken())
+                axios.post(`${SERVER_URL}/board/like`,params,this.$store.getters.setToken)
                     .then(res=>{
                         console.log(res)
                         this.apiData.boardLikeCnt += 1
@@ -102,7 +108,7 @@ export default {
                         console.log(err)
                     })
             } else {
-                axios.post(`${SERVER_URL}/board/dislike`, params,this.setToken())
+                axios.post(`${SERVER_URL}/board/dislike`, params,this.$store.getters.setToken)
                     .then(res=>{
                         console.log(res)
                         this.apiData.boardLikeCnt -= 1
@@ -114,19 +120,11 @@ export default {
             }
 
         },
-        setToken:function(){
-            const token=localStorage.getItem('jwt')
-            const config = {
-                headers: {
-                'auth-token':`${token}`
-                }
-            }
-            return config 
-        },
         deleteBoard:function(){
-            axios.put(`${SERVER_URL}/board/delete/${this.apiData.boardNo}`,{},this.setToken())
-                .then(res => {
-                    console.log(res)
+            axios.put(`${SERVER_URL}/board/delete/${this.apiData.boardNo}`,{},this.$store.getters.setToken)
+                .then(() => {
+                    this.$router.push({name:'Board',params:{bigCategoryNo:this.apiData.bigCategoryNo}})
+
                 })
                 .catch(err => {
                     console.log(err)
@@ -148,7 +146,7 @@ export default {
                 'openFlage':0,
                 'unknownFlag':0,
             }
-            axios.put(`${SERVER_URL}/board/update/${this.apiData.boardNo}`,params,this.setToken())
+            axios.put(`${SERVER_URL}/board/update/${this.apiData.boardNo}`,params,this.$store.getters.setToken)
                 .then(res => {
                     console.log(res)
                     this.apiData.boardContent = this.updateContent  
@@ -172,6 +170,10 @@ export default {
             const img = this.apiData.boardPic
             const headBottom = document.querySelector('.detailHeadInfo')
             const detailBar = document.querySelector('.detailBar')
+            console.log(this.apiData.boardContent)
+            this.apiData.boardContent.replace(/\n/g,'<br/>')
+            console.log(this.apiData.boardCOntent)
+            console.log('이것은\n 테스트')
             if (!img) {
                 headBottom.style.width = '1038px'
                 detailBar.style.right ='1%'

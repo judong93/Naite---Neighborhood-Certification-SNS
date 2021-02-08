@@ -57,7 +57,6 @@ export default {
             } 
             else {
                 const nowNo = this.$route.params.bigCategoryNo
-                console.log(nowNo,num)
                 if (nowNo !== num){
                     this.$router.push({name:'Board',params:{bigCategoryNo:num}})
                 }

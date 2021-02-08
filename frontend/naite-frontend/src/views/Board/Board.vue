@@ -30,7 +30,6 @@ export default {
     methods:{
         renderingList:function(){
             this.bigCategoryNo = this.$route.params.bigCategoryNo
-            console.log(this.bigCategoryNo)
             this.message = this.dumydata[this.bigCategoryNo]
             this.imgsrc = require(`../../assets/${this.bigCategoryNo}.jpg`)
 

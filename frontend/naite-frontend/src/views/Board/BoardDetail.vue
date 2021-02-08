@@ -44,8 +44,7 @@ export default {
         this.boardNo = boardNo
         axios.get(`${SERVER_URL}/board/list/detail/${boardNo}`)
             .then(res => {
-                this.apiData = res.data
-                console.log(res.data)
+                this.apiData = res.data 
             })
             .catch(err=>{
                 console.log(err)
