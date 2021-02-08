@@ -1,5 +1,6 @@
 <template>
     <div id="mainboardlist">
+        
         <div class='mainboardBack' >
             <div class="mainBoardFree" v-for='(no,idx) in boardNo' :key="idx">
                 <div class="mainBoardHead">
@@ -15,7 +16,7 @@
                         <i class="far fa-thumbs-up"></i>
                         {{data.boardLikeCnt}}
                         <i class="far fa-comment-dots"></i>
-                        {{data.boardReportCnt}}
+                        
                     </div>
                 </div>
             </div>
@@ -25,7 +26,8 @@
 <script>
 import axios from 'axios'
 
-const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+// const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 
 export default {
@@ -33,24 +35,28 @@ export default {
     data: function(){
         return {
             boardNo:[1,2,4],
-            boardTitle:['골목길소식','번화가소식','소리소문'],
+            boardTitle:['번화가소식','동사무소소식','소리소문'],
             apiData: {
                 '0': {},
                 '1': {},
                 '2': {},
-            }
+            },
+            // commentCnt:0,
         }
     },
     methods:{
         toDetail:function(num){
             this.$router.push({name:'BoardDetail',params:{boardNo:num}})
-        }  
+        },
+    },
+    computed:{
+        
     },
     created(){
         for (let i=0;i<3;i++){
             axios.get(`${SERVER_URL}/board/list/top/${this.boardNo[i]}`)
                 .then(res => {
-                    this.apiData[`${i}`] = res.data
+                    this.apiData[`${i}`] = res.data               
                 })
                 .catch(err=>{
                     console.log(err)

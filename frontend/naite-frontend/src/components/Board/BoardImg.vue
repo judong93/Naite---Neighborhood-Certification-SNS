@@ -1,6 +1,6 @@
 <template>
     <div id="boardimg">
-        <img :src='urlImg' alt='?'>
+        <img :src='imgsrc' alt='?'>
     </div>
 </template>
 <script>
@@ -11,7 +11,7 @@ export default {
     },
     data: function() {
         return {
-            urlImg:require(`../../assets/1.jpg`),
+
         }
     },
     methods:{
@@ -22,10 +22,7 @@ export default {
         
     },
     watch:{
-        imgsrc:function(){
-            this.urlImg = require(`../../assets/${this.imgsrc}.jpg`)
-            console.log(this.urlImg)        
-        }
+
     },
 
 }

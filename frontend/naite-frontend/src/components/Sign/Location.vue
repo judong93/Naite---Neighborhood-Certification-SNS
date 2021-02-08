@@ -85,10 +85,10 @@ export default {
             const a = Math.pow(this.serverLatitude-this.userLatitude,2)
             const b = Math.pow(this.serverLongitude-this.userLongitude,2)
             // 0.01로줄이기
-            if (Math.sqrt(a+b)<=0.01) {
+            if (Math.sqrt(a+b)<=0.02) {
                 this.$emit('checkAddress',true)
             } else {
-                this.$emit('checkAddress',true)
+                this.$emit('checkAddress',false)
                 
             }
         }

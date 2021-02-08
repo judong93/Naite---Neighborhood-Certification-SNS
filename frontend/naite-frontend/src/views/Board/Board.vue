@@ -32,7 +32,7 @@ export default {
             this.bigCategoryNo = this.$route.params.bigCategoryNo
             console.log(this.bigCategoryNo)
             this.message = this.dumydata[this.bigCategoryNo]
-            this.imgsrc = this.bigCategoryNo
+            this.imgsrc = require(`../../assets/${this.bigCategoryNo}.jpg`)
 
         },
         t:function() {

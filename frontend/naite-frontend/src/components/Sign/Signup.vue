@@ -47,7 +47,8 @@
 import Location from '@/components/Sign/Location'
 import axios from 'axios'
 
-const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+// const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 export default {
     name:'Signup',
