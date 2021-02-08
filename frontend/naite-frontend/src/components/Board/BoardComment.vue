@@ -7,13 +7,15 @@
                         <img src="../../assets/cha2.png" alt="" height="40px">
                         <span class='commentNick'>{{comment.userNick}} : </span> 
                     </div>
-                    <span class='commentContent'>{{comment.content}}</span>
+                    <span class='commentContent deleted' v-if='comment.isDeleted'>삭제된 댓글입니다</span>
+                    <span class='commentContent' v-else>{{comment.content}}</span>
                     <span style='font-size:10px;white-space:nowrap;margin-right:10px'>{{comment.createdAt}} 작성된 글</span>
+                    <!-- {{timdeDiff(comment.createdAt)}} -->
                     <div class='commentStatus'>
                         <div>
                             <i class="fas fa-share"></i><span>대댓글 달기</span>
-                            <span v-if='comment.userOwn' style='margin-left:10px'>수정</span>
-                            <span v-if='comment.userOwn' style='margin-left:10px'>삭제</span>
+                            <span v-if='comment.userOwn && !comment.isDeleted' style='margin-left:10px'>수정</span>
+                            <span v-if='comment.userOwn  && !comment.isDeleted' style='margin-left:10px' @click='deleteComment(idx,comment.commentNo)'>삭제</span>
                         </div>
                         
 
@@ -28,16 +30,17 @@
                 </div>             
             </div>
         </div>
-        <input type="checkbox" style='margin-right:5px'><span style='margin-right:5px'>익명</span>
+        <input type="checkbox" style='margin-right:5px' @click='unknownAlert'><span style='margin-right:5px'>익명</span>
         <input type="text" class='commentinput' v-model='params.content' @keypress.enter='createComment(0)'>
         <button @click='createComment(0)'>댓글작성</button>
-
+        
     </div>
 </template>
 <script>
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
-const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+// const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 
 export default {
@@ -80,6 +83,8 @@ export default {
                         this.apiData.push(param)
                         this.params.content=''
                     } else {
+                        console.log(res)
+                        console.log(this.params.content)
                         alert('내용물을 작성해주세요')
                     }
 
@@ -96,6 +101,25 @@ export default {
                 }
             }
             return config 
+        },
+        unknownAlert:function(){
+            alert('익명게시판은 현재 지원되지 않습니다.')
+        },
+        deleteComment:function(idx,commentIdx){
+            console.log(idx,'삭제')
+            axios.delete(`${SERVER_URL}/comment/${commentIdx}`,this.setToken())
+                .then(res => {
+                    if (res.data.response === 'error') {
+                        alert(res.data.message)
+                    } else {
+                        // this.apiData.splice(idx,1)
+                        this.apiData[idx].content = '삭제된 댓글입니다'
+                        console.log(res)
+                    }
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
         }
     },
     created(){
@@ -103,11 +127,12 @@ export default {
         axios.get(`${SERVER_URL}/comment/${No}`,this.setToken())
             .then(res=>{
                 if (res.data.response==='error'){
-                     alert('오류발생/로그아웃 후 재진행')
-                     localStorage.removeItem('jwt')
-                     this.$router.push({name:'Sign'})
+                    alert('오류발생/로그아웃 후 재진행')
+                    localStorage.removeItem('jwt')
+                    this.$router.push({name:'Sign'})
                 } else {
                     this.apiData = res.data.data 
+                    console.log(this.apiData)
                 }
             })
             .catch(err=>{
@@ -115,7 +140,14 @@ export default {
             })
     },
     computed:{
+        // timdeDiff:function(date){
+        //     const now = new Date()
+        //     const timeValue = new Date(date)
+        //     console.log(now,timeValue)
+        //     return now
 
+
+        // }
     }
 }
 </script>
@@ -178,6 +210,7 @@ export default {
     text-align: left;
     height: 20px;
     font-size: 12px;
+    cursor:pointer;
     
 }
 
@@ -197,6 +230,11 @@ export default {
     margin-left: 5%;
     margin-bottom: 10px;
     border-bottom: beige 1px solid;
+}
+
+.deleted {
+    font-style: italic;
+    text-decoration: line-through;
 }
 
 .childComment > span{

@@ -132,6 +132,9 @@ export default {
             })
             .catch((err) => {
               console.log(err)
+              alert('로그아웃 되었습니다. 다시 로그인 진행해주세요!')
+              localStorage.removeItem('jwt')
+              this.$router.push({name:'Sign'})
             })
       }
 

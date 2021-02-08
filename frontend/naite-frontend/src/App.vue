@@ -9,6 +9,7 @@
 import Navbar from '@/components/Basic/Navbar'
 import Message from '@/components/Basic/Message'
 
+
 export default {
   name:'app',
   components:{
@@ -38,17 +39,17 @@ export default {
       } else if (!jwt && window.location.pathname !=='/sign') {
         this.$router.push({name:'Sign'})
       }
-    }
+    },
   },
   updated:function(){
     this.token()
     this.showing()
-    
   },
   created:function(){
     this.token()
     this.showing()
-  },
+
+  }
 }
 
 </script>

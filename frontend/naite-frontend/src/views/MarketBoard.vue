@@ -44,7 +44,7 @@ export default {
     return {
       messagetitle:'나의 이웃테두리: 나이테',
       message:'당신이 모르는 동네이야기',
-      imgsrc: '5',
+      imgsrc: require(`../assets/5.jpg`),
       onDetail: false,
       thumbnail: "https://picsum.photos/200/300",
       marketPostings: [],

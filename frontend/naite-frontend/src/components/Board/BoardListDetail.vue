@@ -8,18 +8,24 @@
                 <div>
                     <div class="detailTitle">{{apiData.boardTitle}}</div>
                     <div class="detailBar">
-                        <i class="far fa-comments" @click='sendMessage'></i>
-                        <span @click='sendMessage'>메세지</span>
-                        <i class="fas fa-ban"></i>
-                        <span>신고</span>
+                        <i class="far fa-comments" @click='sendMessage'  v-if='thisBoardUserNo !== apiData.userNo'></i>
+                        <span @click='sendMessage'  v-if='thisBoardUserNo !== apiData.userNo'>메세지</span>
+                        <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.userNo'></i>
+                        <span v-if='thisBoardUserNo !== apiData.userNo'>신고</span>
+                        <i class="far fa-edit"  v-if='thisBoardUserNo === apiData.userNo'></i>
+                        <span v-if='thisBoardUserNo === apiData.userNo' @click='updateBoard'>수정</span>
+                        <i class="far fa-trash-alt" v-if='thisBoardUserNo === apiData.userNo'></i>
+                        <span v-if='thisBoardUserNo === apiData.userNo' @click='deleteBoard'>삭제</span>
+                        
+
                     </div>
                     <div class='detailHeadInfo'>
                         <div class='detailUserNick' v-if='apiData.unknownFlag'>익명님 {{categoryName[apiData.bigCategoryNo]}}에 남긴 글</div>
                         <div class='detailUserNick' v-else>{{apiData.userNick}}님이 {{categoryName[apiData.bigCategoryNo]}}에 남긴 글 </div>
                         <div class='detailMes'>
-                            <i class="far fa-thumbs-up" @click='likeBoard' v-if='liked'></i>
+                            <i class="far fa-thumbs-up" @click='likeBoard' v-if='!liked'></i>
                             <i class="fas fa-thumbs-up" @click='likeBoard' v-else></i>
-                            <span @click='likeBoard'>{{apiData.boardLikeCnt}}</span>
+                            <span>{{apiData.boardLikeCnt}}</span>
                             <i class="far fa-comment-dots"></i>
                             <span>{{apiData.boardReportCnt}}</span>
                             <i class="far fa-clock"></i>
@@ -31,16 +37,21 @@
                 </div>
             </div>
             <hr style='background-color:white;margin:10px;'>
-            <div class="detailBody">
+            <div class="detailBody" v-if='!update'>
                 {{apiData.boardContent}}
             </div>
+            <div class="detailBody" v-else>
+                <textarea name="" id="" cols="87" rows="18" v-model='updateContent'></textarea>
+                
+            </div>
             <div class="detailFooter">
-
+                <button v-if='update' @click = 'updateBoard'>수정취소</button>
+                <button v-if='update' @click = 'completeUpdate'>수정하기</button>
             </div>
         </div>
         <div class='detailImg' v-if='apiData.boardPic'>
         <!-- <div class='detailImg'> -->
-            <img src="../../assets/firstpage3.jpg" alt="" width='100%'>
+            <img src="https://i4a402.p.ssafy.io/img/signpast.fbb26c75.jpg" alt="" width='100%'>
         </div>
 
     </div>
@@ -49,8 +60,11 @@
 <script>
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
+const today = new Date()
+console.log(today)
 
-const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+// const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 
 
@@ -64,6 +78,9 @@ export default {
         return {
             categoryName:['','번화가','동사무소','수군수군','소리소문','장터'],
             liked:false,
+            thisBoardUserNo:0,
+            update:false,
+            updateContent: ''
         }
     },
     methods:{
@@ -106,9 +123,52 @@ export default {
             }
             return config 
         },
+        deleteBoard:function(){
+            axios.put(`${SERVER_URL}/board/delete/${this.apiData.boardNo}`,{},this.setToken())
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        updateBoard:function(){
+            if (this.update) {
+                this.update = false
+            } else {
+                this.update = true
+            }
+            this.updateContent = this.apiData.boardContent
+        },
+        completeUpdate:function(){
+            const params = {
+                'boardContent':this.updateContent,
+                'boardPic':this.apiData.boardPic,
+                'boardTitle': this.apiData.boardTitle,
+                'openFlage':0,
+                'unknownFlag':0,
+            }
+            axios.put(`${SERVER_URL}/board/update/${this.apiData.boardNo}`,params,this.setToken())
+                .then(res => {
+                    console.log(res)
+                    this.apiData.boardContent = this.updateContent  
+                    this.update = false
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
+        }
+
     },
     watch:{
         apiData:function(){
+            const decode = jwt_decode(localStorage.getItem('jwt'))
+            this.thisBoardUserNo = decode.user.userNo    
+            for (let i=0; i<this.apiData.usersWithLike.length;i++) {
+                if (this.apiData.usersWithLike[i] === decode.user.userNick) {
+                    this.liked = true                
+                }
+            }
             const img = this.apiData.boardPic
             const headBottom = document.querySelector('.detailHeadInfo')
             const detailBar = document.querySelector('.detailBar')
@@ -122,16 +182,6 @@ export default {
         },
         
     },
-    created(){        
-        const decode = jwt_decode(localStorage.getItem('jwt'))
-        for (let i=0; i<this.apiData.usersWithLike.length;i++) {
-            if (this.apiData.usersWithLike[i] === decode.user.userNick) {
-                this.liked = true                
-            }
-        }
-        
-
-    }
 }
 </script>
 
@@ -233,6 +283,7 @@ export default {
     position: absolute;
     top:4%;    
     right:28%;
+    cursor: pointer;
     
 }
 .detailBar > span {
@@ -243,6 +294,7 @@ export default {
 
 .detailMes{
     cursor:pointer;
+    font-size: 14px;
 }
 
 </style>

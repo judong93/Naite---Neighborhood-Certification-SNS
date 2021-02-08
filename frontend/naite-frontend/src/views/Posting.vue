@@ -9,7 +9,8 @@ import PostingBoard from '@/components/PostingBoard'
 import axios from 'axios'
 
 // const SERVER_URL = 'http://localhost:8080'
-const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+// const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 export default {
     name:'TestPosting',
@@ -25,15 +26,17 @@ export default {
                     'reviewStar':reviewStar,
                     'samllCategoryNo':smallCategoryNo
                 }
-                axios.post(`${SERVER_URL}/review/insert`,param,this.setToken())
+                console.log(param)
+                axios.post(`${SERVER_URL}/review/insert`,param,this.$store.getters.setToken)
                     .then(res=>{
-                        console.log(res)
+                        console.log(res.data) 
+                        
                     })
                     .catch(err=> {
-                        err.data
+                        console.log(err)
                         localStorage.removeItem('jwt')
-                        alert('사용시간이 지나 로그아웃되었습니다! 재접속 해주세요')
-                        this.$router.push({name:'Sign'})
+                        alert('해당 게시물은 현재 사용할 수 없습니다!')
+                        // this.$router.push({name:'Sign'})
                         })
             } else if (params.bigCategoryNo ==='5'){
                 const param = {
@@ -41,27 +44,32 @@ export default {
                     'marketCost':marketCost,
                     'smallCategoryNo':smallCategoryNo,
                 }
-                axios.post(`${SERVER_URL}/market/insert`,param,this.setToken())
+                
+                axios.post(`${SERVER_URL}/market/insert`,param,this.$store.getters.setToken)
                     .then(res=> {
                         console.log(res)
+                        this.$router.push({name:'MarketBoard'})
                     })
                     .catch(err => {
-                        err.data
-                        localStorage.removeItem('jwt')
-                        alert('사용시간이 지나 로그아웃되었습니다! 재접속 해주세요')
-                        this.$router.push({name:'Sign'})
+                        console.log(err)
+                        // err.data
+                        // localStorage.removeItem('jwt')
+                        // alert('사용시간이 지나 로그아웃되었습니다! 재접속 해주세요')
+                        // this.$router.push({name:'Sign'})
                     })
             } else {                
-                axios.post(`${SERVER_URL}/board/insert`,params,this.setToken())
+                axios.post(`${SERVER_URL}/board/insert`,params,this.$store.getters.setToken)
                     .then(res => {
                         console.log(res)
                         this.$router.push({name:'Board',params:{bigCategoryNo:params.bigCategoryNo}})
                     })
                     .catch(err=>{
                         err.data
-                        localStorage.removeItem('jwt')
-                        alert('사용시간이 지나 로그아웃되었습니다! 재접속 해주세요')
-                        this.$router.push({name:'Sign'})
+                        console.log(this.$store.getters.setToken)
+                        console.log(err)
+                        // localStorage.removeItem('jwt')
+                        // alert('사용시간이 지나 로그아웃되었습니다! 재접속 해주세요')
+                        // this.$router.push({name:'Sign'})
                     })
             }
         },
@@ -72,10 +80,7 @@ export default {
                 'auth-token':`${token}`
                 }
             }
-            console.log(config)
-            return config
-
-            
+            return config 
         }
     }
 
