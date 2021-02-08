@@ -37,9 +37,8 @@ public class CommentService {
     public List<CommentGetResponseDto> getComments(int userNo, int boardId) throws Exception{
         List<Comment> list = commentRepository.getCommentsByBoardId(new Board(boardId));
         List<CommentGetResponseDto> returnList = new ArrayList<>();
-        for (int i = list.size()-1; i >= 0; i--) {
+        for (int i = 0; i < list.size(); i++) {
             Comment c = list.get(i);
-            System.out.println(c);
             boolean userOwn = false;
             if (c.getUser().getUserNo() == userNo) {
                 userOwn = true;
