@@ -35,7 +35,6 @@ public class BoardService {
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
-                    boardResponseDto.setUserNo(0);
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -54,7 +53,6 @@ public class BoardService {
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
-                    boardResponseDto.setUserNo(0);
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -73,7 +71,6 @@ public class BoardService {
                                                                             .map(BoardDto.BoardResponseDto::new)
                                                                             .map(boardResponseDto -> {
                                                                                 boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
-                                                                                boardResponseDto.setUserNo(0);
                                                                                 return boardResponseDto;
                                                                             })
                                                                             .collect(Collectors.toList());
@@ -97,7 +94,6 @@ public class BoardService {
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
-                    boardResponseDto.setUserNo(0);
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -116,7 +112,6 @@ public class BoardService {
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
-                    boardResponseDto.setUserNo(0);
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -130,7 +125,6 @@ public class BoardService {
         Board board = boardRepository.findById(boardNo).orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
         BoardDto.BoardResponseDto boardResponseDto = new BoardDto.BoardResponseDto(board);
         boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
-        boardResponseDto.setUserNo(0);
         boardResponseDto.setUsersWithLike(findAllLikesByBoardNo(boardNo));
         return boardResponseDto;
     }
@@ -241,7 +235,6 @@ public class BoardService {
                                                                             .map(BoardDto.BoardResponseDto::new)
                                                                             .map(boardResponseDto -> {
                                                                                 boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
-                                                                                boardResponseDto.setUserNo(0);
                                                                                 return boardResponseDto;
                                                                             })
                                                                             .collect(Collectors.toList());
