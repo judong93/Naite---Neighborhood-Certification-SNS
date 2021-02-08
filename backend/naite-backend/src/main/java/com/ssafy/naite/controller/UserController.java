@@ -225,4 +225,15 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "토큰 유효성 검사")
+    @GetMapping("/token")
+    public Response checkToken(HttpServletRequest req) {
+        try {
+            jwtService.checkValid(req.getHeader("auth-token"));
+            return new Response("success", "유효한 토큰입니다.", null);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+    }
+
 }

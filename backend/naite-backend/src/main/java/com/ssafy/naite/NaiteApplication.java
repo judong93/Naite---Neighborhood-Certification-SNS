@@ -24,7 +24,7 @@ public class NaiteApplication implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(jwtInterceptor).addPathPatterns("/user/**") // 기본 적용 경로
-                .excludePathPatterns(Arrays.asList("/user/sign/**"));// 토큰 요구 제외 경로
+                .excludePathPatterns(Arrays.asList("/user/sign/**", "/user/token"));// 토큰 요구 제외 경로
     }
 
     /** CORS 처리 */
