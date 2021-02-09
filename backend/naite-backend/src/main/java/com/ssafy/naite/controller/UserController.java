@@ -88,7 +88,7 @@ public class UserController {
 
     @PostMapping("/sign/signup")
     @ApiOperation(value = "회원가입")
-    public Response save(@RequestBody UserSignUpRequestDto userSignUpRequestDto) {
+    public Response save(@ModelAttribute UserSignUpRequestDto userSignUpRequestDto) {
         try {
             User user = userService.save(userSignUpRequestDto);
             // 이메일 인증 키 auth_key에 "empty"로 저장 -> 미인증 상태

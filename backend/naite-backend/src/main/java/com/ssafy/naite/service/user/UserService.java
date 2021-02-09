@@ -18,7 +18,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -61,9 +66,24 @@ public class UserService {
             String salt = BCrypt.gensalt();
             String encodedPw = BCrypt.hashpw(requestDto.getUserPw(), salt);
 
+            String rootPath = "/home/ubuntu/images/";
+            String apiPath = "https://i4a402.p.ssafy.io/images/";
+            String changeName = "";
+            List<MultipartFile> files = requestDto.getFiles();
+
+            for (MultipartFile file : files) {
+                String originalName = file.getOriginalFilename();
+                changeName = requestDto.getUserNick() + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmSSS")) + "_" + originalName;
+                String filePath = rootPath + changeName;
+
+                File dest = new File(filePath);
+                file.transferTo(dest);
+            }
+
             User user = requestDto.toEntity();
             user.setUserPw(encodedPw);
             user.setUserSalt(salt);
+            user.setUserPic(apiPath + changeName);
 
             // 회원가입 진행
             return userRepository.save(user);
