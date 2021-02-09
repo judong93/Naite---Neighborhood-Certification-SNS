@@ -33,7 +33,7 @@
                             <i class="fas fa-thumbs-up" @click='likeBoard' v-else></i>
                             <span>{{apiData.boardLikeCnt}}</span>
                             <i class="far fa-comment-dots"></i>
-                            <span>{{apiData.boardReportCnt}}</span>
+                            <span>{{apiData.boardCommentCnt}}</span>
                             <i class="far fa-clock"></i>
                             <span>{{apiData.boardCreatedAt}}</span>
                         </div>
@@ -43,8 +43,9 @@
                 </div>
             </div>
             <hr style='background-color:white;margin:10px;'>
-            <div class="detailBody" v-if='!update'>
-                {{apiData.boardContent}}
+            
+            <div class="detailBody" v-if='!update' v-html='apiData.boardContent'>
+                <!-- 보드의 내용물보이는 부분 -->
             </div>
             <div class="detailBody" v-else>
                 <textarea name="" id="" cols="87" rows="18" v-model='updateContent'></textarea>
@@ -79,6 +80,7 @@ export default {
     props:{
         apiData:Object,
         boardNo:[String,Number],
+        updateCommentCntCheck:Number,
     },
     data:function(){
         return {
@@ -98,7 +100,7 @@ export default {
                 'boardNo':this.boardNo
             }
             if (!this.liked){
-                axios.post(`${SERVER_URL}/board/like`,params,this.$store.getters.setToken)
+                axios.post(`${SERVER_URL}/board/like`,params,this.setToken())
                     .then(res=>{
                         console.log(res)
                         this.apiData.boardLikeCnt += 1
@@ -108,7 +110,7 @@ export default {
                         console.log(err)
                     })
             } else {
-                axios.post(`${SERVER_URL}/board/dislike`, params,this.$store.getters.setToken)
+                axios.post(`${SERVER_URL}/board/dislike`, params,this.setToken())
                     .then(res=>{
                         console.log(res)
                         this.apiData.boardLikeCnt -= 1
@@ -121,7 +123,7 @@ export default {
 
         },
         deleteBoard:function(){
-            axios.put(`${SERVER_URL}/board/delete/${this.apiData.boardNo}`,{},this.$store.getters.setToken)
+            axios.put(`${SERVER_URL}/board/delete/${this.apiData.boardNo}`,{},this.setToken())
                 .then(() => {
                     this.$router.push({name:'Board',params:{bigCategoryNo:this.apiData.bigCategoryNo}})
 
@@ -146,7 +148,7 @@ export default {
                 'openFlage':0,
                 'unknownFlag':0,
             }
-            axios.put(`${SERVER_URL}/board/update/${this.apiData.boardNo}`,params,this.$store.getters.setToken)
+            axios.put(`${SERVER_URL}/board/update/${this.apiData.boardNo}`,params,this.setToken())
                 .then(res => {
                     console.log(res)
                     this.apiData.boardContent = this.updateContent  
@@ -155,7 +157,17 @@ export default {
                 .catch(err=>{
                     console.log(err)
                 })
+        },
+        setToken:function(){
+            const token=localStorage.getItem('jwt')            
+            const config = {
+                headers: {
+                'auth-token':`${token}`
+                }
+                }        
+            return config 
         }
+
 
     },
     watch:{
@@ -170,10 +182,10 @@ export default {
             const img = this.apiData.boardPic
             const headBottom = document.querySelector('.detailHeadInfo')
             const detailBar = document.querySelector('.detailBar')
-            console.log(this.apiData.boardContent)
-            this.apiData.boardContent.replace(/\n/g,'<br/>')
-            console.log(this.apiData.boardCOntent)
-            console.log('이것은\n 테스트')
+                        
+            this.apiData.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')
+            // this.apiData.boardContent.split('\n').join('<br />')
+            
             if (!img) {
                 headBottom.style.width = '1038px'
                 detailBar.style.right ='1%'
@@ -182,6 +194,10 @@ export default {
                 detailBar.style.right ='28%'
             }
         },
+        updateCommentCntCheck:function(){
+            console.log('왜안올라가누')
+            this.apiData.boardCommentCnt += 1
+        }
         
     },
 }
@@ -269,7 +285,7 @@ export default {
     max-height: 190px;
     overflow: auto;
     overflow-x: hidden;
-    white-space: normal;
+    white-space: pre-wrap;
     transition:0.3s
 }
 

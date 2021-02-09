@@ -154,16 +154,16 @@ export default {
       this.unknownFlag=0
     },
 
-    // setToken: function () {
-    //   const token = localStorage.getItem('jwt')
+    setToken: function () {
+      const token = localStorage.getItem('jwt')
 
-    //   const config = {
-    //     headers: {
-    //       Authorization: `JWT ${token}`
-    //     }
-    //   }
-    //   return config
-    // },
+      const config = {
+        headers: {
+          Authorization: `JWT ${token}`
+        }
+      }
+      return config
+    },
     post: function () {
       // const config = this.setToken()
       const posting = {
