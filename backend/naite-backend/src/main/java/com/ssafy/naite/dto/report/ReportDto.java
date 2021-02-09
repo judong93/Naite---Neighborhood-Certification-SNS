@@ -19,7 +19,7 @@ public class ReportDto {
 
         @ApiParam(value = "게시글 인덱스")
         private int boardNo;
-        @ApiParam(value = "원댓글 인덱스")
+        @ApiParam(value = "댓글 인덱스")
         private int commentNo;
         @ApiParam(value = "신고 타입 (0 : 게시글, 1 : 댓글)")
         private int reportType;
@@ -33,19 +33,15 @@ public class ReportDto {
             this.reportType = reportType;
             this.reportTargetNo = reportTargetNo;
         }
-
-        public Report toEntity(int userNo){
-           return Report.builder()
-                   .board(new Board(boardNo))
-                   .comment(new Comment(commentNo))
-                   .user(new User(userNo))
-                   .reportType(reportType)
-                   .reportTargetNo(reportTargetNo)
-                   .reportDate(new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9)))
-                   .build();
-        }
+//        public Report toEntity(int userNo){
+//           return Report.builder()
+//                   .board(new Board(boardNo))
+//                   .comment(new Comment(commentNo))
+//                   .user(new User(userNo))
+//                   .reportType(reportType)
+//                   .reportTargetNo(reportTargetNo)
+//                   .reportDate(new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9)))
+//                   .build();
+//        }
     }
-
-
-
 }

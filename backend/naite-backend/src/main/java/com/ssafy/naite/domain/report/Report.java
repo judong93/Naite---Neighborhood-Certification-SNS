@@ -23,17 +23,13 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reportNo;
 
-    @ManyToOne
-    @JoinColumn(name = "board_no")
-    private Board board;
+    private int boardNo;
+    private int commentNo;
 
-    @ManyToOne
-    @JoinColumn(name = "comment_no")
-    private Comment comment;
-
-    @ManyToOne
-    @JoinColumn(name = "user_no")
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_no")
+//    private User user;
+    private int userNo;
 
     @Column(nullable = false)
     private int reportType;
@@ -43,16 +39,24 @@ public class Report {
 
     private Timestamp reportDate;
 
+//    @Builder
+//    public Report(int reportNo, int boardNo, int commentNo, User user, int reportType, int reportTargetNo, Timestamp reportDate) {
+//        this.reportNo = reportNo;
+//        this.boardNo = boardNo;
+//        this.commentNo = commentNo;
+//        this.user = user;
+//        this.reportType = reportType;
+//        this.reportTargetNo = reportTargetNo;
+//        this.reportDate = reportDate;
+//    }
     @Builder
-    public Report(int reportNo, Board board, Comment comment, User user, int reportType, int reportTargetNo, Timestamp reportDate) {
+    public Report(int reportNo, int boardNo, int commentNo, int userNo, int reportType, int reportTargetNo, Timestamp reportDate) {
         this.reportNo = reportNo;
-        this.board = board;
-        this.comment = comment;
-        this.user = user;
+        this.boardNo = boardNo;
+        this.commentNo = commentNo;
+        this.userNo = userNo;
         this.reportType = reportType;
         this.reportTargetNo = reportTargetNo;
         this.reportDate = reportDate;
     }
-
-
 }
