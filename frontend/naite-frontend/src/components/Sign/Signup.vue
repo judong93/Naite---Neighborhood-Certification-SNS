@@ -2,6 +2,7 @@
   <div id="signup">               
         <div class="signupform">
             <div class='signuphead'>회원가입</div>
+            <button class='backBtn' @click='toLogin'><i class="fas fa-arrow-circle-left">로그인화면으로</i></button> 
             <div class="signupleftdiv">
                 <label for="#" >아이디</label><br>
                 <input id='idInput' type="text" v-model='params.userId' @keypress.space="checkSpace" @keypress.enter='idComfirmMet'><button  v-if='!idConfirm' class="idConfirm" @click='idComfirmMet'>중복확인</button><br>
@@ -21,7 +22,6 @@
                 >
                 
                 <!-- <input type="text"  v-model='params.userPic' @keypress.space="checkSpace"><br>    -->
-                <button class='backBtn' @click='toLogin'>뒤로가기</button>             
             </div>
             <div class="signuprightdiv">
                 <label for="#" >이름</label><br>
@@ -227,7 +227,11 @@ export default {
                     signupFormData.append(`${paramsKey[i]}`,this.params[`${paramsKey[i]}`])
                     console.log(this.params[`${paramsKey[i]}`])
                 }
-                signupFormData.append('files',this.userPic)
+
+                if(this.userPic){
+                    signupFormData.append('files',this.userPic)
+                }
+                
                 axios.post(`${SERVER_URL}/user/sign/signup`,
                     signupFormData, {
                         headers: {
@@ -409,7 +413,8 @@ export default {
 }
 
 .backBtn {
-    margin-top: 10%;
+    position:absolute;
+    /* margin-top: 10%; */
     background-color: yellowgreen;
     border: none;
     color:white;
