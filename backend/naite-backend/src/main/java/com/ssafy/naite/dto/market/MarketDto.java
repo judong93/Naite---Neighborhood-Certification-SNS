@@ -86,7 +86,9 @@ public class MarketDto {
             if(this.board.getBoardCreatedAt().plusHours(1).isAfter(LocalDateTime.now())) {
                 this.boardCreatedAt = "방금 전";
             } else if (this.board.getBoardCreatedAt().plusDays(1).isAfter(LocalDateTime.now())) {
-                this.boardCreatedAt = (LocalDateTime.now().getHour() - this.board.getBoardCreatedAt().getHour()) + "시간 전";
+                int subHour = LocalDateTime.now().getHour() - this.board.getBoardCreatedAt().getHour();
+                if(subHour < 0) subHour += 24;
+                this.boardCreatedAt = subHour + "시간 전";
             } else {
                 this.boardCreatedAt = this.board.getBoardCreatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
             }
