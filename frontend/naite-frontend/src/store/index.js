@@ -22,15 +22,7 @@ export default new Vuex.Store({
     
   }, 
   getters: {
-    setToken:function(){
-      const token=localStorage.getItem('jwt')
-      const config = {
-          headers: {
-          'auth-token':`${token}`
-          }
-        }        
-      return config 
-    }
+
   },
   plugins: [
     createPersistedState()

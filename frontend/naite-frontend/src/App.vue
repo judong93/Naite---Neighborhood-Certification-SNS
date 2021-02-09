@@ -8,7 +8,9 @@
 <script>
 import Navbar from '@/components/Basic/Navbar'
 import Message from '@/components/Basic/Message'
+import axios from 'axios'
 
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 
 export default {
   name:'app',
@@ -40,19 +42,42 @@ export default {
         this.$router.push({name:'Sign'})
       }
     },
-    // usingToken:function(){
-    //   axios.get(``)
-    // }
+    usingToken:function(){
+      axios.get(`${SERVER_URL}/user/token`,this.setToken())
+        .then(res=>{          
+          if(res.data.response!=='success' && localStorage.getItem('jwt')){
+            localStorage.removeItem('jwt')
+            alert('로그인 만료 재로그인 진행해주세요')
+            this.$router.push({name:'Sign'})
+          }
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    setToken:function(){
+      const token=localStorage.getItem('jwt')      
+      const config = {
+          headers: {
+          'auth-token':`${token}`
+          }
+        }        
+      return config 
+    }
   },
   updated:function(){
     this.token()
     this.showing()
-    // this.usingToken()
+    if (localStorage.getItem('jwt')){
+      this.usingToken()
+    }
   },
   created:function(){
     this.token()
     this.showing()
-    // this.usingToken()
+    if (localStorage.getItem('jwt')){
+      this.usingToken()
+    }
 
   }
 }

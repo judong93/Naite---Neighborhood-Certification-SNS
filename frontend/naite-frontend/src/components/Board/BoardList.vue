@@ -24,11 +24,11 @@
                                 </div>
                                 <div>
                                     <i class="far fa-images"></i>
-                                    이미지갯수보여주는식
+                                    {{list.boardPic.length}}
                                     <i class="far fa-thumbs-up"></i>
                                     {{list.boardLikeCnt}}&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="far fa-comment-dots"></i>
-                                    {{list.boardReportCnt}}
+                                    {{list.boardCommentCnt}}
                                 </div>
                             </div>
                         </div>
@@ -55,7 +55,8 @@ export default {
     data: function() {
         return {
             apiData: {},
-            categoryName:['','번화가','동사무소','수군수군','소리소문','장터']
+            categoryName:['','번화가','동사무소','수군수군','소리소문','장터'],
+            imgCnt:0,
         }
     },
     props:{
@@ -65,7 +66,7 @@ export default {
         loadList: function(){
             axios.get(`${SERVER_URL}/board/list/${this.bigCategoryNo}`)
                 .then(res=>{
-                    this.apiData = res.data
+                    this.apiData = res.data                    
                 })
                 .catch(err=> {
                     console.log(err)

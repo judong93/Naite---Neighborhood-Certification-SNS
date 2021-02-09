@@ -1,5 +1,5 @@
 <template>
-  <div id="login">
+  <div id="login">   
     <div class="loginBox">
         <div class="login-head">LOGIN</div>
 
@@ -60,10 +60,12 @@ export default {
         }
     },
     methods:{
-
         look_signup: function(){
-            const loginDiv = document.getElementById('login')
-            loginDiv.style.top = '200%'
+            // const loginDiv = document.getElementById('login')
+            // loginDiv.style.top = '200%'
+            const btn = document.getElementById('login')
+            btn.style.webkitAnimationName = 'fadeout'
+            btn.style.webkitAnimationDuration='0s'
             this.$emit('changeSignup')
         },
         checkSpace:function(){
@@ -97,10 +99,14 @@ export default {
     
     watch:{
         toLogin: function(){
+            const btn = document.getElementById('login')
             if(this.toLogin){
-                const loginDiv = document.getElementById('login')
-                loginDiv.style.top = '0%'
-            }
+                // const loginDiv = document.getElementById('login')
+                // loginDiv.style.top = '0%'
+                btn.style.webkitAnimationName = 'fadein'
+                btn.style.webkitAnimationDuration='1s'
+                // this.$emit('changeSignup')
+            } 
 
         }
     },
@@ -114,14 +120,6 @@ export default {
     color: rgba(255,255,255,0.6)
 }
 
-@keyframes fadeout {
-    from {
-        opacity: 1;
-    } 
-    to {
-        opacity: 0;
-    }
-}
 
 
 #login {
@@ -132,7 +130,9 @@ export default {
     height:100%;    
     transition: 0.3s;
     font-family: font1;
-    color:white;
+    color:white;   
+    animation-fill-mode: forwards;
+    
     
 }
 
@@ -143,11 +143,7 @@ export default {
     top:600px;
     left: 950px;
     transform: translate(-50%,-55%);
-    /* -webkit-animation: fadeout 2s; */
     transition: 0.3s;
-    /* background-color: #3f9f4773; */
-    /* animation-fill-mode: forwards; */
-    /* animation-fill-mode: none; */
 }
 
 .login-head {

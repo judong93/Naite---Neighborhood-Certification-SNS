@@ -1,11 +1,12 @@
 <template>
     <div id="boardComment">
         <div>
+            <button @click='toCommentInput' class='toCommentBtn'>댓글작성</button>
             <div class="commentlist" v-for='(comment,idx) in apiData' :key='idx'>
                 <div class="parentComment" v-if='comment.parentId===0'>   
                     <div class='commentLeft'>
                         <img src="../../assets/cha2.png" alt="" height="40px">
-                        <span class='commentNick'>{{comment.userNick}} : </span> 
+                        <span class='commentNick'>{{comment.isUnknown ? '익명':comment.userNick}} : </span> 
                     </div>
                     <span class='commentContent deleted' v-if='comment.isDeleted'>삭제된 댓글입니다</span>
                     <span class='commentContent' v-else>{{comment.content}}</span>
@@ -45,7 +46,8 @@
                 </div>
             </div>
         </div>
-        <input type="checkbox" style='margin-right:5px' @click='unknownAlert'><span style='margin-right:5px'>익명</span>
+        
+        <input class='unKnownComment' type="checkbox" style='margin-right:5px' v-if='bigCategoryNo===1'><span style='margin-right:5px'  v-if='bigCategoryNo===1'>익명</span>
         <input type="text" class='commentinput' v-model='params.content' @keypress.enter='createComment(0)'>
         <button @click='createComment(0)'>댓글작성</button>
         
@@ -83,30 +85,48 @@ export default {
             recommentParentId:-1,       
         }
     },
+    props:{
+        bigCategoryNo:Number,
+    },
 
     methods:{
+        updateCommentCnt:function(){
+            this.$emit('updateCommentCnt')
+        },
+        toCommentInput:function(){
+            const inputBtn = document.querySelector('.commentinput')
+            inputBtn.focus()
+        },
         createComment:function(num){
             this.params.boardId = this.$route.params.boardNo
             this.params.parentId = num
-
-            axios.post(`${SERVER_URL}/comment`,this.params,this.$store.getters.setToken)
+            const unKnownComment = document.querySelector('.unKnownComment')
+            if (unKnownComment.checked) {
+                this.params.isUnknown = 1
+            } else {
+                this.params.isUnknown = 0
+            }
+            
+            axios.post(`${SERVER_URL}/comment`,this.params,this.setToken())
                 .then(res=>{
                     if(res.data.response==='error') {
                         alert('오류발생/로그아웃 후 재진행')
                         localStorage.removeItem('jwt')
                         this.$router.push({name:'Sign'})
                     } else if (this.params.content) {
+                        console.log(res,'이것은 리스폰스')
                         const decode = jwt_decode(localStorage.getItem('jwt'))
-                        console.log(res)
                         const param = {
                             'content':this.params.content,
                             'isUnknown':this.params.isUnknown,
                             'userNick': decode.user.userNick,
-                            'parentId':this.params.parentId,
+                            'parentId':0,
                             'userOwn':1,
                             'createdAt':'현재',
+                            'commentNo':res.data.data.commentNo,
                         }
-                        
+                        console.log(res.data,param)
+                        this.updateCommentCnt()
                         this.apiData.push(param)
                         this.params.content=''
                     } else {                        
@@ -119,10 +139,10 @@ export default {
                 })
         },
         createRecomment:function(parentId,idx){
-            console.log(parentId,idx)
+            // const comment = this.recommentContent
             this.recommentParams.boardId = this.$route.params.boardNo
             this.recommentParams.parentId = parentId
-            axios.post(`${SERVER_URL}/comment`,this.recommentParams,this.$store.getters.setToken)
+            axios.post(`${SERVER_URL}/comment`,this.recommentParams,this.setToken())
                 .then(res=>{
                     if(res.data.response==='error') {
                         alert('오류발생/로그아웃 후 재진행')
@@ -130,13 +150,25 @@ export default {
                         this.$router.push({name:'Sign'})
                     } else if (this.recommentParams.content) {
                         const decode = jwt_decode(localStorage.getItem('jwt'))
+                        console.log(res)
+                        const param = {
+                            'content':this.recommentParams.content,
+                            'isUnknown':this.recommentParams.isUnknown,
+                            'userNick': decode.user.userNick,
+                            'parentId':this.recommentParams.parentId,
+                            'userOwn':1,
+                            'createdAt':'현재',
+                        }
+                        this.updateCommentCnt()
                         this.recommentParams.userNick = decode.user.userNick 
-                        this.apiData.splice(idx,1)                       
-                        this.apiData.splice(idx,0,this.recommentParams)
+                        this.apiData.splice(idx,1)
+                        if (idx===this.apiData.length){
+                            this.apiData.push(param)
+                        } else {
+                            this.apiData.splice(idx,0,param)
+                        }
                         this.lastRecommentIdx = -1
-                        this.recommentParentId = -1
-                        
-                       
+                        this.recommentParentId = -1                       
                     } else {                        
                         alert('내용물을 작성해주세요')
                     }
@@ -147,12 +179,9 @@ export default {
                 })
 
         },
-        unknownAlert:function(){
-            alert('익명게시판은 현재 지원되지 않습니다.')
-        },
         deleteComment:function(idx,commentIdx){
 
-            axios.delete(`${SERVER_URL}/comment/${commentIdx}`,this.$store.getters.setToken)
+            axios.delete(`${SERVER_URL}/comment/${commentIdx}`,this.setToken())
                 .then(res => {
                     if (res.data.response === 'error') {
                         alert(res.data.message)
@@ -160,7 +189,6 @@ export default {
                         // this.apiData.splice(idx,1)
                         this.apiData[idx].content = '삭제된 댓글입니다'
                         this.apiData[idx].isDeleted = 1
-                        console.log(res)
                     }
                 })
                 .catch(err=>{
@@ -169,22 +197,19 @@ export default {
         },
         recomment:function(idx){
             this.recommentParams.content = ''
-            let addCheckIdx = 0
-            if (this.lastRecommentIdx !==-1){
-                this.apiData.splice(this.lastRecommentIdx,1)
-            }
-
-            if (this.lastRecommentIdx!==-1 && this.lastRecommentIdx<idx){
-                addCheckIdx = 1
-            }
-
-            this.lastRecommentIdx = -1
-
             const parentId = this.apiData[idx].commentNo
-            let addIdx = 0
+            console.log(parentId)
             const recommentInput = {
                 recomment:1,
             }
+
+            if (this.lastRecommentIdx !==-1){
+                this.apiData.splice(this.lastRecommentIdx,1)
+            }
+            this.lastRecommentIdx = -1
+            
+            
+            let addIdx = 0
 
             for (let i=0; i<this.apiData.length;i++){
                 if (this.apiData[i].commentNo === parentId){
@@ -194,18 +219,30 @@ export default {
                     addIdx = i
                 }
             }
-            this.apiData.splice(addIdx+1+addCheckIdx,0,recommentInput)
+            this.apiData.splice(addIdx+1,0,recommentInput)
+
+
             if (document.querySelector('.recommentInput')){
                 document.querySelector('.recommentInput').focus()
             } 
-            this.lastRecommentIdx = addIdx+1+addCheckIdx
+
+            this.lastRecommentIdx = addIdx+1
             this.recommentParentId = parentId
             
+        },
+        setToken:function(){
+            const token=localStorage.getItem('jwt')            
+            const config = {
+                headers: {
+                'auth-token':`${token}`
+                }
+                }        
+            return config 
         }
     },
     created(){
         const No = this.$route.params.boardNo
-        axios.get(`${SERVER_URL}/comment/${No}`,this.$store.getters.setToken)
+        axios.get(`${SERVER_URL}/comment/${No}`,this.setToken())
             .then(res=>{
                 if (res.data.response==='error'){
                     alert('오류발생/로그아웃 후 재진행/머지')
@@ -213,8 +250,8 @@ export default {
                     // this.$router.push({name:'Sign'})
                     console.log(res)
                 } else {
-                    this.apiData = res.data.data 
-                    console.log(this.apiData)
+                    this.apiData = res.data.data   
+                    
                 }
             })
             .catch(err=>{
@@ -238,16 +275,27 @@ export default {
     font-family: font1;
     position:absolute;
     width: 60%;
-    max-height: 900px;
+    /* max-height: 900px; */
     background-color: #A87A4F;
     top: 54%;
     left: 20%;  
     padding:20px;
     color:white;
-    overflow: auto;
+    /* overflow:visible; */
     overflow-x:hidden;
     text-align:center;
 }
+
+.toCommentBtn{
+    position:fixed;
+    right:15%;
+    bottom:10%;
+    border-radius: 10px;
+
+}
+
+
+
 .commentlist {
     overflow: auto;
     overflow-x: hidden;

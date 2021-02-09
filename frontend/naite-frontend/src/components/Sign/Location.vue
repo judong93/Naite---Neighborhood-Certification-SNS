@@ -1,9 +1,14 @@
 <template>
-    <div id="location">
+    <div id="location" v-if='searchLocation'>
     
-        <div v-if='searchLocation'>
+        <div style='position:relative'>
             <VueDaumPostcode
-            style='width:500px;max-height:700px; backgroudColor:red;position:fixed; top:50%;left:50%; overflow:auto;transform: translate(-50%,-50%);borderRadius:30px;' 
+            style='width:500px;max-height:700px; 
+            backgroudColor:red;position:fixed; 
+            top:50%;left:50%; 
+            overflow:auto;
+            transform: translate(-50%,-50%);
+            ' 
             id = 'locationSearch'
             @complete='result=$event'
             :theme="{
@@ -14,10 +19,11 @@
                 textColor: '#FFFFFF',
                 queryTextColor: '#FFFFFF',
                 outlineColor: '#44444'
-            }"
+            }"              
             />
             
         </div>
+        <button @click='closeLocation' class='closeLocation'><i class="fas fa-backspace">취소</i></button>
     </div>
 </template>
 
@@ -53,6 +59,10 @@ export default {
             }
             geocoder.addressSearch(this.userBname,callback)          
         },
+        closeLocation:function(){            
+            console.log('?')
+            this.$emit('selectAddress',this.result) 
+        }
     },
     computed: {
     },
@@ -69,10 +79,6 @@ export default {
                 that.serverLongitude = position.coords.longitude
                 alert('사용자위치정보 확인')
                 });
-            } else {
-                if (!that.result) {
-                    alert('잠시후 다시 이용해주세요')
-                }
             }
             
         },
@@ -119,6 +125,28 @@ export default {
 
 #locationSearch::-webkit-scrollbar{
     display: none;
+}
+
+.closeLocation {
+    position:absolute;
+    top:0;
+    left:0;
+    background-color: transparent;
+    border:none;
+    outline: none;
+    display:inline-block
+}
+
+.closeLocation > i {
+    display:inline-block;
+    position:absolute;
+    color: red;
+    font-size: 32px;
+    width: 400px;
+    text-align: left;
+    top:10px;
+    left:10px;
+    
 }
 
 </style>

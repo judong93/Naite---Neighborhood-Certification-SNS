@@ -27,7 +27,7 @@ export default {
                     'smallCategoryNo':smallCategoryNo                    
                 }
                 console.log(param)
-                axios.post(`${SERVER_URL}/review/insert`,param,this.$store.getters.setToken)
+                axios.post(`${SERVER_URL}/review/insert`,param,this.setToken())
                     .then(res=>{
                         console.log(res) 
                         this.$router.push({name:'Board',params:{bigCategoryNo:params.bigCategoryNo}})
@@ -46,7 +46,7 @@ export default {
                     'smallCategoryNo':smallCategoryNo,
                 }
                 
-                axios.post(`${SERVER_URL}/market/insert`,param,this.$store.getters.setToken)
+                axios.post(`${SERVER_URL}/market/insert`,param,this.setToken())
                     .then(res=> {
                         console.log(res)
                         this.$router.push({name:'MarketBoard'})
@@ -59,7 +59,7 @@ export default {
                         // this.$router.push({name:'Sign'})
                     })
             } else {                
-                axios.post(`${SERVER_URL}/board/insert`,params,this.$store.getters.setToken)
+                axios.post(`${SERVER_URL}/board/insert`,params,this.setToken())
                     .then(res => {
                         console.log(res)
                         this.$router.push({name:'Board',params:{bigCategoryNo:params.bigCategoryNo}})

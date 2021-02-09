@@ -1,9 +1,8 @@
 <template>
-  <div id="signup">       
-        <input type="file" class='testff' name='files'>
-        <button @click='test'>test</button>
+  <div id="signup">               
         <div class="signupform">
             <div class='signuphead'>회원가입</div>
+            <button class='backBtn' @click='toLogin'><i class="fas fa-arrow-circle-left">로그인화면으로</i></button> 
             <div class="signupleftdiv">
                 <label for="#" >아이디</label><br>
                 <input id='idInput' type="text" v-model='params.userId' @keypress.space="checkSpace" @keypress.enter='idComfirmMet'><button  v-if='!idConfirm' class="idConfirm" @click='idComfirmMet'>중복확인</button><br>
@@ -14,8 +13,15 @@
                 <label for="#">닉네임</label><br>
                 <input id='nickInput' type="text"  v-model='params.userNick' @keypress.space="checkSpace" @keypress.enter='nickemailComfirmMet'><button  v-if='!nickConfirm' class="nickConfirm" @click='nickemailComfirmMet'>중복확인</button><br>   
                 <label for="#">프로필사진</label><br>
-                <input type="text"  v-model='params.userPic' @keypress.space="checkSpace"><br>   
-                <button class='backBtn' @click='toLogin'>뒤로가기</button>             
+                <label for="signupPic" class='signupPicForm' >이미지선택</label><br>
+                <input 
+                type="file" 
+                id='signupPic' 
+                name='files' 
+                @change='saveFile'                
+                >
+                
+                <!-- <input type="text"  v-model='params.userPic' @keypress.space="checkSpace"><br>    -->
             </div>
             <div class="signuprightdiv">
                 <label for="#" >이름</label><br>
@@ -37,10 +43,6 @@
         </div>
 
         <Location :searchLocation='searchLocation' @selectAddress = 'selectAddress' @checkAddress='checkAddress' />
-        
-
-
-       
   </div>
 </template>
 
@@ -67,7 +69,6 @@ export default {
                 "userId": "",
                 "userName": "",
                 "userNick": "",
-                "userPic": "",
                 "userPw": ""
             },
             pwConfirm:'',
@@ -76,7 +77,7 @@ export default {
             addressConfirm: false,
             idConfirm:false,
             nickConfirm:false,
-            testPic:'',
+            userPic:'',
         }
     },
     methods:{
@@ -108,6 +109,9 @@ export default {
             for (let key in this.params) {
                 this.params[key] = ''
             }   
+            const showSignup = document.getElementById('signup')
+            showSignup.style.webkitAnimationName = 'fadeout'
+            showSignup.style.webkitAnimationDuration='0s'
         },
         idComfirmMet:function(){
             const btn = document.getElementById('idInput')
@@ -214,23 +218,38 @@ export default {
                 pwCheck = true
             }
 
-
             if(!this.idConfirm || !this.nickConfirm){
                 alert('아이디 및 닉네임 중복확인을 진행해주세요')
             } else if (pwCheck&&nullCheck&&this.emailConfirm&&this.addressConfirm) {
-                axios.post(`${SERVER_URL}/user/sign/signup`,this.params)
-                    .then(res => {
-                        if (res.data.response==='success'){
+                let signupFormData = new FormData()
+                const paramsKey =["userBasicAddress","userDetailAddress",'userDong',"userEmail","userId","userName","userNick","userPw"]
+                for (let i=0;i<8;i++){
+                    signupFormData.append(`${paramsKey[i]}`,this.params[`${paramsKey[i]}`])
+                    console.log(this.params[`${paramsKey[i]}`])
+                }
+
+                if(this.userPic){
+                    signupFormData.append('files',this.userPic)
+                }
+                
+                axios.post(`${SERVER_URL}/user/sign/signup`,
+                    signupFormData, {
+                        headers: {
+                            'Content-type':'multipart/form-data',
+                            }
+                        }
+                    
+                ).then(res=>{
+                    if (res.data.response==='success'){
                             alert('회원가입이 완료되었습니다!')    
                             this.toLogin()
                         } else {
                             alert(res.data.message)
                         }
-                        
-                    })
-                    .catch(err=>{
-                        console.log(err)
-                    })
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
 
             } else if (!pwCheck) {
                 alert('비밀번호를 확인해주세요!')
@@ -242,6 +261,14 @@ export default {
                 alert('주소를 정확히 입력해주세요!')
             }
         },
+        saveFile:function(e){
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length) {
+                this.userPic = ''
+                return;
+            }
+            this.userPic = files[0]
+        }
     },
     computed: {
 
@@ -253,9 +280,13 @@ export default {
         toSignup:function(){
             const showSignup = document.getElementById('signup')
             if (this.toSignup){
-                showSignup.style.top = '0%'
+                // showSignup.style.top = '0%'
+                showSignup.style.webkitAnimationName = 'fadein'
+                showSignup.style.webkitAnimationDuration='1s'
             } else {
-                showSignup.style.top = '-200%'
+                showSignup.style.webkitAnimationName = 'fadeout'
+                showSignup.style.webkitAnimationDuration='0s'
+                // showSignup.style.top = '-200%'
             }
         },
         emailConfirm:function(){
@@ -299,10 +330,12 @@ export default {
 #signup {
     position: absolute;
     height: 100%;
-    top:-200%;
+    top:0%;
     width:100%;      
     transition: 0.3s;  
     font-family: font1;
+    visibility: hidden;
+    animation-fill-mode: forwards;
 }
 .signuphead {
     position: absolute;
@@ -380,7 +413,8 @@ export default {
 }
 
 .backBtn {
-    margin-top: 10%;
+    position:absolute;
+    /* margin-top: 10%; */
     background-color: yellowgreen;
     border: none;
     color:white;
@@ -409,7 +443,24 @@ export default {
     width: 72%;
 }
 
+#signupPic {
+    display: none;
+}
 
-
+.signupPicForm{
+    position: relative;
+    cursor:pointer;
+    margin:0;
+    margin-top: 0;
+    background-color: rgb(17, 235, 35);
+    padding:5px;
+    border-radius: 10px;
+    font-size: 15px;
+    transition:0.3s;
+    top: -5%;
+}
+.signupPicForm:hover{
+    background-color: rgb(1, 101, 250);
+}
 
 </style>

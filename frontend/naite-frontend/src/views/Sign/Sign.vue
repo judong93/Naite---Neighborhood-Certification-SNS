@@ -41,27 +41,59 @@ export default {
 
 
 <style>
+
+
+@keyframes fadeout {
+    from {
+        opacity: 1;
+        visibility: visible;
+        
+    } 
+    to {
+        opacity: 0;
+        visibility: hidden;
+        
+    }
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+        visibility: hidden;
+        
+    }
+    to {
+        opacity: 1;
+        visibility: visible;
+        
+    }
+}
+
+
+
 #sign {
     position:relative;
     background: url('../../assets/sign.jpg') no-repeat center center;
-    background-size: 100vw 100vh;
-    height: 100vh;   
-    width:100vw;
+    background-size: 1920px 969px;
+    height: 969px;   
+    width:1920px;
     overflow:hidden; 
+    /* overflow:auto; */
   
 }
 
 .bgColor {
-  width:1000%;
-  height:1000%;
+  height: 969px;   
+  width:1920px;
   background-color: rgba(0, 0, 0, 0.7);
+  margin:0;
 
 }
 
-/* @media screen and (max-width: 1800px) {
+@media screen and (max-width: 1800px) {
   #sign {
     overflow: auto;
   }
-} */
+}
 
 </style>

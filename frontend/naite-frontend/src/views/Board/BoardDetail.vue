@@ -1,7 +1,7 @@
 <template>
     <div id="boarddetail">
-        <BoardListDetail :apiData='apiData' :boardNo='boardNo'/>
-        <BoardComment />
+        <BoardListDetail :apiData='apiData' :boardNo='boardNo' :updateCommentCntCheck='updateCommentCntCheck' />
+        <BoardComment :bigCategoryNo='bigCategoryNo' @updateCommentCnt='updateCommentCnt' />
     </div>
     
 </template>
@@ -25,12 +25,16 @@ export default {
         return {
             apiData:{},
             boardNo:0,
+            bigCategoryNo:0,
+            updateCommentCntCheck:0,
         }
     },
     props:{
     },
     methods:{
-
+        updateCommentCnt:function(){
+            this.updateCommentCntCheck+=1
+        }
         
     },
     computed: {
@@ -42,9 +46,11 @@ export default {
     created(){
         const boardNo = this.$route.params.boardNo
         this.boardNo = boardNo
+        
         axios.get(`${SERVER_URL}/board/list/detail/${boardNo}`)
             .then(res => {
                 this.apiData = res.data 
+                this.bigCategoryNo = this.apiData.bigCategoryNo
             })
             .catch(err=>{
                 console.log(err)

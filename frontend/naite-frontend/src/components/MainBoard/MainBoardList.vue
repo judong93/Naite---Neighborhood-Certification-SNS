@@ -16,6 +16,7 @@
                         <i class="far fa-thumbs-up"></i>
                         {{data.boardLikeCnt}}
                         <i class="far fa-comment-dots"></i>
+                        {{data.boardCommentCnt}}
                         
                     </div>
                 </div>

@@ -41,11 +41,15 @@
             > <span style='color:white;' v-if='params.bigCategoryNo==="5"' >원</span>
         </div>
         <div class="postingBody">            
-            <textarea id="postingContent" cols="87" rows="18" v-model="params.boardContent" :placeholder="contentExplain"></textarea>
+            <textarea id="postingContent" cols="87" rows="18" v-model="params.boardContent" :placeholder="contentExplain">
+            </textarea>
             
         </div>
         <footer class='postingFooter'>
-            <div class="postingImg" @click='uploadImg'>&#xf302;</div>
+            <label for='postingImgInput'>
+                <div class="postingImg">&#xf302;</div>
+            </label>
+            <input type="file" id='postingImgInput'>
             <div style='color:white'>
                 <span v-if='params.bigCategoryNo === "1"'>익명으로 게시하기</span>
                 <input v-if='params.bigCategoryNo === "1"' type="checkbox" style='margin-left:5px'>
@@ -233,6 +237,10 @@ export default {
 
 .marketCost {
     text-align: right;
+}
+
+#postingImgInput{
+    visibility: hidden;
 }
 
 </style>
