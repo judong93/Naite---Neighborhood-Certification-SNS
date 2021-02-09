@@ -2,6 +2,7 @@ package com.ssafy.naite.service.market;
 
 import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.board.BoardRepository;
+import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.like.LikeRepository;
 import com.ssafy.naite.domain.market.Market;
 import com.ssafy.naite.domain.market.MarketRepository;
@@ -27,6 +28,7 @@ public class MarketService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
 
     private final Comparator<Market> comp = (m1,m2) -> m2.getBoard().getBoardCreatedAt().compareTo(m1.getBoard().getBoardCreatedAt());
 
@@ -42,6 +44,7 @@ public class MarketService {
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
                     marketResponseDto.setUserNick(userRepository.findById(marketResponseDto.getBoard().getUserNo()).get().getUserNick());
+                    marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     return marketResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -60,6 +63,7 @@ public class MarketService {
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
                     marketResponseDto.setUserNick(userRepository.findById(marketResponseDto.getBoard().getUserNo()).get().getUserNick());
+                    marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     return marketResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -80,6 +84,7 @@ public class MarketService {
             likeUserList.add(userRepository.findById(likeResponseDto.getUserNo()).get().getUserNick());
         }
         marketResponseDto.setUsersWithLike(likeUserList);
+        marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
         return marketResponseDto;
     }
 
@@ -128,6 +133,7 @@ public class MarketService {
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
                     marketResponseDto.setUserNick(userRepository.findById(userNo).get().getUserNick());
+                    marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     return marketResponseDto;
                 })
                 .collect(Collectors.toList());
