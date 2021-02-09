@@ -42,7 +42,8 @@ public class UserSignUpRequestDto {
     @ApiParam(value = "유저 프로필 사진", required = false)
     private String userPic;
 
-    private List<MultipartFile> files;
+    @ApiParam(value = "기본", required = false)
+    private MultipartFile files;
 
     @Builder
     public UserSignUpRequestDto(String userId, String userName, String userEmail, String userPw, String userBasicAddress, String userDetailAddress, String userDong, String userNick, String userPic) {
