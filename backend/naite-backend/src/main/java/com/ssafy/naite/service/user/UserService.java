@@ -68,7 +68,7 @@ public class UserService {
 
             String rootPath = "/home/ubuntu/images/";
             String apiPath = "https://i4a402.p.ssafy.io/images/";
-            String changeName = "";
+            String changeName = "basic_profile.png";
             if(requestDto.getFiles() != null) {
                 MultipartFile files = requestDto.getFiles();
                 String originalName = files.getOriginalFilename();
@@ -76,10 +76,6 @@ public class UserService {
                 String filePath = rootPath + changeName;
                 File dest = new File(filePath);
                 files.transferTo(dest);
-            }
-
-            if(changeName.equals("")) {
-                changeName = "basic_profile.png";
             }
 
             User user = requestDto.toEntity();
