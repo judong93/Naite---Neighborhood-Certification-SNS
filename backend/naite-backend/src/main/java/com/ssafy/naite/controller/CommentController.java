@@ -46,13 +46,14 @@ public class CommentController {
     @ApiOperation(value = "댓글 등록")
     @PostMapping
     public Response postComment(@RequestBody CommentPostRequestDto commentPostRequestDto, HttpServletRequest req) {
+        CommentGetResponseDto dto;
         try {
             int userNo = getUserNo(req);
-            commentService.postComment(userNo, commentPostRequestDto);
+            dto = commentService.postComment(userNo, commentPostRequestDto);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);
         }
-        return new Response("success", "댓글 등록 성공", null);
+        return new Response("success", "댓글 등록 성공", dto);
     }
 
 

@@ -12,6 +12,7 @@ import com.ssafy.naite.dto.comment.CommentGetResponseDto;
 import com.ssafy.naite.dto.comment.CommentPostRequestDto;
 import com.ssafy.naite.dto.comment.CommentPutRequestDto;
 import com.ssafy.naite.service.user.JwtService;
+import com.ssafy.naite.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.boot.json.JsonParser;
@@ -32,6 +33,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final JwtService jwtService;
+    private final UserService userService;
 
     @Transactional
     public List<CommentGetResponseDto> getComments(int userNo, int boardId) throws Exception{
@@ -62,7 +64,7 @@ public class CommentService {
         return returnList;
     }
 
-    public void postComment(int userNo, CommentPostRequestDto commentPostRequestDto) throws Exception {
+    public CommentGetResponseDto postComment(int userNo, CommentPostRequestDto commentPostRequestDto) throws Exception {
         Comment comment = Comment.builder()
                 .commentContent(commentPostRequestDto.getContent())
                 .commentParentId(commentPostRequestDto.getParentId())
@@ -75,7 +77,21 @@ public class CommentService {
                 .build();
 
         try {
-            commentRepository.save(comment);
+            Comment newComment = commentRepository.save(comment);
+            boolean userOwn = false;
+            if (userNo == newComment.getUser().getUserNo()) userOwn = true;
+            CommentGetResponseDto dto = CommentGetResponseDto.builder()
+                    .commentNo(newComment.getCommentNo())
+                    .userNick(userService.findByUserNo(newComment.getUser().getUserNo()).getUserNick())
+                    .createdAt(newComment.getCommentCreatedAt())
+                    .updatedAt(newComment.getCommentUpdatedAt())
+                    .content(newComment.getCommentContent())
+                    .parentId(newComment.getCommentParentId())
+                    .userOwn(userOwn)
+                    .isUnknown(newComment.getCommentIsUnknown())
+                    .isDeleted(newComment.getCommentIsDeleted())
+                    .build();
+            return dto;
         } catch (Exception e) {
             throw new Exception("댓글 작성 실패");
         }
