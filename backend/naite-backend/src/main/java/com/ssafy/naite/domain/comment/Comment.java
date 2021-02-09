@@ -35,6 +35,10 @@ public class Comment {
     private Integer commentParentId;
     private Byte commentIsUnknown;
 
+    public Comment(int commentNo){
+        this.commentNo = commentNo;
+    }
+
     @Builder
     public Comment(Integer commentNo, User user, Board board, String commentContent, Timestamp commentCreatedAt, Timestamp commentUpdatedAt, Byte commentIsDeleted, Integer commentReportCnt, Integer commentParentId, Byte commentIsUnknown) {
         this.commentNo = commentNo;
