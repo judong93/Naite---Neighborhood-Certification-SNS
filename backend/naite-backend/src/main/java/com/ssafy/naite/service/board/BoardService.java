@@ -2,6 +2,7 @@ package com.ssafy.naite.service.board;
 
 import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.board.BoardRepository;
+import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.like.LikePK;
 import com.ssafy.naite.domain.like.LikeRepository;
 import com.ssafy.naite.domain.user.UserRepository;
@@ -22,6 +23,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     /**
      * 게시글 전체 조회
@@ -35,6 +37,7 @@ public class BoardService {
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -53,6 +56,7 @@ public class BoardService {
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -71,6 +75,7 @@ public class BoardService {
                                                                             .map(BoardDto.BoardResponseDto::new)
                                                                             .map(boardResponseDto -> {
                                                                                 boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                                                                                boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                                                                                 return boardResponseDto;
                                                                             })
                                                                             .collect(Collectors.toList());
@@ -94,6 +99,7 @@ public class BoardService {
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -112,6 +118,7 @@ public class BoardService {
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -126,6 +133,7 @@ public class BoardService {
         BoardDto.BoardResponseDto boardResponseDto = new BoardDto.BoardResponseDto(board);
         boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
         boardResponseDto.setUsersWithLike(findAllLikesByBoardNo(boardNo));
+        boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
         return boardResponseDto;
     }
 
@@ -235,6 +243,7 @@ public class BoardService {
                                                                             .map(BoardDto.BoardResponseDto::new)
                                                                             .map(boardResponseDto -> {
                                                                                 boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                                                                                boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                                                                                 return boardResponseDto;
                                                                             })
                                                                             .collect(Collectors.toList());
