@@ -2,6 +2,7 @@ package com.ssafy.naite.service.review;
 
 import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.board.BoardRepository;
+import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.like.LikeRepository;
 import com.ssafy.naite.domain.review.Review;
 import com.ssafy.naite.domain.review.ReviewRepository;
@@ -25,6 +26,7 @@ public class ReviewService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
 
     private final Comparator<Review> comp = (r1, r2) -> r2.getBoard().getBoardCreatedAt().compareTo(r1.getBoard().getBoardCreatedAt());
 
@@ -40,6 +42,7 @@ public class ReviewService {
                 .map(ReviewDto.ReviewResponseDto::new)
                 .map(reviewResponseDto->{
                     reviewResponseDto.setUserNick(userRepository.findById(reviewResponseDto.getBoard().getUserNo()).get().getUserNick());
+                    reviewResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == reviewResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     return reviewResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -58,6 +61,7 @@ public class ReviewService {
                 .map(ReviewDto.ReviewResponseDto::new)
                 .map(reviewResponseDto->{
                     reviewResponseDto.setUserNick(userRepository.findById(reviewResponseDto.getBoard().getUserNo()).get().getUserNick());
+                    reviewResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == reviewResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     return reviewResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -78,6 +82,7 @@ public class ReviewService {
             likeUserList.add(userRepository.findById(likeResponseDto.getUserNo()).get().getUserNick());
         }
         reviewResponseDto.setUsersWithLike(likeUserList);
+        reviewResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == reviewResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
         return reviewResponseDto;
     }
 
@@ -118,6 +123,7 @@ public class ReviewService {
                 .map(ReviewDto.ReviewResponseDto::new)
                 .map(reviewResponseDto -> {
                     reviewResponseDto.setUserNick(userRepository.findById(userNo).get().getUserNick());
+                    reviewResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == reviewResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     return reviewResponseDto;
                 })
                 .collect(Collectors.toList());
