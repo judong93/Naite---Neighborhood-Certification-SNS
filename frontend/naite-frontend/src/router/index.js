@@ -4,12 +4,13 @@ import Sign from '@/views/Sign/Sign'
 import MainBoard from '@/views/Board/MainBoard'
 import Board from '@/views/Board/Board'
 import BoardDetail from '@/views/Board/BoardDetail'
-import Profile from '@/views/Profile'
-import MarketBoard from '@/views/MarketBoard'
+import Profile from '@/views/Profile/Profile'
+import MarketBoard from '@/views/MarketBoard/MarketBoard'
+import MarketBoardDetail from '@/views/MarketBoard/MarketBoardDetail'
 import PostingForm from '@/views/PostingForm'
 import Posting from '@/views/Posting'
 import Test from '@/views/Test'
-import ProfileSettings from '@/views/ProfileSettings'
+import ProfileSettings from '@/views/Profile/ProfileSettings'
 
 
 Vue.use(VueRouter)
@@ -43,6 +44,11 @@ const routes = [
     path:'/marketboard',
     name: 'MarketBoard',
     component: MarketBoard,
+  },
+  {
+    path:'/marketboard/detail/:marketNo',
+    name: 'MarketBoardDetail',
+    component: MarketBoardDetail,
   },
   {
     path:'/postingform',

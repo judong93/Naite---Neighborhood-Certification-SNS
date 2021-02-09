@@ -33,7 +33,7 @@
         </div>
       </div>
       <div v-if="activityCheckNum===2" class="profile-cards">
-        <div v-for="(card,idx) in userMarketPostings" :key="idx" class="profile-card">
+        <div @click="toMarketDetail(card.marketNo)" v-for="(card,idx) in userMarketPostings" :key="idx" class="profile-card">
           <img :src="imgData" alt="이미지가 없습니다!" class="posting-img">
           <div class="card-title">
             {{ card.board.boardTitle }}
@@ -46,15 +46,15 @@
         </div>
       </div>
       <div v-if="activityCheckNum===3" class="profile-cards">
-        <div v-for="(card,idx) in userCommentPostings" :key="idx" class="profile-card">
+        <div @click="toBoardDetail(card.boardNo)" v-for="(card,idx) in userCommentPostings" :key="idx" class="profile-card">
           <img :src="imgData" alt="이미지가 없습니다!" class="posting-img">
           <div class="card-title">
-            {{ card.board.boardTitle }}
+            {{ card.boardTitle }}
           </div>
           <div class="card-content">
-            {{ card.board.boardContent }}
+            {{ card.boardContent }}
           </div>
-          <button class="card-delete-button">DELETE</button>
+          <!-- <button class="card-delete-button">DELETE</button> -->
         </div>
       </div>
     </div>
@@ -67,6 +67,8 @@ import Navbar from '@/components/Basic/Navbar'
 import Message from '@/components/Basic/Message'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
+
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 
 export default {
   name: 'Profile',
@@ -117,10 +119,10 @@ export default {
       if (!result) {
         console.log(boardNo)
       } else {
-          axios.put(`http://i4a402.p.ssafy.io:8080/board/delete/${boardNo}`, {}, config)
+          axios.put(`${SERVER_URL}/${boardNo}`, {}, config)
             .then((res) => {
               console.log(res)
-              axios.get('http://i4a402.p.ssafy.io:8080/board/list/user', config)
+              axios.get(`${SERVER_URL}/board/list/user`, config)
                 .then((res) => {
                   this.postingCount = res.data.length
                   if (this.postingCount > 5) {
@@ -142,6 +144,9 @@ export default {
     toBoardDetail: function (boardNo) {
       this.$router.push({ name: 'BoardDetail', params: {boardNo: boardNo} })
     },
+      toMarketDetail: function (MarketNo) {
+      this.$router.push({name:'MarketBoardDetail',params:{MarketNo:MarketNo}})
+    },
   },
   components: {
     Navbar,
@@ -152,7 +157,8 @@ export default {
     const config = this.setToken()
     const decode = jwt_decode(localStorage.getItem('jwt'))
     this.userNick = decode.user.userNick
-    axios.get('http://i4a402.p.ssafy.io:8080/board/list/user', config)
+    console.log(config)
+    axios.get(`${SERVER_URL}/board/list/user`, config)
       .then((res) => {
         this.postingCount = res.data.length
         if (this.postingCount > 5) {
@@ -164,22 +170,26 @@ export default {
       .catch((err) => {
         console.log(err)
       })
-    axios.get('http://i4a402.p.ssafy.io:8080/market/list/user', config)
+    axios.get(`${SERVER_URL}/market/list/user`, config)
       .then((res) => {
         this.marketCount = res.data.length
         if (this.marketCount > 5) {
-          this.userMarketPostings = res.data.slice(-6, -1)
+          this.userMarketPostings = res.data.slice(0, 5)
         } else {
           this.userMarketPostings = res.data
         }
-        console.log(this.userMarketPostings)
       })
       .catch((err) => {
         console.log(err)
       })
-    axios.get('http://i4a402.p.ssafy.io:8080/comment/user', config)
+    axios.get(`${SERVER_URL}/comment/user`, config)
       .then((res) => {
-        console.log(res)
+        this.commentCount = res.data.data.length
+        if (this.commentCount > 5) {
+          this.userCommentPostings = res.data.data.slice(0, 5)
+        } else {
+          this.userCommentPostings = res.data.data
+        }
       })
       .catch((err) => {
         console.log(err)
