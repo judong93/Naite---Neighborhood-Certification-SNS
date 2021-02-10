@@ -48,10 +48,9 @@ public class MarketController {
     /**
      * 장터 게시글 유저별 조회
      */
-    @GetMapping("/list/user")
+    @GetMapping("/list/user/{userNo}")
     @ApiOperation(value = "장터 게시글 유저별 조회")
-    public ResponseEntity<List<MarketDto.MarketResponseDto>> findAllMarketsByUser(HttpServletRequest req) {
-        int userNo = getUserNo(req);
+    public ResponseEntity<List<MarketDto.MarketResponseDto>> findAllMarketsByUser(@PathVariable int userNo) {
         List<MarketDto.MarketResponseDto> result = marketService.getMarketListByUser(userNo);
         return new ResponseEntity<List<MarketDto.MarketResponseDto>>(result, HttpStatus.OK);
     }
@@ -89,6 +88,34 @@ public class MarketController {
             return new ResponseEntity<Integer>(updatedMarketNo, HttpStatus.NOT_ACCEPTABLE);
         }
         return new ResponseEntity<Integer>(updatedMarketNo, HttpStatus.CREATED);
+    }
+
+    /**
+     * 장터 모집 완료
+     */
+    @PutMapping("/complete/{marketNo}")
+    @ApiOperation(value = "장터 모집 완료")
+    public ResponseEntity<Integer> completeMarket(@PathVariable int marketNo, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        int completedMarketNo = marketService.completeMarket(marketNo, userNo);
+        if(completedMarketNo < 0) {
+            return new ResponseEntity<Integer>(completedMarketNo, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity<Integer>(completedMarketNo, HttpStatus.CREATED);
+    }
+
+    /**
+     * 장터 모집 완료 취소
+     */
+    @PutMapping("/restore/{marketNo}")
+    @ApiOperation(value = "장터 모집 완료")
+    public ResponseEntity<Integer>  restoreMarket(@PathVariable int marketNo, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        int restoredMarketNo = marketService.restoreMarket(marketNo, userNo);
+        if(restoredMarketNo < 0) {
+            return new ResponseEntity<Integer>(restoredMarketNo, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity<Integer>(restoredMarketNo, HttpStatus.CREATED);
     }
 
     public int getUserNo(HttpServletRequest req) {

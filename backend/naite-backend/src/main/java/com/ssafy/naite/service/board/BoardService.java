@@ -95,6 +95,7 @@ public class BoardService {
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)
                 .filter(board -> board.getUserNo() == userNo)
+                .filter(board -> board.getBigCategoryNo() != 5)
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
