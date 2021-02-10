@@ -62,10 +62,10 @@ public class CommentService {
                 createdAt = subHour + "시간 전";
             }
             else {
-                createdAt = c.getCommentCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
+                createdAt = c.getCommentCreatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
             }
 
-            if (c.getCommentUpdatedAt() != null) updatedAt = c.getCommentUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
+            if (c.getCommentUpdatedAt() != null) updatedAt = c.getCommentUpdatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
 
             CommentGetResponseDto dto = new CommentGetResponseDto(
                     c.getCommentNo(),
@@ -112,7 +112,7 @@ public class CommentService {
                 createdAt = subHour + "시간 전";
             }
             else {
-                createdAt = newComment.getCommentCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
+                createdAt = newComment.getCommentCreatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
             }
 
             CommentGetResponseDto dto = new CommentGetResponseDto(
