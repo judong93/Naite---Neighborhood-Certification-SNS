@@ -35,6 +35,10 @@ public class Comment {
     private Integer commentParentId;
     private Byte commentIsUnknown;
 
+    public Comment(int commentNo){
+        this.commentNo = commentNo;
+    }
+
     @Builder
     public Comment(Integer commentNo, User user, Board board, String commentContent, Timestamp commentCreatedAt, Timestamp commentUpdatedAt, Byte commentIsDeleted, Integer commentReportCnt, Integer commentParentId, Byte commentIsUnknown) {
         this.commentNo = commentNo;
@@ -59,6 +63,11 @@ public class Comment {
 
     public void updateTime() {
         this.commentUpdatedAt = new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9));
+    }
+
+    public void updateReportCnt(){
+        if (this.commentReportCnt < 100)
+            this.commentReportCnt += 1;
     }
 
     @Override
