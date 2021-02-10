@@ -108,8 +108,7 @@ public class UserController {
 
         // user에 해당 user_email 있는지 확인
         User user = userService.findByEmail(emailSendRequestDto.getUserEmail());
-        if (user == null) {
-
+        if ((emailSendRequestDto.getType() == 0 && user == null) || emailSendRequestDto.getType() == 1) {
             // 랜덤키 생성
             Random random = new Random();
             StringBuffer buffer = new StringBuffer();
@@ -122,7 +121,7 @@ public class UserController {
             }
             String key = buffer.toString();
             System.out.println("key " + key);
-            authKeyService.save(new AuthKeySaveRequestDto(emailSendRequestDto.getUserEmail(), key, 0));
+            authKeyService.save(new AuthKeySaveRequestDto(emailSendRequestDto.getUserEmail(), key, emailSendRequestDto.getType()));
 
             // 이메일 전송
             StringBuffer emailcontent = new StringBuffer();

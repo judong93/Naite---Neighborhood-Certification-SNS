@@ -34,4 +34,8 @@ public class AuthKey {
     public void updateKey(String newKey) {
         this.authKey = newKey;
     }
+
+    public void updateType(Integer type) {
+        this.authType = type;
+    }
 }

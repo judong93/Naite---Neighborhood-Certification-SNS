@@ -24,6 +24,7 @@ public class AuthKeyService {
         if (existed.isPresent()) {
             AuthKey authKey = existed.get();
             authKey.updateKey(authKeySaveRequestDto.getAuthKey());
+            authKey.updateType(authKeySaveRequestDto.getAuthType());
             authKeyRepository.save(authKey);
         } else {
             authKeyRepository.save(authKeySaveRequestDto.toEntity());
