@@ -14,11 +14,16 @@
         <div class="market-detail-content-title">{{marketDetailContent.board.boardTitle}}</div>
         <div class="market-detail-subs">
           <div class="subs-title">
+            <p>작성자</p>
             <p>작성시각</p>
             <p>가격</p>
             <p>상세내용</p>
           </div>
           <div class="subs-content">
+            <div class="market-detail-writer">
+              <p @click="toWriterProfile">{{marketDetailContent.userNick}}</p>
+              <i class="far fa-comment-dots fa-2x"><span>작성자와 채팅하기</span></i>
+            </div>
             <p>{{marketDetailContent.boardCreatedAt}}</p>
             <p>{{marketDetailContent.marketCost}}원</p>
           </div>
@@ -136,7 +141,10 @@ export default {
   border-bottom: 1px solid rgb(201, 197, 197);
   padding-bottom: 10px;
   font-size: 25px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .market-detail-subs {
   display: flex;
@@ -145,17 +153,44 @@ export default {
   position: relative;
   color: rgb(184, 182, 182);
   width: 23%;
+  padding-top: 5px;
 }
 .subs-content {
   position: relative;
   /* display: flex; */
   width: 70%;
+  /* padding-top: 5px; */
   /* margin-right: 100px; */
 }
+.market-detail-writer {
+  display: flex;
+}
+.market-detail-writer > p {
+  padding-top: 5px;
+  cursor: pointer;
+}
+.fa-comment-dots {
+  position: relative;
+  margin-left: 30px;
+  /* padding-bottom: 20px; */
+  /* padding-top: 0; */
+}
 .market-detail-boardcontent {
-  margin-top: 10px;
-  height: 38.5%;
-  overflow: hidden;
-  padding-right: 9%;
+  margin-top: 4px;
+  height: 34%;
+  width: 100%;
+  overflow: auto;
+  padding: 1% 1% 1% 0;
+}
+.far {
+  cursor: pointer;
+}
+.far:hover span {
+  display: inline-block;
+}
+.far span {
+  display: none;
+  font-size: 15px;
+  font-family: font1;
 }
 </style>
