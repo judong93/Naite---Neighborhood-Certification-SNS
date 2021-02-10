@@ -68,16 +68,14 @@ public class UserService {
 
             String rootPath = "/home/ubuntu/images/";
             String apiPath = "https://i4a402.p.ssafy.io/images/";
-            String changeName = "";
-            List<MultipartFile> files = requestDto.getFiles();
-
-            for (MultipartFile file : files) {
-                String originalName = file.getOriginalFilename();
+            String changeName = "basic_profile.png";
+            if(requestDto.getFiles() != null) {
+                MultipartFile files = requestDto.getFiles();
+                String originalName = files.getOriginalFilename();
                 changeName = requestDto.getUserNick() + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmSSS")) + "_" + originalName;
                 String filePath = rootPath + changeName;
-
                 File dest = new File(filePath);
-                file.transferTo(dest);
+                files.transferTo(dest);
             }
 
             User user = requestDto.toEntity();
