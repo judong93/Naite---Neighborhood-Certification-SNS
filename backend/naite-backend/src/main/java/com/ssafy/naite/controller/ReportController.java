@@ -29,8 +29,7 @@ public class ReportController {
     @ApiOperation(value = "신고 등록",
             notes = "신고할 게시물 혹은 댓글 인덱스를 파라미터에 담아 보냅니다.\n" +
                     "boardNo와 commentNo 둘 중 하나는 0이 입력되어야 합니다.\n" +
-                    "신고 등록 후 신고 번호를 리턴합니다.\n" +
-                    "신고 실패 시 0이 반환됩니다.")
+                    "신고 등록 후 신고 번호를 리턴합니다.")
     public ResponseEntity<Map<String, Object>> insertReport(@RequestBody ReportDto.ReportSaveRequestDto reportSaveRequestDto, HttpServletRequest req) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
