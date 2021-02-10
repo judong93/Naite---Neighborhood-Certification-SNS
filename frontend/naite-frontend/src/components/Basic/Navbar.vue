@@ -46,6 +46,7 @@ export default {
     data: function() {
         return {
             greeting:'',
+            userNo:'',
         }
     },
     methods:{
@@ -67,7 +68,7 @@ export default {
             this.$router.push({name:'Sign'})
         },
         profile:function(){
-            this.$router.push({name:'Profile'})
+            this.$router.push({name:'Profile', params:{userNo:this.userNo}})
         }
     },
     computed: {
@@ -76,6 +77,7 @@ export default {
     created(){
         const token = localStorage.getItem('jwt')
         const decode = jwt_decode(token)
+        this.userNo = decode.user.userNo
         this.greeting = decode.greeting
     }
 

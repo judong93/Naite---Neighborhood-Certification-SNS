@@ -36,7 +36,7 @@ const routes = [
     component: BoardDetail,
   },
   {
-    path:'/profile',
+    path:'/profile/:userNo',
     name: 'Profile',
     component: Profile,
   },

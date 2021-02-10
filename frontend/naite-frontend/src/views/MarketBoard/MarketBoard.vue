@@ -20,13 +20,7 @@
             <div>
               가격: {{ posting.marketCost }}원
             </div>
-            <!-- <div class="created">
-              {{ posting.board.boardCreatedAt }} 
-            </div> -->
-            <div class="marks">
-              <i class="market-thumbs far fa-thumbs-up" >0</i>
-              <i class="market-comments far fa-comment-dots">0</i>
-            </div>
+            <p>{{ posting.boardCreatedAtSimple }}</p>
           </div>
         </div>
       </div>
@@ -177,6 +171,7 @@ export default {
 .area-created {
   position: absolute;
   display: flex;
+  justify-content: space-between;
   bottom: 7px;
   left: 180px;
   width: 60%;
@@ -190,9 +185,5 @@ export default {
 }
 .market-comments {
   margin-left: 17px;
-}
-.marks {
-  position: absolute;
-  right: 0;
 }
 </style>

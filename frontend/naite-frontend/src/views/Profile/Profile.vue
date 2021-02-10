@@ -4,12 +4,16 @@
     <Message />
     <div class="profile">
       <div class="profile-box">
-        <img :src="imgData" alt="No Image" class="profile-img">
+        <div @mouseover="showReliability" @mouseout="showImg" class="profile-img-container">
+          <img v-if="onProfileImg===false" :src="imgData" alt="No Image" class="profile-img">
+          <div v-if="onProfileImg===true" class="reliability-letter">신뢰도</div>
+          <div v-if="onProfileImg===true" class="reliability">42</div>
+        </div>
         <div class="profile-info">
           <div class="username-settings">
             <div class="username">
             {{ userNick }}
-            <i id="settings-icon" class="fas fa-user-cog" @click="selectSettings"></i>
+            <i v-if="userNo===loginedUserNo" id="settings-icon" class="fas fa-user-cog" @click="selectSettings"></i>
             </div>
           </div>
           <div class="activities">
@@ -29,7 +33,7 @@
           <div @click="toBoardDetail(card.boardNo)" class="card-content">
             {{ card.boardContent }}
           </div>
-          <button @click="deletePosting(card.boardNo)" class="card-delete-button">삭제하기</button>
+          <button v-if="userNo===loginedUserNo" @click="deletePosting(card.boardNo)" class="card-delete-button">삭제하기</button>
         </div>
       </div>
       <div v-if="activityCheckNum===2" class="profile-cards">
@@ -85,6 +89,9 @@ export default {
       postingImg: "https://picsum.photos/200/300",
       activityCheckNum: 1,
       userNick: '',
+      userNo: 0,
+      loginedUserNo: 0,
+      onProfileImg: false,
     }
   },
   methods: {
@@ -119,10 +126,9 @@ export default {
       if (!result) {
         console.log(boardNo)
       } else {
-          axios.put(`${SERVER_URL}/${boardNo}`, {}, config)
-            .then((res) => {
-              console.log(res)
-              axios.get(`${SERVER_URL}/board/list/user`, config)
+          axios.put(`${SERVER_URL}/board/delete/${boardNo}`, {}, config)
+            .then(() => {
+              axios.get(`${SERVER_URL}/board/list/user/${this.userNo}`)
                 .then((res) => {
                   this.postingCount = res.data.length
                   if (this.postingCount > 5) {
@@ -144,9 +150,19 @@ export default {
     toBoardDetail: function (boardNo) {
       this.$router.push({ name: 'BoardDetail', params: {boardNo: boardNo} })
     },
-      toMarketDetail: function (MarketNo) {
-      this.$router.push({name:'MarketBoardDetail',params:{MarketNo:MarketNo}})
+      toMarketDetail: function (marketNo) {
+      this.$router.push({name:'MarketBoardDetail',params:{marketNo:marketNo}})
     },
+    showReliability: function () {
+      setTimeout(() => {
+        this.onProfileImg = true
+      }, 400);
+    },
+    showImg: function () {
+      setTimeout(() => {
+        this.onProfileImg = false
+      }, 400);
+    }
   },
   components: {
     Navbar,
@@ -154,12 +170,14 @@ export default {
   },
   created: function () {
     this.Cards = this.postingCards
-    const config = this.setToken()
+    // const config = this.setToken()
     const decode = jwt_decode(localStorage.getItem('jwt'))
+    this.loginedUserNo = decode.user.userNo
+    this.userNo = this.$route.params.userNo
     this.userNick = decode.user.userNick
-    console.log(config)
-    axios.get(`${SERVER_URL}/board/list/user`, config)
+    axios.get(`${SERVER_URL}/board/list/user/${this.userNo}`)
       .then((res) => {
+        console.log(res)
         this.postingCount = res.data.length
         if (this.postingCount > 5) {
           this.userPostings = res.data.slice(0, 5)
@@ -170,7 +188,7 @@ export default {
       .catch((err) => {
         console.log(err)
       })
-    axios.get(`${SERVER_URL}/market/list/user`, config)
+    axios.get(`${SERVER_URL}/market/list/user/${this.userNo}`)
       .then((res) => {
         this.marketCount = res.data.length
         if (this.marketCount > 5) {
@@ -182,7 +200,7 @@ export default {
       .catch((err) => {
         console.log(err)
       })
-    axios.get(`${SERVER_URL}/comment/user`, config)
+    axios.get(`${SERVER_URL}/comment/user/${this.userNo}`)
       .then((res) => {
         this.commentCount = res.data.data.length
         if (this.commentCount > 5) {
@@ -228,17 +246,45 @@ hr {
   height: 180px;
   width: 60%;
 }
-.profile-img {
+.profile-img-container {
   position: relative;
-  background-color: red;
+  /* background-color: red; */
   width: 150px;
   height: 150px;
   overflow: hidden;
   border-radius: 50%;
+  background-color: rgb(190, 208, 245, 0.5);
 }
-.profile-img:hover {
-  background-color: black;
+.profile-img {
+  position: absolute;
+  /* background-color: red; */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* border-radius: 50%; */
+}
+.profile-img-container:hover {
+  /* background-color: black; */
   transform: rotateY(180deg);
+  transition-duration: 0.9s;
+}
+.profile-img-container:not(:hover) {
+  transition-duration: 0.9s;
+}
+.profile-img-container div {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  transform: rotateY(180deg);
+}
+.reliability-letter {
+  top: 25%;
+  font-size: 175%;
+}
+.reliability {
+  top: 60%;
+  font-size: 130%;
 }
 .username {
   position: relative;
@@ -248,7 +294,8 @@ hr {
 .username-settings {
   display: flex;
   justify-content: center;
-  padding-left: 60px;
+  height: 80px;
+  /* padding-left: 60px; */
 }
 #settings-icon {
   margin-left: 20px;
@@ -262,7 +309,7 @@ hr {
   display: flex;
   justify-content: space-between;
   position: relative;
-  top: 38px; 
+  top: 20px; 
   font-size: 30px;
 }
 .profile-cards {
@@ -401,6 +448,13 @@ hr {
   /* cursor:pointer; */
   transition:800ms ease all;
   outline:none;
+}
+#settings-icon:hover {
+  font-size: 130%;
+  transition-duration: 0.3s;
+}
+#settings-icon:not(:hover) {
+  transition-duration: 0.3s;
 }
 
 
