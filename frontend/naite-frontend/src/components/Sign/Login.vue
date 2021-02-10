@@ -132,6 +132,7 @@ export default {
     font-family: font1;
     color:white;   
     animation-fill-mode: forwards;
+    overflow: hidden;
     
     
 }

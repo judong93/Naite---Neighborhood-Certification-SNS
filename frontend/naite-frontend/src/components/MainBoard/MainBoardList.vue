@@ -12,11 +12,15 @@
                 <div class="mainBoardBody" v-for='(data,idx2) in apiData[`${idx}`]' :key='idx2'> 
                     <img src="../../assets/cha2.png" alt="" width='30px' height="30px">                    
                     <p @click='toDetail(data.boardNo)' style='cursor:pointer'>{{data.boardTitle}}</p>
-                    <div @click='toDetail(data.boardNo)' style='cursor:pointer'>
+                    <div @click='toDetail(data.boardNo)' style='cursor:pointer' class='mainBoardStatus'>
                         <i class="far fa-thumbs-up"></i>
                         {{data.boardLikeCnt}}
                         <i class="far fa-comment-dots"></i>
                         {{data.boardCommentCnt}}
+                        <br>
+                        <i class="far fa-clock"></i>
+                        {{data.boardCreatedAt}}
+                        
                         
                     </div>
                 </div>
@@ -103,6 +107,7 @@ export default {
     height: 90%;    
     margin: auto;
     background-color: white;
+    font-size: 15px;
 }
 .mainBoardHead {
     display:flex;
@@ -142,7 +147,11 @@ export default {
     overflow: hidden;
 }
 
-
+.mainBoardStatus {
+    text-align: right;
+    font-size: 10px;
+    width:170px;
+}
 
 
 </style>

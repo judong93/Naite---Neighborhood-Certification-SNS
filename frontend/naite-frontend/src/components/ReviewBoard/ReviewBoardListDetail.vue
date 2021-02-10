@@ -6,13 +6,13 @@
                     <img src="../../assets/cha2.png">
                 </div>
                 <div>
-                    <div class="detailTitle">{{apiData.boardTitle}}</div>
+                    <div class="detailTitle">{{apiData['board'].boardTitle}}</div>
                     <div class="detailBar">
-                        <i class="far fa-comments" @click='sendMessage'  v-if='thisBoardUserNo !== apiData.userNo'></i>
-                        <span @click='sendMessage'  v-if='thisBoardUserNo !== apiData.userNo'>메세지</span>
-                        <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.userNo'></i>
-                        <span v-if='thisBoardUserNo !== apiData.userNo'>신고</span>
-                        <div v-if='thisBoardUserNo === apiData.userNo' style='display:flex'>
+                        <i class="far fa-comments" @click='sendMessage'  v-if='thisBoardUserNo !== apiData.board.userNo'></i>
+                        <span @click='sendMessage'  v-if='thisBoardUserNo !== apiData.board.userNo'>메세지</span>
+                        <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.board.userNo'></i>
+                        <span v-if='thisBoardUserNo !== apiData.board.userNo'>신고</span>
+                        <div v-if='thisBoardUserNo === apiData.board.userNo' style='display:flex'>
                             <div  @click='updateBoard' style='margin-right:10px'>
                                 <i class="far fa-edit"  ></i>
                                 <span>수정</span>
@@ -26,25 +26,31 @@
 
                     </div>
                     <div class='detailHeadInfo'>                        
-                        <div class='detailUserNick' v-if='apiData.unknownFlag'>익명님 {{categoryName[apiData.bigCategoryNo]}}에 남긴 글</div>
-                        <div class='detailUserNick' v-else>{{apiData.userNick}}님이 {{categoryName[apiData.bigCategoryNo]}}에 남긴 글 </div>
+                        <div class='detailUserNick'>{{apiData.userNick}}님의 {{smallCategoryNmae[apiData.smallCategoryNo]}}시설에 대한 글 
+                             <span v-if='apiData.smallCategoryNo===1'>&#xf2e7;</span>
+                            <span v-if='apiData.smallCategoryNo===2'>&#xf0f9;</span>
+                            <span v-if='apiData.smallCategoryNo===3'>&#xf70c;</span>
+                            <span v-if='apiData.smallCategoryNo===4'>&#xf0c4;</span>
+                            <span v-if='apiData.smallCategoryNo===5'>&#xf563;</span>
+                        </div>
                         <div class='detailMes'>
                             <i class="far fa-thumbs-up" @click='likeBoard' v-if='!liked'></i>
                             <i class="fas fa-thumbs-up" @click='likeBoard' v-else></i>
-                            <span>{{apiData.boardLikeCnt}}</span>
+                            <span>{{apiData.board.boardLikeCnt}}</span>
                             <i class="far fa-comment-dots"></i>
                             <span>{{apiData.boardCommentCnt}}</span>
+                             <i class="far fa-star"></i>
+                            <span>{{apiData.reviewStar}}점</span>    
                             <i class="far fa-clock"></i>
-                            <span>{{apiData.boardCreatedAt}}</span>
+                            <span>{{apiData.board.boardCreatedAt}}</span>
                         </div>
 
 
                     </div>
                 </div>
             </div>
-            <hr style='background-color:white;margin:10px;'>
-            
-            <div class="detailBody" v-if='!update' v-html='apiData.boardContent'>
+            <hr style='background-color:white;margin:10px;'>            
+            <div class="detailBody" v-if='!update' v-html='apiData.board.boardContent'>
                 <!-- 보드의 내용물보이는 부분 -->
             </div>
             <div class="detailBody" v-else>
@@ -56,7 +62,7 @@
                 <button v-if='update' @click = 'completeUpdate'>수정하기</button>
             </div>
         </div>
-        <div class='detailImg' v-if='apiData.boardPic'>
+        <div class='detailImg' v-if='apiData.board.boardPic'>
         <!-- <div class='detailImg'> -->
             <img src="https://i4a402.p.ssafy.io/img/signpast.fbb26c75.jpg" alt="" width='100%'>
         </div>
@@ -76,7 +82,7 @@ const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 
 
 export default {
-    name:'BoardListDetail',
+    name:'ReviewBoardListDetail',
     props:{
         apiData:Object,
         boardNo:[String,Number],
@@ -88,7 +94,8 @@ export default {
             liked:false,
             thisBoardUserNo:0,
             update:false,
-            updateContent: ''
+            updateContent: '',
+            smallCategoryNmae:['','식당','의료','체육시설','미용','기타'],
         }
     },
     methods:{
@@ -101,9 +108,8 @@ export default {
             }
             if (!this.liked){
                 axios.post(`${SERVER_URL}/board/like`,params,this.setToken())
-                    .then(res=>{
-                        console.log(res)
-                        this.apiData.boardLikeCnt += 1
+                    .then(()=>{                        
+                        this.apiData.board.boardLikeCnt += 1
                         this.liked = true
                     })
                     .catch(err => {
@@ -113,7 +119,7 @@ export default {
                 axios.post(`${SERVER_URL}/board/dislike`, params,this.setToken())
                     .then(res=>{
                         console.log(res)
-                        this.apiData.boardLikeCnt -= 1
+                        this.apiData.board.boardLikeCnt -= 1
                         this.liked = false
                     })
                     .catch(err=>{
@@ -123,9 +129,9 @@ export default {
 
         },
         deleteBoard:function(){
-            axios.put(`${SERVER_URL}/board/delete/${this.apiData.boardNo}`,{},this.setToken())
+            axios.put(`${SERVER_URL}/board/delete/${this.apiData.board.boardNo}`,{},this.setToken())
                 .then(() => {
-                    this.$router.push({name:'Board',params:{bigCategoryNo:this.apiData.bigCategoryNo}})
+                    this.$router.push({name:'Board',params:{bigCategoryNo:this.apiData.board.bigCategoryNo}})
 
                 })
                 .catch(err => {
@@ -138,20 +144,20 @@ export default {
             } else {
                 this.update = true
             }
-            this.updateContent = this.apiData.boardContent
+            this.updateContent = this.apiData.board.boardContent
         },
         completeUpdate:function(){
             const params = {
                 'boardContent':this.updateContent,
                 'boardPic':this.apiData.boardPic,
-                'boardTitle': this.apiData.boardTitle,
+                'boardTitle': this.apiData.board.boardTitle,
                 'openFlage':0,
                 'unknownFlag':0,
             }
-            axios.put(`${SERVER_URL}/board/update/${this.apiData.boardNo}`,params,this.setToken())
+            axios.put(`${SERVER_URL}/board/update/${this.apiData.board.boardNo}`,params,this.setToken())
                 .then(res => {
                     console.log(res)
-                    this.apiData.boardContent = this.updateContent  
+                    this.apiData.board.boardContent = this.updateContent  
                     this.update = false
                 })
                 .catch(err=>{
@@ -173,18 +179,21 @@ export default {
     watch:{
         apiData:function(){
             const decode = jwt_decode(localStorage.getItem('jwt'))
-            this.thisBoardUserNo = decode.user.userNo    
+            this.thisBoardUserNo = decode.user.userNo   
+
             for (let i=0; i<this.apiData.usersWithLike.length;i++) {
                 if (this.apiData.usersWithLike[i] === decode.user.userNick) {
                     this.liked = true                
                 }
             }
-            const img = this.apiData.boardPic
+         
+
+            const img = this.apiData.board.boardPic
             const headBottom = document.querySelector('.detailHeadInfo')
             const detailBar = document.querySelector('.detailBar')
                         
-            this.apiData.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')
-            // this.apiData.boardContent.split('\n').join('<br />')
+            this.apiData.board.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')
+            this.apiData.board.boardContent.split('\n').join('<br />')
             
             if (!img) {
                 headBottom.style.width = '1038px'
@@ -194,8 +203,7 @@ export default {
                 detailBar.style.right ='28%'
             }
         },
-        updateCommentCntCheck:function(){
-            console.log('왜안올라가누')
+        updateCommentCntCheck:function(){            
             this.apiData.boardCommentCnt += 1
         }
         
@@ -249,6 +257,11 @@ export default {
 }
 .detailUserNick {
     text-align: left;
+}
+
+.detailUserNick span {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;    
 }
 
 

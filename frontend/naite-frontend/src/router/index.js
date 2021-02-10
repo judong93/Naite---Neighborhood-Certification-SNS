@@ -7,6 +7,8 @@ import BoardDetail from '@/views/Board/BoardDetail'
 import Profile from '@/views/Profile/Profile'
 import MarketBoard from '@/views/MarketBoard/MarketBoard'
 import MarketBoardDetail from '@/views/MarketBoard/MarketBoardDetail'
+import ReviewBoard from '@/views/ReviewBoard/ReviewBoard'
+import ReviewBoardDetail from '@/views/ReviewBoard/ReviewBoardDetail'
 import PostingForm from '@/views/PostingForm'
 import Posting from '@/views/Posting'
 import Test from '@/views/Test'
@@ -49,6 +51,16 @@ const routes = [
     path:'/marketboard/detail/:marketNo',
     name: 'MarketBoardDetail',
     component: MarketBoardDetail,
+  },
+  {
+    path:'/reviewboard',
+    name: 'ReviewBoard',
+    component:ReviewBoard,
+  },
+  {
+    path:'/review/detail/:reviewNo/:boardNo?',
+    name: 'ReviewBoardDetail',
+    component:ReviewBoardDetail,
   },
   {
     path:'/postingform',

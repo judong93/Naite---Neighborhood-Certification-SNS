@@ -86,7 +86,7 @@ export default {
         }
     },
     props:{
-        bigCategoryNo:Number,
+        bigCategoryNo:Number,      
     },
 
     methods:{
@@ -99,23 +99,14 @@ export default {
         },
         createComment:function(num){
             this.params.boardId = this.$route.params.boardNo
-            this.params.parentId = num
-            if (this.bigCategoryNo===1){
-                const unKnownComment = document.querySelector('.unKnownComment')
-                if (unKnownComment.checked) {
-                    this.params.isUnknown = 1
-                } else {
-                    this.params.isUnknown = 0
-                }
-                
-            }
+            this.params.parentId = num            
             axios.post(`${SERVER_URL}/comment`,this.params,this.setToken())
                 .then(res=>{
                     if(res.data.response==='error') {
                         alert('오류발생/로그아웃 후 재진행')
                         localStorage.removeItem('jwt')
                         this.$router.push({name:'Sign'})
-                    } else if (this.params.content) {                        
+                    } else if (this.params.content) {
                         const decode = jwt_decode(localStorage.getItem('jwt'))
                         const param = {
                             'content':this.params.content,
@@ -240,16 +231,17 @@ export default {
         }
     },
     created(){
-        const No = this.$route.params.boardNo
-        axios.get(`${SERVER_URL}/comment/${No}`,this.setToken())
+        const boardNo = this.$route.params.boardNo
+        axios.get(`${SERVER_URL}/comment/${boardNo}`,this.setToken())
             .then(res=>{
                 if (res.data.response==='error'){
-                    alert('오류발생/로그아웃 후 재진행/머지')
+                    alert('오류발생/로그아웃 후 재진행')
                     // localStorage.removeItem('jwt')
                     // this.$router.push({name:'Sign'})
                     console.log(res)
                 } else {
                     this.apiData = res.data.data   
+                    console.log(res)
                     
                 }
             })
@@ -257,16 +249,6 @@ export default {
                 console.log(err)
             })
     },
-    computed:{
-        // timdeDiff:function(date){
-        //     const now = new Date()
-        //     const timeValue = new Date(date)
-        //     console.log(now,timeValue)
-        //     return now
-
-
-        // }
-    }
 }
 </script>
 <style>

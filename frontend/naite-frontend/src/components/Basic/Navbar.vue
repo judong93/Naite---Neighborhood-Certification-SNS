@@ -54,8 +54,9 @@ export default {
                 this.$router.push({name:'MainBoard'})
             } else if (num===5){
                 this.$router.push({name:'MarketBoard'})
-            } 
-            else {
+            } else if (num===3){
+                this.$router.push({name:'ReviewBoard'})
+            } else {
                 const nowNo = this.$route.params.bigCategoryNo
                 if (nowNo !== num){
                     this.$router.push({name:'Board',params:{bigCategoryNo:num}})

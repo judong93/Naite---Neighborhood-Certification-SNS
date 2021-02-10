@@ -77,8 +77,8 @@ export default {
     background-size: 1920px 969px;
     height: 969px;   
     width:1920px;
-    overflow:hidden; 
-    /* overflow:auto; */
+    /* overflow:hidden;  */
+    overflow:auto;
   
 }
 
@@ -90,10 +90,10 @@ export default {
 
 }
 
-@media screen and (max-width: 1800px) {
+/* @media screen and (max-width: 1800px) {
   #sign {
     overflow: auto;
   }
-}
+} */
 
 </style>
