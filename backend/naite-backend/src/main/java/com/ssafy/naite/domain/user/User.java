@@ -75,4 +75,8 @@ public class User {
         if (this.userScore > 0)
             this.userScore -= 1;
     }
+
+    public void leave(Byte userSecession) {
+        this.userActive = userSecession;
+    }
 }

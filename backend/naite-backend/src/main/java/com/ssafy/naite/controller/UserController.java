@@ -236,4 +236,33 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "회원 탈퇴")
+    @PutMapping("/leave")
+    public Response leaveUser(HttpServletRequest req) {
+        try {
+            int userNo = getUserNo(req);
+            int leftUser = userService.leaveUser(userNo);
+            return new Response("success","회원 탈퇴하셨습니다.", leftUser);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+    }
+
+    @ApiOperation(value = "회원 복귀")
+    @PutMapping("/restore")
+    public Response restoreUser(HttpServletRequest req) {
+        try {
+            int userNo = getUserNo(req);
+            int restoredUser = userService.restoreUser(userNo);
+            return new Response("success","회원 복귀하셨습니다.", restoredUser);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+    }
+
+    public int getUserNo(HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.putAll(jwtService.get(req.getHeader("auth-token")));
+        return (int) ((Map<String, Object>) resultMap.get("user")).get("userNo");
+    }
 }

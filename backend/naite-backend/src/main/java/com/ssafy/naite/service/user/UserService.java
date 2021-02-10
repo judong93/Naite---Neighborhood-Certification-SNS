@@ -170,4 +170,21 @@ public class UserService {
         }
     }
 
+    /** 회원 탈퇴 */
+    @Transactional
+    public int leaveUser(int userNo) {
+        User user = userRepository.findById(userNo).orElseThrow(() -> new IllegalAccessError("해당 유저가 존재하지 않습니다."));
+        user.leave((byte) 0);
+        userRepository.save(user);
+        return userNo;
+    }
+
+    /** 회원 복귀 */
+    @Transactional
+    public int restoreUser(int userNo) {
+        User user = userRepository.findById(userNo).orElseThrow(() -> new IllegalAccessError("해당 유저가 존재하지 않습니다."));
+        user.leave((byte) 1);
+        userRepository.save(user);
+        return userNo;
+    }
 }
