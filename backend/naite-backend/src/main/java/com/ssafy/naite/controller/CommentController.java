@@ -37,11 +37,10 @@ public class CommentController {
             int userNo = getUserNo(req);
             list = commentService.getComments(userNo, boardId);
         } catch (Exception e) {
-            return new Response("error", "댓글 조회 실패", null);
+            return new Response("error", e.getMessage(), null);
         }
         return new Response("success", "댓글 조회 성공", list);
     }
-
 
     @ApiOperation(value = "댓글 등록")
     @PostMapping

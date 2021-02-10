@@ -14,6 +14,7 @@ import com.ssafy.naite.dto.comment.CommentPutRequestDto;
 import com.ssafy.naite.service.user.JwtService;
 import com.ssafy.naite.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import springfox.documentation.spring.web.json.JsonSerializer;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -41,26 +45,42 @@ public class CommentService {
         List<CommentGetResponseDto> returnList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             Comment c = list.get(i);
+            System.out.println(c.getCommentCreatedAt());
             boolean userOwn = false;
             if (c.getUser().getUserNo() == userNo) {
                 userOwn = true;
             }
-            CommentGetResponseDto dto = CommentGetResponseDto.builder()
-                    .commentNo(c.getCommentNo())
-                    .content(c.getCommentContent())
-                    .createdAt(c.getCommentCreatedAt())
-                    .updatedAt(c.getCommentUpdatedAt())
-                    .userNick(c.getUser().getUserNick())
-                    .parentId(c.getCommentParentId())
-                    .userOwn(userOwn)
-                    .isUnknown(c.getCommentIsUnknown())
-                    .isDeleted(c.getCommentIsDeleted())
-                    .build();
+
+            String createdAt = "";
+            String updatedAt = "";
+            if (c.getCommentCreatedAt().plusHours(1).isAfter(LocalDateTime.now())) {
+                createdAt = "방금 전";
+            }
+            else if (c.getCommentCreatedAt().plusDays(1).isAfter(LocalDateTime.now())) {
+                int subHour = LocalDateTime.now().getHour() - c.getCommentCreatedAt().getHour();
+                if (subHour < 0) subHour += 24;
+                createdAt = subHour + "시간 전";
+            }
+            else {
+                createdAt = c.getCommentCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
+            }
+
+            if (c.getCommentUpdatedAt() != null) updatedAt = c.getCommentUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
+
+            CommentGetResponseDto dto = new CommentGetResponseDto(
+                    c.getCommentNo(),
+                    c.getUser().getUserNick(),
+                    createdAt,
+                    updatedAt,
+                    c.getCommentContent(),
+                    c.getCommentParentId(),
+                    userOwn,
+                    c.getCommentIsUnknown(),
+                    c.getCommentIsDeleted()
+            );
+
             returnList.add(dto);
         }
-
-
-
         return returnList;
     }
 
@@ -72,7 +92,7 @@ public class CommentService {
                 .commentIsDeleted(Byte.parseByte("0"))
                 .board(new Board(commentPostRequestDto.getBoardId()))
                 .user(new User(userNo))
-                .commentCreatedAt(new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9)))
+                .commentCreatedAt(LocalDateTime.now())
                 .commentIsUnknown(Byte.valueOf(String.valueOf(commentPostRequestDto.getIsUnknown())))
                 .build();
 
@@ -80,17 +100,33 @@ public class CommentService {
             Comment newComment = commentRepository.save(comment);
             boolean userOwn = false;
             if (userNo == newComment.getUser().getUserNo()) userOwn = true;
-            CommentGetResponseDto dto = CommentGetResponseDto.builder()
-                    .commentNo(newComment.getCommentNo())
-                    .userNick(userService.findByUserNo(newComment.getUser().getUserNo()).getUserNick())
-                    .createdAt(newComment.getCommentCreatedAt())
-                    .updatedAt(newComment.getCommentUpdatedAt())
-                    .content(newComment.getCommentContent())
-                    .parentId(newComment.getCommentParentId())
-                    .userOwn(userOwn)
-                    .isUnknown(newComment.getCommentIsUnknown())
-                    .isDeleted(newComment.getCommentIsDeleted())
-                    .build();
+
+            String createdAt = "";
+            String updatedAt = "";
+            if (newComment.getCommentCreatedAt().plusHours(1).isAfter(LocalDateTime.now())) {
+                createdAt = "방금 전";
+            }
+            else if (newComment.getCommentCreatedAt().plusDays(1).isAfter(LocalDateTime.now())) {
+                int subHour = LocalDateTime.now().getHour() - newComment.getCommentCreatedAt().getHour();
+                if(subHour < 0) subHour += 24;
+                createdAt = subHour + "시간 전";
+            }
+            else {
+                createdAt = newComment.getCommentCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
+            }
+
+            CommentGetResponseDto dto = new CommentGetResponseDto(
+                    newComment.getCommentNo(),
+                    userService.findByUserNo(newComment.getUser().getUserNo()).getUserNick(),
+                    createdAt,
+                    updatedAt,
+                    newComment.getCommentContent(),
+                    newComment.getCommentParentId(),
+                    userOwn,
+                    newComment.getCommentIsUnknown(),
+                    newComment.getCommentIsDeleted()
+            );
+
             return dto;
         } catch (Exception e) {
             throw new Exception("댓글 작성 실패");

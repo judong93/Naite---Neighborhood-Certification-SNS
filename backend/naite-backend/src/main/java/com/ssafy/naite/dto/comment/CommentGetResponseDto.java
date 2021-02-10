@@ -4,25 +4,26 @@ import io.swagger.annotations.ApiParam;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.jni.Local;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @NoArgsConstructor
 public class CommentGetResponseDto {
     private Integer commentNo;
-    @ApiParam(value = "유저 닉네임")
     private String userNick;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private String createdAt;
+    private String updatedAt;
     private String content;
     private int parentId;
     private boolean userOwn;
     private byte isUnknown;
     private byte isDeleted;
 
-    @Builder
-    public CommentGetResponseDto(Integer commentNo, String userNick, Timestamp createdAt, Timestamp updatedAt, String content, int parentId, boolean userOwn, byte isUnknown, byte isDeleted) {
+    public CommentGetResponseDto(Integer commentNo, String userNick, String createdAt, String updatedAt, String content, int parentId, boolean userOwn, byte isUnknown, byte isDeleted) {
         this.commentNo = commentNo;
         this.userNick = userNick;
         this.createdAt = createdAt;
@@ -34,4 +35,18 @@ public class CommentGetResponseDto {
         this.isDeleted = isDeleted;
     }
 
+    @Override
+    public String toString() {
+        return "CommentGetResponseDto{" +
+                "commentNo=" + commentNo +
+                ", userNick='" + userNick + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", content='" + content + '\'' +
+                ", parentId=" + parentId +
+                ", userOwn=" + userOwn +
+                ", isUnknown=" + isUnknown +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -28,8 +29,8 @@ public class Comment {
     @Column(length = 200)
     private String commentContent;
 
-    private Timestamp commentCreatedAt;
-    private Timestamp commentUpdatedAt;
+    private LocalDateTime commentCreatedAt;
+    private LocalDateTime commentUpdatedAt;
     private Byte commentIsDeleted;
     private Integer commentReportCnt;
     private Integer commentParentId;
@@ -40,7 +41,7 @@ public class Comment {
     }
 
     @Builder
-    public Comment(Integer commentNo, User user, Board board, String commentContent, Timestamp commentCreatedAt, Timestamp commentUpdatedAt, Byte commentIsDeleted, Integer commentReportCnt, Integer commentParentId, Byte commentIsUnknown) {
+    public Comment(Integer commentNo, User user, Board board, String commentContent, LocalDateTime commentCreatedAt, LocalDateTime commentUpdatedAt, Byte commentIsDeleted, Integer commentReportCnt, Integer commentParentId, Byte commentIsUnknown) {
         this.commentNo = commentNo;
         this.board = board;
         this.user = user;
@@ -62,7 +63,7 @@ public class Comment {
     }
 
     public void updateTime() {
-        this.commentUpdatedAt = new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9));
+        this.commentUpdatedAt = LocalDateTime.now();
     }
 
     public void updateReportCnt(){
