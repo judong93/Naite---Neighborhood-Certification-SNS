@@ -126,10 +126,12 @@ public class MarketService {
     /**
      * 유저별 장터 게시글 조회
      */
+    @Transactional
     public List<MarketDto.MarketResponseDto> getMarketListByUser(int userNo) {
         return marketRepository.findAll()
                 .stream()
                 .filter(market -> market.getBoard().getUserNo() == userNo)
+                .filter(market -> market.getBoard().getBoardIsDeleted() == 0)
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
                     marketResponseDto.setUserNick(userRepository.findById(userNo).get().getUserNick());
@@ -137,5 +139,33 @@ public class MarketService {
                     return marketResponseDto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 장터 모집 완료
+     */
+    @Transactional
+    public int completeMarket(int marketNo, int userNo) {
+        Market market = marketRepository.findById(marketNo).orElseThrow(() -> new IllegalAccessError("[marketNo=" + marketNo + "] 해당 게시글이 존재하지 않습니다."));
+        if(market.getBoard().getUserNo() != userNo) {
+            return -1;
+        }
+        market.marketClose(1);
+        marketRepository.save(market);
+        return marketNo;
+    }
+
+    /**
+     * 장터 모집 완료 취소
+     */
+    @Transactional
+    public int restoreMarket(int marketNo, int userNo) {
+        Market market = marketRepository.findById(marketNo).orElseThrow(() -> new IllegalAccessError("[marketNo=" + marketNo + "] 해당 게시글이 존재하지 않습니다."));
+        if(market.getBoard().getUserNo() != userNo) {
+            return -1;
+        }
+        market.marketClose(0);
+        marketRepository.save(market);
+        return marketNo;
     }
 }

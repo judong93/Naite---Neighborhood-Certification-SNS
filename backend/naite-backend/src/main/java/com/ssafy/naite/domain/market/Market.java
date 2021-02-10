@@ -49,7 +49,7 @@ public class Market {
         this.marketIsCompleted = marketIsCompleted;
     }
 
-    public void marketClose() {
-        this.marketIsCompleted = 1;
+    public void marketClose(int closeFlag) {
+        this.marketIsCompleted = closeFlag;
     }
 }
