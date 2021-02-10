@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -70,27 +71,29 @@ public class MarketDto {
         private int marketNo;
         private Board board;
         private int smallCategoryNo;
-        private int marketCost;
+        private String marketCost;
         private int marketIsCompleted;
         private List<String> usersWithLike = new ArrayList<String>();
         private String userNick;
         private String boardCreatedAt;
+        private String boardCreatedAtSimple;
         private int boardCommentCnt;
 
         public MarketResponseDto(Market market) {
             this.marketNo = market.getMarketNo();
             this.board = market.getBoard();
             this.smallCategoryNo = market.getSmallCategoryNo();
-            this.marketCost = market.getMarketCost();
+            this.marketCost = NumberFormat.getInstance().format(market.getMarketCost());
             this.marketIsCompleted = market.getMarketIsCompleted();
             if(this.board.getBoardCreatedAt().plusHours(1).isAfter(LocalDateTime.now())) {
-                this.boardCreatedAt = "방금 전";
+                this.boardCreatedAt = this.boardCreatedAtSimple = "방금 전";
             } else if (this.board.getBoardCreatedAt().plusDays(1).isAfter(LocalDateTime.now())) {
                 int subHour = LocalDateTime.now().getHour() - this.board.getBoardCreatedAt().getHour();
                 if(subHour < 0) subHour += 24;
-                this.boardCreatedAt = subHour + "시간 전";
+                this.boardCreatedAt = this.boardCreatedAtSimple = subHour + "시간 전";
             } else {
                 this.boardCreatedAt = this.board.getBoardCreatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
+                this.boardCreatedAtSimple = this.board.getBoardCreatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             }
         }
     }
