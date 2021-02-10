@@ -82,6 +82,11 @@ public class Board {
         this.openFlag = openFlag;
     }
 
+    public void updateReportCnt(){
+        if (this.boardReportCnt < 100)
+            this.boardReportCnt += 1;
+    }
+
     public void delete(int boardIsDeleted) {
         this.boardUpdatedAt = LocalDateTime.now();
         this.boardIsDeleted = boardIsDeleted;

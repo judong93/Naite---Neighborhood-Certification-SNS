@@ -2,9 +2,11 @@ package com.ssafy.naite.service.report;
 
 import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.board.BoardRepository;
+import com.ssafy.naite.domain.comment.Comment;
 import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.report.Report;
 import com.ssafy.naite.domain.report.ReportRepository;
+import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
 import com.ssafy.naite.dto.report.ReportDto;
 import lombok.RequiredArgsConstructor;
@@ -41,40 +43,51 @@ public class ReportService {
                 else {  // 해당 신고자가 게시물을 신고한 기록이 없으면 신고 가능
                     report = Report.builder()
                             .boardNo(reportSaveRequestDto.getBoardNo())
-//                        .user(new User(userNo))
                             .userNo(userNo)
                             .reportType(reportSaveRequestDto.getReportType())
                             .reportTargetNo(reportSaveRequestDto.getReportTargetNo())
                             .reportDate(new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9)))
                             .build();
 
-                    // 신고받은 게시물 조회 후 신고 수 조회
+                    // 3. 10회 이상 신고 받을 시, 삭제
+                    // 신고받은 게시물의 현재 신고 수 조회
                     Board reportedBoard = boardRepository.findById(reportSaveRequestDto.getBoardNo()).orElseThrow(() -> new IllegalAccessError("해당 게시글이 존재하지 않습니다."));
+                    User reportedUser = userRepository.findById(reportSaveRequestDto.getReportTargetNo()).orElseThrow(() -> new IllegalAccessError("해당 사용자가 존재하지 않습니다."));
                     int boardReportCnt = reportedBoard.getBoardReportCnt();
 
-                    if (boardReportCnt >= 9) {
-                        // 신고횟수 10회(9 + 1) 이상일 시 게시물 삭제
+                    if (boardReportCnt >= 2) {
+                        // 신고횟수 10회 이상 : 게시물 삭제, 신뢰도 - 1
                         reportedBoard.delete(1);
-
+                        reportedUser.updateScore();
                     }else {
-                        // 신고횟수 + 1 로 게시물 업데이트
+                        // 신고수 10회 미만 : 신고횟수 + 1 로 게시물 업데이트
+                        reportedBoard.updateReportCnt();
                     }
-
                 }
-
-
-
-
-
             } else { // 댓글
-                report = Report.builder()
-                        .commentNo(reportSaveRequestDto.getCommentNo())
-//                        .user(new User(userNo))
-                        .userNo(userNo)
-                        .reportType(reportSaveRequestDto.getReportType())
-                        .reportTargetNo(reportSaveRequestDto.getReportTargetNo())
-                        .reportDate(new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9)))
-                        .build();
+                Optional<Report> existed = reportRepository.findByCommentNoAndUserNo(userNo);
+                if (existed.isPresent())
+                    throw new Exception("이미 신고한 댓글입니다.");
+                else {  // 해당 신고자가 게시물을 신고한 기록이 없으면 신고 가능
+                    report = Report.builder()
+                            .commentNo(reportSaveRequestDto.getCommentNo())
+                            .userNo(userNo)
+                            .reportType(reportSaveRequestDto.getReportType())
+                            .reportTargetNo(reportSaveRequestDto.getReportTargetNo())
+                            .reportDate(new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9)))
+                            .build();
+
+                    Comment reportedComment = commentRepository.findById(reportSaveRequestDto.getCommentNo()).orElseThrow(() -> new IllegalAccessError("해당 댓글이 존재하지 않습니다."));
+                    User reportedUser = userRepository.findById(reportSaveRequestDto.getReportTargetNo()).orElseThrow(() -> new IllegalAccessError("해당 사용자가 존재하지 않습니다."));
+                    int commentReportCnt = reportedComment.getCommentReportCnt();
+                    if (commentReportCnt >= 2) {
+                        reportedComment.updateDelete();
+                        reportedComment.updateTime();
+                        reportedUser.updateScore();
+                    }else {
+                        reportedComment.updateReportCnt();
+                    }
+                }
             }
             int reportNo = reportRepository.save(report).getReportNo();
 

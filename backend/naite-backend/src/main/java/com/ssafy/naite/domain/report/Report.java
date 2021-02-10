@@ -25,10 +25,6 @@ public class Report {
 
     private int boardNo;
     private int commentNo;
-
-//    @ManyToOne
-//    @JoinColumn(name = "user_no")
-//    private User user;
     private int userNo;
 
     @Column(nullable = false)
@@ -39,16 +35,6 @@ public class Report {
 
     private Timestamp reportDate;
 
-//    @Builder
-//    public Report(int reportNo, int boardNo, int commentNo, User user, int reportType, int reportTargetNo, Timestamp reportDate) {
-//        this.reportNo = reportNo;
-//        this.boardNo = boardNo;
-//        this.commentNo = commentNo;
-//        this.user = user;
-//        this.reportType = reportType;
-//        this.reportTargetNo = reportTargetNo;
-//        this.reportDate = reportDate;
-//    }
     @Builder
     public Report(int reportNo, int boardNo, int commentNo, int userNo, int reportType, int reportTargetNo, Timestamp reportDate) {
         this.reportNo = reportNo;

@@ -33,15 +33,5 @@ public class ReportDto {
             this.reportType = reportType;
             this.reportTargetNo = reportTargetNo;
         }
-//        public Report toEntity(int userNo){
-//           return Report.builder()
-//                   .board(new Board(boardNo))
-//                   .comment(new Comment(commentNo))
-//                   .user(new User(userNo))
-//                   .reportType(reportType)
-//                   .reportTargetNo(reportTargetNo)
-//                   .reportDate(new Timestamp(System.currentTimeMillis() + (1000 * 60 * 60 * 9)))
-//                   .build();
-//        }
     }
 }
