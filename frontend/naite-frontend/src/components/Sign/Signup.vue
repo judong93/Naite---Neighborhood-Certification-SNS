@@ -2,7 +2,7 @@
   <div id="signup">               
         <div class="signupform">
             <div class='signuphead'>회원가입</div>
-            <button class='backBtn' @click='toLogin'><i class="fas fa-arrow-circle-left">로그인화면으로</i></button> 
+            <button class='backBtn' @click='toLogin'><i class="fas fa-arrow-circle-left"><span>뒤로가기</span></i></button> 
             <div class="signupleftdiv">
                 <label for="#" >아이디</label><br>
                 <input id='idInput' type="text" v-model='params.userId' @keypress.space="checkSpace" @keypress.enter='idComfirmMet'><button  v-if='!idConfirm' class="idConfirm" @click='idComfirmMet'>중복확인</button><br>
@@ -13,14 +13,14 @@
                 <label for="#">닉네임</label><br>
                 <input id='nickInput' type="text"  v-model='params.userNick' @keypress.space="checkSpace" @keypress.enter='nickemailComfirmMet'><button  v-if='!nickConfirm' class="nickConfirm" @click='nickemailComfirmMet'>중복확인</button><br>   
                 <label for="#">프로필사진</label><br>
-                <label for="signupPic" class='signupPicForm' >이미지선택</label><br>
+                <label for="signupPic" class='signupPicForm' v-if='beforeSelectPic'>이미지 선택</label><br v-if='beforeSelectPic'>
                 <input 
                 type="file" 
                 id='signupPic' 
                 name='files' 
                 @change='saveFile'                
                 >
-                
+                <ProfilePreview :profileImg = 'userPic' :beforeSelectPic='beforeSelectPic' @resettingPic='resettingPic'/>
                 <!-- <input type="text"  v-model='params.userPic' @keypress.space="checkSpace"><br>    -->
             </div>
             <div class="signuprightdiv">
@@ -48,6 +48,9 @@
 
 <script>
 import Location from '@/components/Sign/Location'
+import ProfilePreview from '@/components/Sign/ProfilePreview'
+
+
 import axios from 'axios'
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
@@ -57,6 +60,7 @@ export default {
     name:'Signup',
     components:{
         Location,                
+        ProfilePreview,
     },
     data: function() {
         return {
@@ -78,6 +82,7 @@ export default {
             idConfirm:false,
             nickConfirm:false,
             userPic:'',
+            beforeSelectPic:true,
         }
     },
     methods:{
@@ -268,6 +273,14 @@ export default {
                 return;
             }
             this.userPic = files[0]
+            this.beforeSelectPic = false
+        },
+        resettingPic:function(){
+            var picInput = document.getElementById('signupPic')
+            picInput.value = ''
+            this.beforeSelectPic = true
+            this.userPic = ''
+
         }
     },
     computed: {
@@ -414,12 +427,16 @@ export default {
 
 .backBtn {
     position:absolute;
-    /* margin-top: 10%; */
-    background-color: yellowgreen;
+    margin-top: 2%;
+    background-color: transparent;
     border: none;
     color:white;
     border-radius: 10px;
-    cursor:pointer;
+    cursor:pointer; 
+}
+.backBtn > i > span {
+    font-family: font1;
+    margin-left: 10px;
 }
 
 .emailSend, .idConfirm, .nickConfirm, .emailConfirmSend {    

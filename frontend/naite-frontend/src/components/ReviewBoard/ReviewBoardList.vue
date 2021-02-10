@@ -1,34 +1,42 @@
 <template>
     <div id="boardlist">
         <div class="writeBoard">
+            <ReviewCategory @changeSmallCategory='changeSmallCategory'/>
             <span class='writeBoardNext' @click='writeBoard'>글 쓰기 </span>
         </div>
         <div class="listBox"> 
             <div class="Box">
-                <div v-for='(list,idx) in apiData' :key='idx'>
-                    <div class='list' @click='toDetail(list.boardNo)'>                                      
+                <div v-for='(list,idx) in apiData' :key='idx'>                    
+                    <div class='list' @click='toDetail(list.reviewNo,list.board.boardNo)'>                                      
                         <div class='listInfo'>
                             <div class='listTitle'>
                                 <div>
-                                    {{list.boardTitle}}
+                                    {{list.board.boardTitle}}
                                 </div>
                                 <div class='listContent'>
-                                    {{list.boardContent}}
+                                    {{list.board.boardContent}}
                                 </div>
                             </div>
                             
-                            <div class='subList'>
-                                <div class='listUser'>
-                                    <div v-if='list.unknownFlag'>익명님이 {{categoryName[list.bigCategoryNo]}}에 남긴 글</div>
-                                    <div v-else>{{list.userNick}}님이 {{categoryName[list.bigCategoryNo]}}에 남긴 글</div>
+                            <div class='subList'>                                
+                                <div class='listUser'>                                    
+                                    <div>{{list.userNick}}님이 {{smallCategoryNmae[list.smallCategoryNo]}}에 대해 {{categoryName[list.board.bigCategoryNo]}}
+                                        <span v-if='list.smallCategoryNo===1'>&#xf2e7;</span>
+                                        <span v-if='list.smallCategoryNo===2'>&#xf0f9;</span>
+                                        <span v-if='list.smallCategoryNo===3'>&#xf70c;</span>
+                                        <span v-if='list.smallCategoryNo===4'>&#xf0c4;</span>
+                                        <span v-if='list.smallCategoryNo===5'>&#xf563;</span>
+                                    </div>
                                 </div>
-                                <div>
+                                <div>                                    
                                     <i class="far fa-images"></i>
-                                    {{list.boardPic.length}}
+                                    {{list.board.boardPic ?list.board.boardPic.length:0 }}                                    
                                     <i class="far fa-thumbs-up"></i>
-                                    {{list.boardLikeCnt}}&nbsp;&nbsp;&nbsp;&nbsp;
+                                    {{list.board.boardLikeCnt}}&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="far fa-comment-dots"></i>
                                     {{list.boardCommentCnt}}
+                                    <i class="far fa-star"></i>
+                                    {{list.reviewStar}}점
                                     <i class="far fa-clock"></i>
                                     {{list.boardCreatedAt}}
                                 </div>
@@ -44,21 +52,23 @@
     
 </template>
 <script>
+import ReviewCategory from '@/components/ReviewBoard/ReviewCategory'
 import axios from 'axios'
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 // const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
 
 export default {
-    name:'BoardList',
+    name:'ReviewBoardList',
     components:{
-                
+        ReviewCategory,                
     },
     data: function() {
         return {
-            apiData: {},
+            apiData: {'board':{'board':{}}},
             categoryName:['','번화가','동사무소','수군수군','소리소문','장터'],
-            imgCnt:0,
+            smallCategoryNmae:['','식당','의료','체육시설','미용','기타'],
+            imgCnt:0,           
         }
     },
     props:{
@@ -66,9 +76,10 @@ export default {
     },
     methods:{
         loadList: function(){
-            axios.get(`${SERVER_URL}/board/list/${this.bigCategoryNo}`)
+            axios.get(`${SERVER_URL}/review/list`)
                 .then(res=>{
-                    this.apiData = res.data                    
+                    this.apiData = res.data   
+                                
                 })
                 .catch(err=> {
                     console.log(err)
@@ -77,9 +88,23 @@ export default {
         writeBoard:function(){
             this.$router.push({name:'Posting'})
         } ,
-        toDetail:function(num){
-            this.$router.push({name:'BoardDetail',params:{boardNo:num}})
-        }  
+        toDetail:function(num,boardNo){
+            this.$router.push({name:'ReviewBoardDetail',params:{reviewNo:num,boardNo:boardNo}})
+        },
+        changeSmallCategory:function(smallNo){
+            if (smallNo !== 0 && smallNo!==-1) {
+                axios.get(`${SERVER_URL}/review/list/${smallNo}`)
+                    .then(res=>{
+                        this.apiData = res.data  
+                        console.log(this.apiData) 
+                    })
+                    .catch(err=> {
+                        console.log(err)
+                    })
+            } else {
+                this.loadList()
+            }
+        }
     },
     watch:{
         bigCategoryNo:function(){
@@ -97,7 +122,6 @@ export default {
     font-family: font1;
 }
 
-
 .writeBoard {
     position:absolute;
     top: 24%;
@@ -105,6 +129,8 @@ export default {
     width: 60%;
     height: 2%;
     text-align: right;
+    
+    
 }
 
 .writeBoardNext{
@@ -160,6 +186,15 @@ export default {
     height:55px;
     /* width:300px; */
     width:480px;
+}
+
+.subList i {
+    margin-left: 5px;
+}
+
+.subList span {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;    
 }
 
 .listInfo {
