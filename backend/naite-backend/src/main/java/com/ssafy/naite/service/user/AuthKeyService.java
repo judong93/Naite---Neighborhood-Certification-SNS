@@ -19,10 +19,15 @@ public class AuthKeyService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void save(AuthKeySaveRequestDto authKeySaveRequestDto) {
+    public void save(AuthKeySaveRequestDto authKeySaveRequestDto) throws Exception{
         Optional<AuthKey> existed = authKeyRepository.findByUserEmail(authKeySaveRequestDto.getUserEmail());
         if (existed.isPresent()) {
             AuthKey authKey = existed.get();
+
+            // 회원가입 도중 이메일 인증 미완료된 가입되지 않은 사용자가 비밀번호 찾기를 하려고 할 때
+            if (authKeySaveRequestDto.getAuthType() == 1 && authKey.getAuthType() == 0 && !authKey.getAuthKey().equals("success"))
+                throw new Exception("회원가입 이메일 인증 미완료된 사용자입니다.");
+
             authKey.updateKey(authKeySaveRequestDto.getAuthKey());
             authKey.updateType(authKeySaveRequestDto.getAuthType());
             authKeyRepository.save(authKey);

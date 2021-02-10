@@ -120,8 +120,12 @@ public class UserController {
                 buffer.append(num);
             }
             String key = buffer.toString();
-            System.out.println("key " + key);
-            authKeyService.save(new AuthKeySaveRequestDto(emailSendRequestDto.getUserEmail(), key, emailSendRequestDto.getType()));
+
+            try {
+                authKeyService.save(new AuthKeySaveRequestDto(emailSendRequestDto.getUserEmail(), key, emailSendRequestDto.getType()));
+            } catch (Exception e) {
+                return new Response("error", e.getMessage(), null);
+            }
 
             // 이메일 전송
             StringBuffer emailcontent = new StringBuffer();
