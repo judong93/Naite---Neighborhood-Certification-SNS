@@ -295,7 +295,7 @@ export default {
     .login-head {
         position:relative;
         font-size: 20px;
-        margin-top: 50px;   
+        margin-top: 20%;   
     }
 
     .login-form {
@@ -304,7 +304,7 @@ export default {
         top:0;
         left:0;
         transform: none;
-        margin: 100px auto 20px;
+        margin: 20% auto 1%;
     }
     .login-form > input {
         margin-top: 2%;
@@ -335,11 +335,11 @@ export default {
     }
 
     #login-checkbox > label {
-    margin-right: 5px;
+    margin-right: 1%;
         
     }
     #login-checkbox :nth-child(1){
-        margin-left: 185px;
+        margin-left: 57%;
     }
 
     #webSingup{
@@ -360,7 +360,7 @@ export default {
         border: none;
         right:0%;
         transform:none;
-        margin-top: 20px;
+        margin-top: 5%;
         font-size: 15px;
 
     }
@@ -377,8 +377,8 @@ export default {
         border: none;
         right:0%;
         transform:none;
-        margin-top: 25px;
-        margin-bottom: 20px;
+        margin-top: 5%;
+        margin-bottom: 5%;
         font-size: 15px;
 
     }
@@ -403,7 +403,7 @@ export default {
         color:white;
         background-color: rgba(0,0,0,0.3);
         width:20%;
-        margin: 20px auto
+        margin: 5% auto
 
     }
 

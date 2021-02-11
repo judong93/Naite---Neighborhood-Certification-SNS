@@ -480,9 +480,151 @@ export default {
     background-color: rgb(1, 101, 250);
 }
 @media screen and (max-width: 501px) {
-    #sign {
-        width: 360px;
-        height: 640px;
+    
+    #signup {
+        position: absolute;
+        height: 100%;
+        top:0%;
+        width:100%;      
+        transition: 0.3s;  
+        font-family: font1;
+        visibility: hidden;
+        animation-fill-mode: forwards;
+    }
+    .signupform {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        top:0;
+        left:0;
+        transform:none;
+        display:block;
+        font-size:15px;
+        color:black;
+        
+    }
+    .signuphead {
+        position: relative;
+        left: 0;
+        top: 0;
+        font-size: 20px;
+        color:black;
+        transform: none;
+        margin: 10% auto;       
+    }
+
+    .signupleftdiv{    
+        width: 80%;
+        height: 80%;        
+        margin: 10% auto;
+        text-align: left;
+    
+    }
+    .signuprightdiv{   
+        width: 80%;
+        height: 80%;
+        margin: -35% auto;
+        text-align: left; 
+    }
+
+    .signuprightdiv>input{
+        text-align: left;
+        
+    }
+
+
+
+    .signupform input {
+        width: 80%;
+        height: 5%;
+        border-style: dotted;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        outline: none;
+        background-color: transparent;
+        color:white
+    }
+    .signuprightdiv > .emailInput{
+        width: 70%;
+        
+    }
+
+
+    .signupform label {
+        margin-top:5%;
+    }
+
+    .signupComplete{
+        margin-top: 10%;
+        margin-left:80%;
+        background-color: cornflowerblue;
+        color:white;
+        border:none;
+        border-radius: 10px;
+        cursor:pointer;
+    }
+
+    .backBtn {
+        position:absolute;
+        margin-top: 2%;
+        top:0;
+        left:10%;
+        background-color: transparent;
+        border: none;
+        color:black;
+        border-radius: 10px;
+        cursor:pointer; 
+    }
+
+    .backBtn:hover {
+        color:white;
+    }
+
+    .backBtn > i > span {
+        font-family: font1;
+        margin-left: 10px;
+    }
+
+    .emailSend, .idConfirm, .nickConfirm, .emailConfirmSend {    
+        font-size: 15px;
+        border:none;
+        border-radius: 10px;
+        height:5%; 
+        background-color: rgb(114, 114, 114);   
+        color:white;
+    }   
+
+    #idInput {
+        width: 70%
+    }
+
+    #nickInput {
+        width: 70%;
+    }
+
+    #emailConfirmInput {
+        width: 72%;
+    }
+
+    #signupPic {
+        display: none;
+    }
+
+    .signupPicForm{
+        position: relative;
+        cursor:pointer;
+        margin:0;
+        margin-top: 0;
+        background-color: rgb(17, 235, 35);
+        padding:5px;
+        border-radius: 10px;
+        font-size: 15px;
+        transition:0.3s;
+        top: 0%;
+    }
+    .signupPicForm:hover{
+        background-color: rgb(1, 101, 250);
     }
 }
 
