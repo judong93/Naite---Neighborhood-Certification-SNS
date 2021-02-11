@@ -21,6 +21,26 @@
                 outlineColor: '#44444'
             }"              
             />
+            <VueDaumPostcode
+            style='width:80vw;max-height:80vh; 
+            backgroudColor:red;position:fixed; 
+            top:50%;left:50%; 
+            overflow:auto;
+            font-size:10px;
+            transform: translate(-50%,-50%);
+            ' 
+            id = 'mobilelocationSearch'
+            @complete='result=$event'
+            :theme="{
+                bgColor: '#162525',
+                searchBgColor: '#162525',
+                contentBgColor: '#162525',
+                pageBgColor: '#162525',
+                textColor: '#FFFFFF',
+                queryTextColor: '#FFFFFF',
+                outlineColor: '#44444'
+            }"              
+            />
             
         </div>
         <button @click='closeLocation' class='closeLocation'><i class="fas fa-backspace">취소</i></button>
@@ -148,5 +168,47 @@ export default {
     left:10px;
     
 }
+
+#mobilelocationSearch{
+    display: none;
+}
+@media screen and (max-width: 501px){
+    #location {
+    position: relative;
+    width: 10vw;
+    height:100vh;
+    background-color: transparent;
+    z-index: 3;
+    transform:none;
+    }
+    #mobilelocationSearch{
+        display: block;
+    }
+    #mobilelocationSearch::-webkit-scrollbar{
+        display:none;
+    }
+    #locationSearch{
+        display: none;
+    }
+
+    .closeLocation {
+        position:fixed;
+        top:5%;
+        left:5%;
+        background-color: black;
+    }
+
+    .closeLocation > i {
+        position:relative;
+        color: white;
+        font-size: 15px;
+        width: 100%;
+        text-align: left;
+        top:0;
+        left:0;
+        
+    }
+}
+
 
 </style>

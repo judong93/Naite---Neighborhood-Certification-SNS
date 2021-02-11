@@ -229,12 +229,6 @@ export default {
 
 <style>
 
-@media screen and (max-width: 500px) {
-    #findsign {
-        width: 360px;
-        height: 640px;
-    }
-}
 
 #findsign {
     position: absolute;
@@ -340,6 +334,74 @@ export default {
     color:#3F9F47;
 }
 
+@media screen and (max-width: 501px) {
 
+    #findsign > div {
+        position: absolute;
+        top: 50%;
+        left:50%;
+        color:white;
+        transform:translate(-50%,-50%);
+        width: 100%;
+        height: 100%;    
+        text-align: left;
+        padding: 10%;
+    }
+
+    #findsign input {
+        font-size: 15px;
+        width: 100%;
+        height: 35px;
+        background-color: transparent;
+        border:none;
+        outline:none;
+        border-bottom: 1px rgb(255, 255, 255) dotted;
+        color:white;
+
+    }
+
+    #findsign label {
+        margin-top: 5%;        
+    }
+
+
+    .findId h1 {
+        text-align: center;
+        margin-bottom: 50%;
+    }
+    .findPw h1 {
+        text-align: center;
+        margin-bottom: 50%;
+    }
+
+    .backLogo {
+        left:10%;
+    }
+
+    .backLogo:hover {
+        left:9%;
+    }
+
+    #emailInput, #findPwEmail {
+        margin-bottom: 50px;
+    }
+
+    #findsign button {
+        position:relative;
+        width: 100%;
+        height: 5%;
+        margin: 40px auto;            
+    }
+
+
+    #findsign > div > span {
+        width: 100%;
+        margin: 0 40%;    
+    }
+
+    #findsign > div > span:hover {
+        color:#3F9F47;
+    }
+}
 
 </style>

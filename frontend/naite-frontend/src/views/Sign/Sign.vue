@@ -47,6 +47,20 @@ export default {
         }
       },
     },
+    watch:{
+      toSignup: function(){
+        const screenWidth = window.screen.width
+        const bg = document.querySelector('.bgColor')
+        const sign =document.querySelector('#sign')
+        if (this.toSignup && screenWidth<501) {
+          bg.style.height = '160vh'
+          sign.style.overflow='auto'
+        } else {
+          bg.style.height = '100vh'
+          sign.style.overflow='hidden'
+        }
+      }
+    }
 }
 </script>
 
@@ -105,6 +119,7 @@ export default {
 @media screen and (max-width: 501px) {
   #sign {    
     background: url('../../assets/m_sign.png') no-repeat center center;
+    overflow: hidden;
   }
 
   .bgColor {
