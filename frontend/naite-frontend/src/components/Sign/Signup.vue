@@ -479,5 +479,11 @@ export default {
 .signupPicForm:hover{
     background-color: rgb(1, 101, 250);
 }
+@media screen and (max-width: 501px) {
+    #sign {
+        width: 360px;
+        height: 640px;
+    }
+}
 
 </style>

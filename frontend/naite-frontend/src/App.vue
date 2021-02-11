@@ -98,4 +98,12 @@ export default {
   color: #2c3e50;
 }
 
+
+@media screen and (max-width: 500px) {
+    #app {
+        width: 360px;
+        height: 640px;
+    }
+}
+
 </style>

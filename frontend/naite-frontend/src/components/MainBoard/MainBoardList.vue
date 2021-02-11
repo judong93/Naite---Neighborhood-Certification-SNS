@@ -9,7 +9,7 @@
                     <div class='rightPin'></div>
                 </div>
                 <hr>
-                <div class="mainBoardBody" v-for='(data,idx2) in apiData[`${idx}`]' :key='idx2'> 
+                <div class="mainBoardBody" v-for='(data,idx2) in apiData[`${idx}`]' :key='idx2'>
                     <img src="../../assets/cha2.png" alt="" width='30px' height="30px">                    
                     <p @click='toDetail(data.boardNo)' style='cursor:pointer'>{{data.boardTitle}}</p>
                     <div @click='toDetail(data.boardNo)' style='cursor:pointer' class='mainBoardStatus'>
