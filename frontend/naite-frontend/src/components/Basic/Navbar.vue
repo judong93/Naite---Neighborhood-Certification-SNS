@@ -23,6 +23,7 @@
             <span>{{greeting}}</span>
             <div class="nav-status">
                 <div class="statusHover">   
+                    
                     <a href="#" @click='profile'>내 프로필</a> <br>
                     <a href="#" @click='logout'>로그아웃</a>
                 </div>
@@ -80,6 +81,7 @@ export default {
         const decode = jwt_decode(token)
         this.userNo = decode.user.userNo
         this.greeting = decode.greeting
+        console.log(decode)
     }
 
     

@@ -1,15 +1,16 @@
 <template>
   <div id="sign">
     <div class='bgColor'></div>
-    <Login @changeSignup='changeSignup' :toLogin='toLogin'/>
+    <Login @changeSignup='changeSignup' :toLogin='toLogin' @switchFindLogin='switchFindLogin' :toFind='toFind' />
     <Signup @changeLogin='changeLogin' :toSignup='toSignup'/>
-
+    <FindSign :toFind='toFind' @switchFindLogin='switchFindLogin' />
   </div>
 </template>
 
 <script>
 import Login from '@/components/Sign/Login'
 import Signup from '@/components/Sign/Signup'
+import FindSign from '@/components/Sign/FindSign'
 
 
 
@@ -18,11 +19,13 @@ export default {
     components:{
         Login,
         Signup,
+        FindSign,
     },
     data: function() {
         return {
           toSignup:false,
           toLogin:false,
+          toFind:false,
         }
     },
     methods:{
@@ -33,7 +36,16 @@ export default {
       changeLogin:function(){
         this.toLogin = true
         this.toSignup = false
-      }
+      },
+      switchFindLogin:function(){
+        if (this.toFind) {
+          this.toLogin = true
+          this.toFind = false
+        } else {
+          this.toLogin = false
+          this.toFind = true
+        }
+      },
     },
 }
 </script>
@@ -72,28 +84,32 @@ export default {
 
 
 #sign {
-    position:relative;
-    background: url('../../assets/sign.jpg') no-repeat center center;
-    background-size: 1920px 969px;
-    height: 969px;   
-    width:1920px;
-    /* overflow:hidden;  */
-    overflow:auto;
+  position:relative;
+  background: url('../../assets/sign.jpg') no-repeat center center;
+  background-size: 100vw 100vh;
+  height: 100vh;   
+  width:100vw;
+  /* overflow:hidden;  */
+  overflow:auto;
   
 }
 
 .bgColor {
-  height: 969px;   
-  width:1920px;
+  height: 100vh;   
+  width:100vw;
   background-color: rgba(0, 0, 0, 0.7);
   margin:0;
 
 }
 
-/* @media screen and (max-width: 1800px) {
-  #sign {
-    overflow: auto;
+@media screen and (max-width: 501px) {
+  #sign {    
+    background: url('../../assets/m_sign.png') no-repeat center center;
   }
-} */
+
+  .bgColor {
+    background-color: rgba(0, 0, 0, 0.2);   
+  }
+}
 
 </style>

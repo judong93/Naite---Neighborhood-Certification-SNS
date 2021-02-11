@@ -22,14 +22,16 @@
             <input type="checkbox" id='id-save'>
             <label for="auto-login" style='margin-left:3%;'>자동 로그인</label>
             <input type="checkbox" id='auto-login'>
-            <span @click='look_signup'>Don't have an account? Signup</span>
+            <span id='webSingup' @click='look_signup'>Don't have an account? Signup</span>
+            
         </div>
         
-        <button class="login-btn" @click='loginById'>로그인</button>
-        <button class="login-btn-sns">네이버로 로그인 하기</button>
-        <span class='find-pw'>아이디/비밀번호 찾기</span>
+        <button class="login-btn" @click='loginById'>로그인</button><br>
+        <button class="login-btn-sns">네이버로 로그인 하기</button><br>
+        <span class='find-pw' @click='switchFindLogin'>아이디/비밀번호 찾기</span><br>
+        <span id='mobiSignup' @click='look_signup'>회원가입</span>
     </div>
-           
+
     
     
 
@@ -89,12 +91,19 @@ export default {
                 alert('회원정보를 입력해주세요')
             }
         },
+        switchFindLogin:function(){
+            const btn = document.getElementById('login')
+            btn.style.webkitAnimationName = 'fadeout'
+            btn.style.webkitAnimationDuration='0s'
+            this.$emit('switchFindLogin')
+        }
     },
     computed: {
 
     },
     props:{
         toLogin:Boolean,
+        toFind:Boolean,
     },
     
     watch:{
@@ -108,7 +117,16 @@ export default {
                 // this.$emit('changeSignup')
             } 
 
+        },
+        toFind:function(){
+            const btn = document.getElementById('login')
+            if(!this.toFind){                
+                btn.style.webkitAnimationName = 'fadein'
+                btn.style.webkitAnimationDuration='1s'                
+            } 
+
         }
+
     },
 }
 </script>
@@ -255,5 +273,142 @@ export default {
     border-bottom: white solid 1px;
 }
 
+#mobiSignup {
+    display: none;
+}
+
+@media screen and (max-width: 501px) {
+    #login {
+        width: 100vw;
+        height: 100vh;
+        color:black;
+    }
+
+    .loginBox{
+        width: 100vw;
+        height:100vh;
+        transform: none;
+        top:0;
+        left:0;
+    }
+
+    .login-head {
+        position:relative;
+        font-size: 20px;
+        margin-top: 50px;   
+    }
+
+    .login-form {
+        position: relative;
+        font-size: 15px;
+        top:0;
+        left:0;
+        transform: none;
+        margin: 100px auto 20px;
+    }
+    .login-form > input {
+        margin-top: 2%;
+        height:35px;
+        width: 100%;
+        border-style: dotted;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        outline: none;
+        border-radius: 5px;
+        background-color: rgba(0,0,0,0.2);
+        padding:0 5px;
+        font-size: 15px;
+        color:white;
+
+    }
+    
+    #login-checkbox {
+        position: relative;
+        text-align: left;    
+        vertical-align: center;
+        top:0%;
+        left: 0%;
+        width: 100%;
+        font-size: 10px;
+        color:white;
+    }
+
+    #login-checkbox > label {
+    margin-right: 5px;
+        
+    }
+    #login-checkbox :nth-child(1){
+        margin-left: 185px;
+    }
+
+    #webSingup{
+        display: none;
+    }
+
+   
+
+    .login-btn {
+        position: relative;
+        width: 50%;
+        height: 5%;
+        top: 0;
+        left: 0;
+        color:white;
+        background-color: rgba(102, 102, 245);
+        border-radius: 10px;
+        border: none;
+        right:0%;
+        transform:none;
+        margin-top: 20px;
+        font-size: 15px;
+
+    }
+
+    .login-btn-sns {
+        position: relative;
+        width: 50%;
+        height: 5%;
+        top: 0;
+        left: 0;
+        color:white;
+        background-color: rgba(21, 255, 0);
+        border-radius: 10px;
+        border: none;
+        right:0%;
+        transform:none;
+        margin-top: 25px;
+        margin-bottom: 20px;
+        font-size: 15px;
+
+    }
+
+    .find-pw{
+        position:relative;
+        bottom: 0%;
+        left: 0%;
+        transform:none;
+        cursor:pointer;
+        border-bottom: white solid 1px;
+        color:white;
+        background-color: rgba(0,0,0,0.3);
+        border-radius: 5px;
+        padding:5px;
+        font-size: 10px;
+    }
+    
+    #mobiSignup {
+        font-size: 15px;
+        display: block;
+        color:white;
+        background-color: rgba(0,0,0,0.3);
+        width:20%;
+        margin: 20px auto
+
+    }
+
+
+    
+}
 
 </style>

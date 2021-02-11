@@ -10,7 +10,7 @@
                     </div>
                     <span class='commentContent deleted' v-if='comment.isDeleted'>삭제된 댓글입니다</span>
                     <span class='commentContent' v-else>{{comment.content}}</span>
-                    <span style='font-size:10px;white-space:nowrap;margin-right:10px'>{{comment.createdAt}} 작성된 글</span>
+                    <span style='font-size:10px;white-space:nowrap;margin-right:10px'>{{comment.createdAt}}</span>
                     <!-- {{timdeDiff(comment.createdAt)}} -->
                     <div class='commentStatus'>
                         <div style='display:flex'>
