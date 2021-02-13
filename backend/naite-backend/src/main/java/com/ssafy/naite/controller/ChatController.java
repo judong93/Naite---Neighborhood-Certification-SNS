@@ -1,5 +1,4 @@
 package com.ssafy.naite.controller;
-// import 생략...
 
 import com.ssafy.naite.dto.chat.ChatMessageGetDto;
 import com.ssafy.naite.dto.chat.ChatMessagePostDto;
