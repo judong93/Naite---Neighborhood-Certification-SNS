@@ -228,6 +228,19 @@ public class UserController {
         }
     }
 
+    @PutMapping("profile/village")
+    @ApiOperation(value = "동네 재설정")
+    public Response updateVillage(@RequestBody VillageUpdateRequestDto villageUpdateRequestDto, HttpServletRequest req){
+        try{
+            int userNo = getUserNo(req);
+            int addressUpdatedUser = userService.updateUserAddress(userNo, villageUpdateRequestDto);
+            int dongUpdatedUser = villageService.updateVillage(addressUpdatedUser, villageUpdateRequestDto.getUserDong());
+            return new Response("success","동네 재설정 완료", dongUpdatedUser);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+    }
+
     @ApiOperation(value = "토큰 유효성 검사")
     @GetMapping("/token")
     public Response checkToken(HttpServletRequest req) {
@@ -262,6 +275,18 @@ public class UserController {
             return new Response("error", e.getMessage(), null);
         }
     }
+
+    @GetMapping("/profile/{userNo}")
+    @ApiOperation(value = "타인 프로필 조회")
+    public Response getProfileByNo(@ApiParam(value = "유저 번호") @PathVariable int userNo) {
+        try {
+            UserGetProfileResponseDto userGetProfileResponseDto = userService.getProfileByNo(userNo);
+            return new Response("success", "유저 번호로 프로필 조회 성공", userGetProfileResponseDto);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+    }
+
 
     public int getUserNo(HttpServletRequest req) {
         Map<String, Object> resultMap = new HashMap<>();
