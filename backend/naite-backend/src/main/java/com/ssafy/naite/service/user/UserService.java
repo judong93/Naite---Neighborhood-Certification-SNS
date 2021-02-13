@@ -6,10 +6,7 @@ import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
 import com.ssafy.naite.domain.village.VillageRepository;
 
-import com.ssafy.naite.dto.user.PwUpdateRequestDto;
-import com.ssafy.naite.dto.user.UserGetProfileResponseDto;
-import com.ssafy.naite.dto.user.UserSignInRequestDto;
-import com.ssafy.naite.dto.user.UserSignUpRequestDto;
+import com.ssafy.naite.dto.user.*;
 import com.ssafy.naite.service.board.BoardService;
 import com.ssafy.naite.service.market.MarketService;
 import com.ssafy.naite.service.util.Salt;
@@ -170,6 +167,15 @@ public class UserService {
         }
     }
 
+    /** 회원 주소 변경 */
+    @Transactional
+    public int updateUserAddress(int userNo, VillageUpdateRequestDto requestDto) {
+        User user = userRepository.findById(userNo).orElseThrow(()-> new IllegalAccessError("해당 유저가 존재하지 않습니다."));
+        user.updateAddress(requestDto.getUserBasicAddress(),requestDto.getUserDetailAddress());
+        userRepository.save(user);
+        return userNo;
+    }
+
     /** 회원 탈퇴 */
     @Transactional
     public int leaveUser(int userNo) {
@@ -186,5 +192,24 @@ public class UserService {
         user.leave((byte) 1);
         userRepository.save(user);
         return userNo;
+    }
+
+    /**
+     * 유저 번호로 유저 프로필 조회
+     */
+    @Transactional
+    public UserGetProfileResponseDto getProfileByNo(int userNo) throws Exception {
+        User user = userRepository.findById(userNo).get();
+        int commentCnt = commentRepository.findByUser(user).size(); // 댓글 수
+        int boardCnt = boardService.findAllBoardsByUserNo(user.getUserNo()).size(); // 게시글 수
+        int dealCnt = marketService.getMarketByUser(user.getUserNo()); // 장터거래 수
+
+        return UserGetProfileResponseDto.builder()
+                .userName(user.getUserName())
+                .userNick(user.getUserNick())
+                .commentCnt(commentCnt)
+                .boardCnt(boardCnt)
+                .dealCnt(dealCnt)
+                .build();
     }
 }

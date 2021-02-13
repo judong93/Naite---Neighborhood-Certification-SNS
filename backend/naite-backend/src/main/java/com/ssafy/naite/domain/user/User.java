@@ -79,4 +79,9 @@ public class User {
     public void leave(Byte userSecession) {
         this.userActive = userSecession;
     }
+
+    public void updateAddress(String userBasicAddress, String userDetailAddress){
+        this.userBasicAddress = userBasicAddress;
+        this.userDetailAddress = userDetailAddress;
+    }
 }
