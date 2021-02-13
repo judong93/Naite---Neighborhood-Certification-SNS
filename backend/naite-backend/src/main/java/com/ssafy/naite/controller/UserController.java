@@ -216,7 +216,7 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "비밀번호 재설정", notes = "사용자의 인증 후 비밀번호를 재설정합니다.")
+    @ApiOperation(value = "비밀번호 찾기", notes = "사용자가 비밀번호를 분실 했을 때 사용합니다.\n이메일로 사용자의 인증 후 비밀번호를 재설정합니다.")
     @PutMapping("/sign/password/{userId}")
     public ResponseEntity<String> updatePassword(@PathVariable String userId,@RequestBody PwUpdateRequestDto pwUpdateRequestDto) {
         try {
@@ -225,6 +225,19 @@ public class UserController {
             return new ResponseEntity<String>("비밀번호 재설정 완료", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<String>("비밀번호 재설정 실패", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @ApiOperation(value = "비밀번호 변경", notes = "프로필에서 비밀번호 변경을 통해 비밀번호를 변경합니다.")
+    @PutMapping("/profile/password")
+    public Response updatePasswordInProfile(@RequestBody PwUpdateRequestDto pwUpdateRequestDto,HttpServletRequest req) {
+        try {
+            int userNo = getUserNo(req);
+            User user = userService.findByUserNo(userNo);
+            User updatedUser = userService.updateUserPw(user.getUserId(), pwUpdateRequestDto);
+            return new Response("success","비밀번호 재설정 완료", updatedUser);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
         }
     }
 
