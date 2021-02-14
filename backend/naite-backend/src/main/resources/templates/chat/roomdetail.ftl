@@ -63,16 +63,16 @@
             findRoom: function() {
                 axios.get('/chat/room/'+this.roomNo, {
                     headers: {
-                        'auth-token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoLXRva2VuIiwiZXhwIjoxNjEzMjA4MTQ1LCJ1c2VyIjp7InVzZXJObyI6MSwidXNlcklkIjoibWluZyIsInVzZXJOYW1lIjoi6rmA66-86rK9IiwidXNlckVtYWlsIjoia2ltbWswOTI0QGdtYWlsLmNvbSIsInVzZXJQdyI6IiQyYSQxMCR1QTljRC5jNEdvaHQyOWRHSFZwTWplVkllQ3F4N3cvSW1jeDBJbzhhR3Q5Lm9Ia0dPYVVMcSIsInVzZXJTYWx0IjoiJDJhJDEwJHVBOWNELmM0R29odDI5ZEdIVnBNamUiLCJ1c2VyQmFzaWNBZGRyZXNzIjoibWtiYXNpYyIsInVzZXJEZXRhaWxBZGRyZXNzIjoibWtkZXRhaWwiLCJ1c2VyTmljayI6Im1pbmciLCJ1c2VyU2NvcmUiOjQyLCJ1c2VyUmVwb3J0Q250IjowLCJ1c2VyUGljIjoibWtwaWMiLCJ1c2VyQWN0aXZlIjoxfSwiZ3JlZXRpbmciOiJtaW5n64uYIO2ZmOyYge2VqeuLiOuLpC4ifQ.mqdDtk8WkxgRykMix9Ej-_-USxxRQzLae1Y12YsYjAg'
+                        'auth-token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoLXRva2VuIiwiZXhwIjoxNjEzMjMzNTk2LCJ1c2VyIjp7InVzZXJObyI6MSwidXNlcklkIjoibWluZyIsInVzZXJOYW1lIjoi6rmA66-86rK9IiwidXNlckVtYWlsIjoia2ltbWswOTI0QGdtYWlsLmNvbSIsInVzZXJQdyI6IiQyYSQxMCR1QTljRC5jNEdvaHQyOWRHSFZwTWplVkllQ3F4N3cvSW1jeDBJbzhhR3Q5Lm9Ia0dPYVVMcSIsInVzZXJTYWx0IjoiJDJhJDEwJHVBOWNELmM0R29odDI5ZEdIVnBNamUiLCJ1c2VyQmFzaWNBZGRyZXNzIjoibWtiYXNpYyIsInVzZXJEZXRhaWxBZGRyZXNzIjoibWtkZXRhaWwiLCJ1c2VyTmljayI6Im1pbmciLCJ1c2VyU2NvcmUiOjQyLCJ1c2VyUmVwb3J0Q250IjowLCJ1c2VyUGljIjoibWtwaWMiLCJ1c2VyQWN0aXZlIjoxfSwiZ3JlZXRpbmciOiJtaW5n64uYIO2ZmOyYge2VqeuLiOuLpC4ifQ.NLToERJgn7tpH_iDrgreIgn-WE4eRhX_ycxdDXAw4t4'
                     }
                 }).then(response => {
-                    this.messages = response.data;
+                    this.messages = response.data.data;
                 });
             },
             sendMessage: function() {
                 axios.post('/chat/message', {roomNo: this.roomNo, message: this.message}, {
                     headers: {
-                        'auth-token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoLXRva2VuIiwiZXhwIjoxNjEzMjA4MTQ1LCJ1c2VyIjp7InVzZXJObyI6MSwidXNlcklkIjoibWluZyIsInVzZXJOYW1lIjoi6rmA66-86rK9IiwidXNlckVtYWlsIjoia2ltbWswOTI0QGdtYWlsLmNvbSIsInVzZXJQdyI6IiQyYSQxMCR1QTljRC5jNEdvaHQyOWRHSFZwTWplVkllQ3F4N3cvSW1jeDBJbzhhR3Q5Lm9Ia0dPYVVMcSIsInVzZXJTYWx0IjoiJDJhJDEwJHVBOWNELmM0R29odDI5ZEdIVnBNamUiLCJ1c2VyQmFzaWNBZGRyZXNzIjoibWtiYXNpYyIsInVzZXJEZXRhaWxBZGRyZXNzIjoibWtkZXRhaWwiLCJ1c2VyTmljayI6Im1pbmciLCJ1c2VyU2NvcmUiOjQyLCJ1c2VyUmVwb3J0Q250IjowLCJ1c2VyUGljIjoibWtwaWMiLCJ1c2VyQWN0aXZlIjoxfSwiZ3JlZXRpbmciOiJtaW5n64uYIO2ZmOyYge2VqeuLiOuLpC4ifQ.mqdDtk8WkxgRykMix9Ej-_-USxxRQzLae1Y12YsYjAg'
+                        'auth-token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoLXRva2VuIiwiZXhwIjoxNjEzMjMzNTk2LCJ1c2VyIjp7InVzZXJObyI6MSwidXNlcklkIjoibWluZyIsInVzZXJOYW1lIjoi6rmA66-86rK9IiwidXNlckVtYWlsIjoia2ltbWswOTI0QGdtYWlsLmNvbSIsInVzZXJQdyI6IiQyYSQxMCR1QTljRC5jNEdvaHQyOWRHSFZwTWplVkllQ3F4N3cvSW1jeDBJbzhhR3Q5Lm9Ia0dPYVVMcSIsInVzZXJTYWx0IjoiJDJhJDEwJHVBOWNELmM0R29odDI5ZEdIVnBNamUiLCJ1c2VyQmFzaWNBZGRyZXNzIjoibWtiYXNpYyIsInVzZXJEZXRhaWxBZGRyZXNzIjoibWtkZXRhaWwiLCJ1c2VyTmljayI6Im1pbmciLCJ1c2VyU2NvcmUiOjQyLCJ1c2VyUmVwb3J0Q250IjowLCJ1c2VyUGljIjoibWtwaWMiLCJ1c2VyQWN0aXZlIjoxfSwiZ3JlZXRpbmciOiJtaW5n64uYIO2ZmOyYge2VqeuLiOuLpC4ifQ.NLToERJgn7tpH_iDrgreIgn-WE4eRhX_ycxdDXAw4t4'
                     }
                 })
                      .then((response) => {

@@ -29,11 +29,11 @@ public class ChatRoomController {
 
     // 채팅 리스트 화면
     // 서버에서 테스트 할 화면
-    //    @GetMapping("/room")
-    //    @ApiIgnore
-    //    public String rooms(Model model) {
-    //        return "/chat/room";
-    //    }
+    // @GetMapping("/rooms")
+    // @ApiIgnore
+    // public String rooms(Model model) {
+    //    return "/chat/room";
+    // }
 
     // 모든 채팅방 목록 반환
     @GetMapping("/room")
