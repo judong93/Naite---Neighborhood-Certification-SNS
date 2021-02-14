@@ -3,12 +3,12 @@
     <form action="#">
       <label for="#">주소</label><br>
       <input type="text" 
-      v-model="userBasicAddress" @click="openSearchLocation" 
+      v-model="changeAddressParams.userBasicAddress" @click="openSearchLocation" 
       placeholder="클릭하여 주소를 검색해주세요" readonly><br>
       <label for="#">상세주소</label><br>
       <input type="text"
-      v-model="userDetailAddress" ><br>
-      <button class="setting-btn">확인</button>
+      v-model="changeAddressParams.userDetailAddress" @keypress.enter="changeAddress"><br>
+      <button class="setting-btn" @click="changeAddress">확인</button>
     </form>
     <Location :searchLocation='searchLocation' @selectAddress = 'selectAddress' @checkAddress='checkAddress' />
   </div>
@@ -17,14 +17,19 @@
 
 <script>
 import Location from '@/components/Sign/Location'
+import axios from 'axios'
+
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 
 export default {
   name: 'LocationChangingForm',
   data: function () {
     return {
-      userBasicAddress: '',
-      userDetailAddress: '',
-      userDong: '',
+      changeAddressParams: {
+        userBasicAddress: '',
+        userDetailAddress: '',
+        userDong: '',
+      },
       searchLocation: false,
       addressConfirm: false,
     }
@@ -33,6 +38,16 @@ export default {
     Location,                
   },
   methods: {
+    setToken:function(){
+      const token=localStorage.getItem('jwt')
+      const config = {
+          headers: {
+          'auth-token':`${token}`
+          }
+      }
+      console.log(config)
+      return config
+    },
     checkSpace:function () {
     event.returnValue=false;
     },
@@ -45,21 +60,42 @@ export default {
     },
     selectAddress:function(result) {
       this.searchLocation = false
-      this.userBasicAddress = result.address
-      this.userDong = result.bname2
-      console.log(this.userBasicAddress)
-      console.log(this.userDong)
+      this.changeAddressParams.userBasicAddress = result.address
+      this.changeAddressParams.userDong = result.bname2
+      console.log(this.changeAddressParams.userBasicAddress)
+      console.log(this.changeAddressParams.userDong)
     },
     checkAddress:function(res) {
       this.addressConfirm = res
-    },  
+    },
+    changeAddress: function () {
+      const config = this.setToken()
+      if (this.changeAddressParams.userDetailAddress==='') {
+        alert('상세주소를 입력해주세요!')
+      } else {
+        const params = this.changeAddressParams
+        axios.put(`${SERVER_URL}/user/profile/village`, {params} , config)
+          .then(() => {
+            alert('동네가 변경되었습니다!')
+            this.$emit('changingAddressCompleted')
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+
+    }  
   }
 
 }
 </script>
 
 <style>
-#location-changing-form::placeholder {
+#location-changing-form input::placeholder {
   color: black;
+  text-align: center;
+}
+#location-changing-form input {
+  width: 70%;
 }
 </style>

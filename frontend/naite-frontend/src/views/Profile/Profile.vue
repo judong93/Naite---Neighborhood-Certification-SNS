@@ -24,41 +24,25 @@
         </div>  
       </div>
       <hr>
-      <div v-if="activityCheckNum===1" class="profile-cards">
-        <div v-for="(card,idx) in userPostings" :key="idx" class="profile-card">
-          <img @click="toBoardDetail(card.boardNo)" :src="imgData" alt="이미지가 없습니다!" class="posting-img">
-          <div @click="toBoardDetail(card.boardNo)" class="card-title">
-            {{ card.boardTitle }}
+      <div class="profile-cards-container">
+        <div v-for="(userPosting,idx) in userPostings" :key=idx class="profile-cards" :class="{ carouselactive: idx===carouselNo}">
+          <i @click="previousCarouselSet" v-if="carouselLength >=0" class="fas fa-chevron-left fa-2x carousel-move-btn"></i>
+          <div class="profile-card-container">
+            <div v-for="(card,idx) in userPosting" :key="idx" class="profile-card">
+              <img @click="toBoardDetail(card.boardNo)" :src="imgData" alt="이미지가 없습니다!" class="posting-img">
+              <div @click="toBoardDetail(card.boardNo)" class="card-title">
+                {{ card.boardTitle }}
+              </div>
+              <div @click="toBoardDetail(card.boardNo)" class="card-content">
+                {{ card.boardContent }}
+              </div>
+              <div class="card-category">{{ bigCategory[card.bigCategoryNo] }}게시글</div>
+              <button v-if="activityCheckNum===1 && userNo===loginedUserNo" @click="deletePosting(card.boardNo)" class="profile-card-button cdb">삭제하기</button>
+              <div v-if="card.marketIsCompleted===0" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo)" class="profile-card-button market-not-completed">모집중</div>
+              <div v-if="card.marketIsCompleted===1" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo)" class="profile-card-button market-is-completed">거래완료</div>
+            </div>
           </div>
-          <div @click="toBoardDetail(card.boardNo)" class="card-content">
-            {{ card.boardContent }}
-          </div>
-          <button v-if="userNo===loginedUserNo" @click="deletePosting(card.boardNo)" class="card-delete-button">삭제하기</button>
-        </div>
-      </div>
-      <div v-if="activityCheckNum===2" class="profile-cards">
-        <div @click="toMarketDetail(card.marketNo)" v-for="(card,idx) in userMarketPostings" :key="idx" class="profile-card">
-          <img :src="imgData" alt="이미지가 없습니다!" class="posting-img">
-          <div class="card-title">
-            {{ card.board.boardTitle }}
-          </div>
-          <div class="card-content">
-            {{ card.board.boardContent }}
-          </div>
-          <div v-if="card.marketIsCompleted===0" class="market-is-completed">모집중</div>
-          <div v-if="card.marketIsCompleted===1" class="font-yellow market-is-completed">거래완료</div>
-        </div>
-      </div>
-      <div v-if="activityCheckNum===3" class="profile-cards">
-        <div @click="toBoardDetail(card.boardNo)" v-for="(card,idx) in userCommentPostings" :key="idx" class="profile-card">
-          <img :src="imgData" alt="이미지가 없습니다!" class="posting-img">
-          <div class="card-title">
-            {{ card.boardTitle }}
-          </div>
-          <div class="card-content">
-            {{ card.boardContent }}
-          </div>
-          <!-- <button class="card-delete-button">DELETE</button> -->
+          <i @click="nextCarouselSet" class="fas fa-chevron-right fa-2x carousel-move-btn"></i>
         </div>
       </div>
     </div>
@@ -79,20 +63,27 @@ export default {
   data: function () {
     return {
       imgData: "http://picsum.photos/200/300",
-      userName: "user1",
       postingCount: 0,
       marketCount: 0,
       commentCount: 0,
       userPostings: [],
+      userBoardPostings: [],
       userMarketPostings: [],
       userCommentPostings: [],
       postingImg: "https://picsum.photos/200/300",
-      activityCheckNum: 1,
+      activityCheckNum: 0,
       userNick: '',
       userNo: 0,
       loginedUserNo: 0,
       onProfileImg: false,
+      carouselNo: 0,
+      carouselLength: 0,
+      bigCategory: ['','번화가 ', '소리소문 ', '수군수군 ', '동사무소 ', '장터 ', '공지사항 '],
     }
+  },
+  components: {
+    Navbar,
+    Message
   },
   methods: {
     postingList: function () {
@@ -120,32 +111,24 @@ export default {
       console.log(config)
       return config
     },
-    deletePosting: function (boardNo) { 
+    deletePosting: async function (boardNo) { 
       const config = this.setToken()
       const result = confirm("정말 삭제하시겠습니까?")
       if (!result) {
         console.log(boardNo)
       } else {
-          axios.put(`${SERVER_URL}/board/delete/${boardNo}`, {}, config)
-            .then(() => {
-              axios.get(`${SERVER_URL}/board/list/user/${this.userNo}`)
-                .then((res) => {
-                  this.postingCount = res.data.length
-                  if (this.postingCount > 5) {
-                    this.userPostings = res.data.slice(0, 5)
-                  } else {
-                    this.userPostings = res.data
-                  }
-                })
-            })
-            .catch((err) => {
-              console.log(err)
-              alert('로그아웃 되었습니다. 다시 로그인 진행해주세요!')
-              localStorage.removeItem('jwt')
-              this.$router.push({name:'Sign'})
-            })
+        axios.put(`${SERVER_URL}/board/delete/${boardNo}`, {}, config)
+          .then(() => {
+            this.getBoardList()
+          })
+          .catch((err) => {
+            console.log(err)
+            alert('로그아웃 되었습니다. 다시 로그인 진행해주세요!')
+            localStorage.removeItem('jwt')
+            this.$router.push({name:'Sign'})
+          })
+        console.log(this.userBoardPostings)
       }
-
     },
     toBoardDetail: function (boardNo) {
       this.$router.push({ name: 'BoardDetail', params: {boardNo: boardNo} })
@@ -162,56 +145,144 @@ export default {
       setTimeout(() => {
         this.onProfileImg = false
       }, 400);
+    },
+    nextCarouselSet: function () {
+      console.log(this.carouselLength)
+      if (this.carouselNo < this.carouselLength) {
+        this.carouselNo += 1
+      } else {
+        this.carouselNo = 0
+      }
+    },
+    previousCarouselSet: function () {
+      if (this.carouselNo===0) {
+        this.carouselNo = this.carouselLength
+      } else {
+        this.carouselNo -= 1
+      }
+    },
+    // 각각 게시글 리스트를 하나의 함수에서 처리하면 좋았을텐데, API 주소가 규칙성이 없이 다르고, 데이터 양식도 달라서 불가피하게 다 나눔..ㅠ
+    getBoardList: function () {
+      axios.get(`${SERVER_URL}/board/list/user/${this.userNo}`)
+        .then((res) => {
+          this.postingCount = res.data.length
+          const length = parseInt((res.data.length -1) / 5)
+          this.carouselLength = length
+          this.userBoardPostings = []
+          for (let i = 0; i <= length; i++) {
+            this.userBoardPostings.push(res.data.splice(0,5))
+            if (i===length) {
+              this.userPostings = this.userBoardPostings
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getMarketList: function () {
+      axios.get(`${SERVER_URL}/market/list/user/${this.userNo}`)
+        .then((res) => {  
+          this.marketCount = res.data.length
+          const length = parseInt((res.data.length -1) / 5)
+          this.userMarketPostings = []
+          for (let i = 0; i <= length; i++) {
+            const fiveList = []
+            const x = res.data.splice(0,5)
+            for (let j = 0; j < x.length; j++) {
+              const y = x[j].board
+              y.marketIsCompleted = x[j].marketIsCompleted
+              y.marketNo = x[j].marketNo
+              fiveList.push(y)
+            }
+            this.userMarketPostings.push(fiveList)
+            if (this.activityCheckNum===2) {
+              this.userPostings = this.userMarketPostings
+            }
+          }
+          console.log(this.userMarketPostings)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getCommentList: function () {
+      axios.get(`${SERVER_URL}/comment/user/${this.userNo}`)
+        .then((res) => {
+          this.commentCount = res.data.data.length
+          const length = parseInt((res.data.data.length -1) / 5)
+          for (let i = 0; i <= length; i++) {
+            this.userCommentPostings.push(res.data.data.splice(0,5))
+          }
+          console.log(this.userCommentPostings)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getUserNick: function () {
+      const config = this.setToken()
+      axios.get(`${SERVER_URL}/user/profile/${this.userNo}`, config)
+        .then((res) => {
+          this.userNick = res.data.data.userNick
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    changeMarketStatus: function (status,marketNo) {
+      const config = this.setToken()
+      if (this.userNo === this.loginedUserNo) {
+        if (status===0) {
+          const result = confirm('모집을 마감하시겠습니까?')
+          if (result) {
+            axios.put(`${SERVER_URL}/market/complete/${marketNo}`, {}, config)
+              .then(() => {
+                this.getMarketList()
+                this.userPostings = this.userMarketPostings
+              })
+          }
+        } else {
+          const result = confirm('다시 모집하시겠습니까?')
+          if (result) {
+            axios.put(`${SERVER_URL}/market/restore/${marketNo}`, {}, config)
+              .then(() => {
+                this.getMarketList()
+                this.userPostings = this.userMarketPostings
+              })
+          }
+        }
+      }
+
     }
   },
-  components: {
-    Navbar,
-    Message
+  watch: {
+    activityCheckNum: function () {
+      if (this.activityCheckNum===1) {
+        this.userPostings = this.userBoardPostings
+        this.carouselLength = this.userBoardPostings.length -1
+      } else if (this.activityCheckNum===2) {
+        this.userPostings = this.userMarketPostings
+        this.carouselLength = this.userMarketPostings.length -1
+      } else {
+        this.userPostings = this.userCommentPostings
+        this,this.carouselLength = this.userCommentPostings.length -1
+      }
+      this.carouselNo = 0
+    }
   },
   created: function () {
     this.Cards = this.postingCards
     // const config = this.setToken()
     const decode = jwt_decode(localStorage.getItem('jwt'))
     this.loginedUserNo = decode.user.userNo
-    this.userNo = this.$route.params.userNo
-    this.userNick = decode.user.userNick
-    axios.get(`${SERVER_URL}/board/list/user/${this.userNo}`)
-      .then((res) => {
-        console.log(res)
-        this.postingCount = res.data.length
-        if (this.postingCount > 5) {
-          this.userPostings = res.data.slice(0, 5)
-        } else {
-          this.userPostings = res.data
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    axios.get(`${SERVER_URL}/market/list/user/${this.userNo}`)
-      .then((res) => {
-        this.marketCount = res.data.length
-        if (this.marketCount > 5) {
-          this.userMarketPostings = res.data.slice(0, 5)
-        } else {
-          this.userMarketPostings = res.data
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    axios.get(`${SERVER_URL}/comment/user/${this.userNo}`)
-      .then((res) => {
-        this.commentCount = res.data.data.length
-        if (this.commentCount > 5) {
-          this.userCommentPostings = res.data.data.slice(0, 5)
-        } else {
-          this.userCommentPostings = res.data.data
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    // 새로고침하면 userNo가 스트링으로 받아와짐.. 도대체 왜지?!
+    this.userNo = Number(this.$route.params.userNo)
+    this.getUserNick()
+    this.getBoardList()
+    this.getMarketList()
+    this.getCommentList()
+    this.activityCheckNum = 1
   },
 }
 </script>
@@ -312,48 +383,62 @@ hr {
   top: 20px; 
   font-size: 30px;
 }
-.profile-cards {
-  /* overflow: hidden; */
-  margin-left: 80px;
-  margin-top: 20px;
-  display: flex;
-  /* justify-content: space-around; */
+.profile-cards-container {
+  /* margin-left: 80px; */
+  /* margin-top: 20px; */
   width: 60%;
+  text-align: center;
+}
+.profile-cards {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  z-index: 0;
+  opacity: 0;
+  transition: all .5s ease-in-out;
+  transform: scale(0.95);
+}
+.carouselactive {
+  opacity: 1;
+  z-index: 1;
+  transform: none;
+}
+.profile-card-container {
+  /* text-align: left; */
+  width: 92%;
+  display: flex;
+  justify-content: center;
 }
 .profile-card {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* justify-content: space-between; */
   border: 1px solid palegoldenrod;
-  /* border-radius: 10%; */
-  width: 190px;
-  height: 280px;
-  margin-right: 30px;
-  /* box-shadow: inset 0 0 5px rosybrown; */
+  width: 185px;
+  height: 290px;
+  margin: 0 12px;
   cursor: pointer;
+}
+.profile-card:hover {
+  width: 195px;
+  height: 300px;
+  transition-duration: 0.3s;
 }
 .posting-img {
   height: 38%;
-  width: 100%;
-  /* border-radius: 10%; */
 }
 .card-title {
-  /* display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  word-wrap:break-word;  */
   line-height: 1.5em;
   overflow: hidden;
   text-align: left;
   margin-top: 14px;
   margin-left: 10px;
   font-weight: bold;
-  font-size: 125%;
+  font-size: 120%;
   height: 52px;
   white-space: nowrap;
   text-overflow: ellipsis;
-  /* word-break: normal; */
 }
 .card-content {
   display: -webkit-box;
@@ -363,24 +448,17 @@ hr {
   line-height: 1.5em;
   overflow: hidden;
   text-align: left;
-  margin-top: 8px;
   padding-left: 10px;  
   padding-right: 20px;  
   height: 52px;
   white-space: normal;
   text-overflow: ellipsis;
-  /* white-space: normal; */
 }
-/* .card-delete-button {
-  margin-left: 55%;
-  position: relative;
-  margin-top: 17px;
-  width: 45%;
-  border-radius: 10%;
-  color: rgb(199, 5, 5);
-} */
-.font-yellow {
-  color: rgb(112, 112, 28);
+.card-category {
+  font-size: 12px;
+  margin-top: 13px;
+  margin-right: 20px;
+  text-align: right;
 }
 .underline {
   text-decoration: underline;
@@ -393,12 +471,12 @@ hr {
   background-color: rgb(223, 217, 217);
   opacity: 0.7;
 }
-.card-delete-button{
+.profile-card-button{
   /* margin-left: 100%; */
-  margin-top: 17px;
+  /* margin-top: 17px; */
   width: 100%; 
   text-align: center;
-  background:#DB4455;
+  /* background:#DB4455; */
   color:#fff;
   border:none;
   position:relative;
@@ -409,51 +487,71 @@ hr {
   transition:800ms ease all;
   outline:none;
 }
-.card-delete-button:hover{
+.profile-card-button:hover{
   background:#fff;
-  color:#DB4455;
+  /* color:#DB4455; */
 }
-.card-delete-button:before,.card-delete-button:after{
+.profile-card-button:before,.profile-card-button:after{
   content:'';
   position:absolute;
   top:0;
   right:0;
   height:2px;
   width:0;
-  background: #DB4455;
+  /* background: #DB4455; */
   transition:400ms ease all;
 }
-.card-delete-button:after{
+.profile-card-button:after{
   right:inherit;
   top:inherit;
   left:0;
   bottom:0;
 }
-.card-delete-button:hover:before,.card-delete-button:hover:after{
+.profile-card-button:hover:before,.profile-card-button:hover:after{
   width:100%;
   transition:800ms ease all;
 }
-.market-is-completed{
-  /* margin-left: 100%; */
-  margin-top: 17px;
-  width: 100%; 
-  text-align: center;
+.cdb {
+  background:#DB4455;
+}
+.cdb:hover {
+  color:#DB4455;
+}
+.cdb:before, .cdb:after{
+  background:#DB4455;
+}
+.market-not-completed{
   background:#1AABBA;
-  color:#fff;
-  border:none;
-  position:relative;
-  height: 40px;
-  font-size:1.3em;
-  padding: 0 5px;
-  /* cursor:pointer; */
-  transition:800ms ease all;
-  outline:none;
+}
+.market-not-completed:hover {
+  color: #1AABBA;
+}
+.market-not-completed:before, .market-not-completed:after {
+  background:#1AABBA;
+}
+.market-is-completed{
+  background:#FF7F50;
+}
+.market-is-completed:hover {
+  color: #FF7F50;
+}
+.market-is-completed:before, .market-is-completed:after {
+  background:#FF7F50;
 }
 #settings-icon:hover {
   font-size: 130%;
   transition-duration: 0.3s;
 }
 #settings-icon:not(:hover) {
+  transition-duration: 0.3s;
+}
+.carousel-move-btn {
+  position: relative;
+  margin-top: 110px;
+  cursor: pointer;
+}
+.carousel-move-btn:hover {
+  font-size: 250%;
   transition-duration: 0.3s;
 }
 

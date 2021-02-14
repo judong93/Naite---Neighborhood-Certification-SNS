@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="market-detail-content-container">
-        <div class="market-detail-content-title">{{marketDetailContent.board.boardTitle}}</div>
+        <div v-if="marketDetailContent.board" class="market-detail-content-title">{{marketDetailContent.board.boardTitle}}</div>
         <div class="market-detail-subs">
           <div class="subs-title">
             <p>작성자</p>
@@ -28,7 +28,7 @@
             <p>{{marketDetailContent.marketCost}}원</p>
           </div>
         </div>
-        <div class="market-detail-boardcontent">
+        <div v-if="marketDetailContent.board" class="market-detail-boardcontent">
           {{ marketDetailContent.board.boardContent }}
         </div>
       </div>
@@ -62,6 +62,11 @@ export default {
   },
   components: {
     BoardImg,
+  },
+  methods: {
+    toWriterProfile: function () {
+      this.$router.push({name: 'Profile', params:{userNo: this.marketDetailContent.board.userNo}})
+    }
   },
   created: function () {
     const marketNo = this.$route.params.marketNo

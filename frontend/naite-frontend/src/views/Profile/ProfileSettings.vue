@@ -19,7 +19,7 @@
       </div>
       <p><span @click="openPwChangingForm">비밀번호 재설정하기</span> </p>
       <p><span @click="openLocationChangingForm">동네 재설정하기</span> </p>
-      <p class="delete-account"><span>회원탈퇴</span></p>
+      <p class="delete-account" @click="deleteAccount"><span>회원탈퇴</span></p>
       <p><span @click="backToProfile">내 프로필로 가기</span></p>
     </div>
   </div>
@@ -29,9 +29,9 @@
 import Navbar from '@/components/Basic/Navbar'
 import SettingBox from '@/components/Profile/SettingBox'
 import jwt_decode from 'jwt-decode'
-// import axios from 'axios'
+import axios from 'axios'
 
-// const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 
 export default {
   name: 'ProfileSettings',
@@ -54,15 +54,31 @@ export default {
     backToProfile: function () {
       this.$router.push({ name: 'Profile', params:{userNo:this.userNo}})
     },
-    // deleteAccount: function () {
-    //   axios.put(`http://i4a402.p.ssafy.io:8080/board/delete/${boardNo}`, config)
-    //     .then((res) => {
-    //       console.log(res)
-    //     })
-    //     .catch((err) => {
-    //       console.log(err)
-    //     })
-    // },
+    setToken:function(){
+      const token=localStorage.getItem('jwt')
+      const config = {
+          headers: {
+          'auth-token':`${token}`
+          }
+      }
+      console.log(config)
+      return config
+    },
+    deleteAccount: function () {
+      const result = confirm("정말 삭제하시겠습니까?")
+      if (result) {
+        const config = this.setToken()
+        axios.put(`${SERVER_URL}/user/leave`, {}, config)
+          .then(() => {
+            alert('그동안 나이테를 사용해주셔서 감사합니다')
+            localStorage.removeItem('jwt')
+            this.$router.push({name:'Sign'})
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+        }
+    },
     openPwChangingForm: function () {
       this.formIsOpen = !this.formIsOpen
       this.formTitle = '비밀번호 재설정'
