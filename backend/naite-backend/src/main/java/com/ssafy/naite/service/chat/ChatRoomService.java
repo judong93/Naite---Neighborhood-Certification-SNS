@@ -69,19 +69,23 @@ public class ChatRoomService {
             // 마지막 메세지 정보
             ChatMessage lastMessage = getLastMessage(roomId);
             String lastMessageTime = "";
-            if (lastMessage.getTime().plusHours(1).isAfter(LocalDateTime.now())) {
-                lastMessageTime = "방금 전";
-            }
-            else if (lastMessage.getTime().plusDays(1).isAfter(LocalDateTime.now())) {
-                int subHour = LocalDateTime.now().getHour() - lastMessage.getTime().getHour();
-                if(subHour < 0) subHour += 24;
-                lastMessageTime = subHour + "시간 전";
-            }
-            else {
-                lastMessageTime = lastMessage.getTime().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
-            }
+            if (lastMessage == null) {
+                result.add(new ChatRoomGetDto(roomId, other.getUserNick(), other.getUserPic(), "", ""));
+            } else {
+                if (lastMessage.getTime().plusHours(1).isAfter(LocalDateTime.now())) {
+                    lastMessageTime = "방금 전";
+                }
+                else if (lastMessage.getTime().plusDays(1).isAfter(LocalDateTime.now())) {
+                    int subHour = LocalDateTime.now().getHour() - lastMessage.getTime().getHour();
+                    if(subHour < 0) subHour += 24;
+                    lastMessageTime = subHour + "시간 전";
+                }
+                else {
+                    lastMessageTime = lastMessage.getTime().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
+                }
 
-            result.add(new ChatRoomGetDto(roomId, other.getUserNick(), other.getUserPic(), lastMessage.getMessage(), lastMessageTime));
+                result.add(new ChatRoomGetDto(roomId, other.getUserNick(), other.getUserPic(), lastMessage.getMessage(), lastMessageTime));
+            }
         }
         return result;
     }
@@ -141,7 +145,8 @@ public class ChatRoomService {
 
     public ChatMessage getLastMessage(Integer roomNo) {
         List<ChatMessage> messages = chatMessageService.getMessages(roomNo);
-        return messages.get(messages.size()-1);
+        if (messages.size() == 0) return null;
+        else return messages.get(messages.size()-1);
     }
 
     public ChatRoom findByRoomNo(Integer roomNo) {

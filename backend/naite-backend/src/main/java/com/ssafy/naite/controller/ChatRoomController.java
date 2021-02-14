@@ -46,7 +46,7 @@ public class ChatRoomController {
     // 채팅방 생성
     @PostMapping("/room")
     @ResponseBody
-    public Integer createRoom(@RequestParam String otherNick, HttpServletRequest req) {
+    public Integer createRoom(@RequestParam("otherNick") String otherNick, HttpServletRequest req) {
         int userNo = getUserNo(req);
         ChatRoom chatRoom = chatRoomService.makeNewRoom(userNo, otherNick);
         return chatRoom.getRoomNo();
