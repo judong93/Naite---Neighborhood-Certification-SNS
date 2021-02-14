@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
@@ -19,21 +20,34 @@ public class MarketDto {
      * insert market dto
      */
     @Getter
+    @Setter
     @NoArgsConstructor
     public static class MarketSaveRequestDto {
-        private Board board;
+//        private Board board;
+        private int bigCategoryNo;
+        private String boardTitle;
+        private String boardContent;
+        private String boardPic;
+        private int unknownFlag;
+        private int openFlag;
         private int smallCategoryNo;
         private int marketCost;
+        private List<MultipartFile> files;
 
         @Builder
-        public MarketSaveRequestDto(Board board, int smallCategoryNo, int marketCost, String marketPlace, int marketPerson, String time) {
-            this.board = board;
+        public MarketSaveRequestDto(int bigCategoryNo, String boardTitle, String boardContent, String boardPic, int unknownFlag, int openFlag, int smallCategoryNo, int marketCost) {
+//            this.board = board;
+            this.bigCategoryNo = bigCategoryNo;
+            this.boardTitle = boardTitle;
+            this.boardContent = boardContent;
+            this.boardPic = boardPic;
+            this.unknownFlag = unknownFlag;
+            this.openFlag = openFlag;
             this.smallCategoryNo = smallCategoryNo;
             this.marketCost = marketCost;
         }
 
-        public Market toEntity(int userNo) {
-            this.board.setUserNo(userNo);
+        public Market toEntity(Board board) {
             return Market.builder()
                     .board(board)
                     .smallCategoryNo(smallCategoryNo)
@@ -78,6 +92,7 @@ public class MarketDto {
         private String boardCreatedAt;
         private String boardCreatedAtSimple;
         private int boardCommentCnt;
+        private List<String> files = new ArrayList<String>();
 
         public MarketResponseDto(Market market) {
             this.marketNo = market.getMarketNo();

@@ -5,12 +5,20 @@ import com.ssafy.naite.domain.board.BoardRepository;
 import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.like.LikePK;
 import com.ssafy.naite.domain.like.LikeRepository;
+import com.ssafy.naite.domain.picture.Picture;
+import com.ssafy.naite.domain.picture.PictureRepository;
 import com.ssafy.naite.domain.user.UserRepository;
+import com.ssafy.naite.domain.village.VillageRepository;
 import com.ssafy.naite.dto.board.BoardDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -24,20 +32,25 @@ public class BoardService {
     private final LikeRepository likeRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final PictureRepository pictureRepository;
+    private final VillageRepository villageRepository;
 
     /**
      * 게시글 전체 조회
      */
     @Transactional(readOnly = true)
-    public List<BoardDto.BoardResponseDto> findAllBoards() {
+    public List<BoardDto.BoardResponseDto> findAllBoards(int userNo) {
+        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return boardRepository.findAll()
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)
+//                .filter(board -> villageRepository.findByUserNo(board.getUserNo()).get().getVillageName().equals(userVillageName))
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                     boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
+                    boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -47,16 +60,19 @@ public class BoardService {
      * 게시글 카테고리별 조회
      */
     @Transactional(readOnly = true)
-    public List<BoardDto.BoardResponseDto> findAllBoardsByCategory(int bigCategoryNo) {
+    public List<BoardDto.BoardResponseDto> findAllBoardsByCategory(int bigCategoryNo, int userNo) {
+        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return boardRepository.findAll()
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)
                 .filter(board -> board.getBigCategoryNo() == bigCategoryNo)
+//                .filter(board -> villageRepository.findByUserNo(board.getUserNo()).get().getVillageName().equals(userVillageName))
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                     boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
+                    boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -66,16 +82,19 @@ public class BoardService {
      * 게시글 좋아요 높은 순서로 5개
      */
     @Transactional(readOnly = true)
-    public List<BoardDto.BoardResponseDto> findTopLikedBoardsByCategory(int bigCategoryNo) {
+    public List<BoardDto.BoardResponseDto> findTopLikedBoardsByCategory(int bigCategoryNo, int userNo) {
+        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         List<BoardDto.BoardResponseDto> boardResponseDtoList = boardRepository.findAll()
                                                                             .stream()
                                                                             .filter(board -> board.getBoardIsDeleted() == 0)
                                                                             .filter(board -> board.getBigCategoryNo() == bigCategoryNo)
+//                                                                            .filter(board -> villageRepository.findByUserNo(board.getUserNo()).get().getVillageName().equals(userVillageName))
                                                                             .sorted(Comparator.comparingInt(Board::getBoardLikeCnt).reversed())
                                                                             .map(BoardDto.BoardResponseDto::new)
                                                                             .map(boardResponseDto -> {
                                                                                 boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                                                                                 boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
+                                                                                boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                                                                                 return boardResponseDto;
                                                                             })
                                                                             .collect(Collectors.toList());
@@ -101,6 +120,7 @@ public class BoardService {
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                     boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
+                    boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -110,16 +130,19 @@ public class BoardService {
      * 게시글 제목으로 조회
      */
     @Transactional(readOnly = true)
-    public List<BoardDto.BoardResponseDto> findAllBoardsByTitle(String boardTitle) {
+    public List<BoardDto.BoardResponseDto> findAllBoardsByTitle(String boardTitle, int userNo) {
+        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return boardRepository.findAll()
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)
                 .filter(board -> board.getBoardTitle().contains(boardTitle))
+//                .filter(board -> villageRepository.findByUserNo(board.getUserNo()).get().getVillageName().equals(userVillageName))
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
                     boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                     boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
+                    boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -135,6 +158,7 @@ public class BoardService {
         boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
         boardResponseDto.setUsersWithLike(findAllLikesByBoardNo(boardNo));
         boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
+        boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
         return boardResponseDto;
     }
 
@@ -142,8 +166,22 @@ public class BoardService {
      * 게시글 등록
      */
     @Transactional
-    public int insertBoard(BoardDto.BoardSaveRequestDto boardSaveRequestDto, int userNo) {
-        return boardRepository.save(boardSaveRequestDto.toEntity(userNo)).getBoardNo();
+    public int insertBoard(BoardDto.BoardSaveRequestDto boardSaveRequestDto, int userNo) throws IOException {
+        int insertedBoardNo = boardRepository.save(boardSaveRequestDto.toEntity(userNo)).getBoardNo();
+        if(boardSaveRequestDto.getFiles() != null) {
+            String rootPath = "/home/ubuntu/images/board/";
+            String apiPath = "https://i4a402.p.ssafy.io/images/board/";
+            List<MultipartFile> files = boardSaveRequestDto.getFiles();
+            for(MultipartFile file : files) {
+                String changeName = insertedBoardNo + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmSSS")) + "_" + file.getOriginalFilename();
+                String filePath = rootPath + changeName;
+                System.out.println(filePath);
+                File dest = new File(filePath);
+                file.transferTo(dest);
+                pictureRepository.save(Picture.builder().boardNo(insertedBoardNo).boardPic(apiPath + changeName).build());
+            }
+        }
+        return insertedBoardNo;
     }
 
     /**
@@ -245,6 +283,7 @@ public class BoardService {
                                                                             .map(boardResponseDto -> {
                                                                                 boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
                                                                                 boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
+                                                                                boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                                                                                 return boardResponseDto;
                                                                             })
                                                                             .collect(Collectors.toList());

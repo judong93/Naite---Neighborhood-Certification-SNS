@@ -30,8 +30,9 @@ public class BoardController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "게시글 전체 조회")
-    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoards() {
-        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoards();
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoards(HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoards(userNo);
         return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
 
@@ -40,8 +41,9 @@ public class BoardController {
      */
     @GetMapping("/list/{bigCategoryNo}")
     @ApiOperation(value = "게시글 카테고리별 조회")
-    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByCategory(@PathVariable int bigCategoryNo) {
-        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByCategory(bigCategoryNo);
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByCategory(@PathVariable int bigCategoryNo, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByCategory(bigCategoryNo, userNo);
         return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
 
@@ -50,8 +52,9 @@ public class BoardController {
      */
     @GetMapping("/list/top/{bigCategoryNo}")
     @ApiOperation(value = "게시글 좋아요 많은 순 카테고리별 조회")
-    public ResponseEntity<List<BoardDto.BoardResponseDto>> findTopLikedBoardsByCategory(@PathVariable int bigCategoryNo) {
-        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findTopLikedBoardsByCategory(bigCategoryNo);
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findTopLikedBoardsByCategory(@PathVariable int bigCategoryNo, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findTopLikedBoardsByCategory(bigCategoryNo, userNo);
         return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
 
@@ -70,8 +73,9 @@ public class BoardController {
      */
     @GetMapping("/list/title/{boardTitle}")
     @ApiOperation(value = "게시글 제목으로 조회")
-    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByTitle(@PathVariable String boardTitle) {
-        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByTitle(boardTitle);
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByTitle(@PathVariable String boardTitle, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByTitle(boardTitle, userNo);
         return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
 
@@ -90,10 +94,15 @@ public class BoardController {
      */
     @PostMapping("/insert")
     @ApiOperation(value = "게시글 등록")
-    public ResponseEntity<Integer> insertBoard(@RequestBody BoardDto.BoardSaveRequestDto boardSaveRequestDto, HttpServletRequest req) {
+    public ResponseEntity<Integer> insertBoard(@ModelAttribute BoardDto.BoardSaveRequestDto boardSaveRequestDto, HttpServletRequest req) {
         int userNo = getUserNo(req);
-        int insertedBoardNo = boardService.insertBoard(boardSaveRequestDto, userNo);
-        return new ResponseEntity<Integer>(insertedBoardNo, HttpStatus.CREATED);
+        try {
+            int insertedBoardNo = boardService.insertBoard(boardSaveRequestDto, userNo);
+            return new ResponseEntity<Integer>(insertedBoardNo, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<Integer>(-1,HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     /**

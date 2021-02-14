@@ -3,6 +3,7 @@ package com.ssafy.naite.dto.board;
 import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.like.BoardLike;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +25,7 @@ public class BoardDto {
         private String boardPic;
         private int unknownFlag;
         private int openFlag;
+        private List<MultipartFile> files;
 
         @Builder
         public BoardSaveRequestDto(int userNo, int bigCategoryNo, String boardTitle, String boardContent, String boardPic, int unknownFlag, int openFlag) {
@@ -95,6 +97,7 @@ public class BoardDto {
         private List<String> usersWithLike = new ArrayList<String>();
         private String userNick;
         private int boardCommentCnt;
+        private List<String> files = new ArrayList<String>();
 
         public BoardResponseDto(Board board) {
             this.boardNo = board.getBoardNo();
