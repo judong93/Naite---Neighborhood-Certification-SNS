@@ -212,4 +212,21 @@ public class UserService {
                 .dealCnt(dealCnt)
                 .build();
     }
+
+    /**
+     * 닉네임 변경
+     */
+    public void updateUserNick(int userNo, String newNick) throws Exception{
+        if (checkDuplicateNick(newNick)) {
+            throw new Exception("이미 사용 중인 닉네임입니다.");
+        }
+        Optional<User> user = userRepository.findById(userNo);
+
+        if (user.isPresent()) {
+            user.get().updateNick(newNick);
+            userRepository.save(user.get());
+        } else {
+            throw new Exception("존재하지 않는 사용자입니다.");
+        }
+    }
 }
