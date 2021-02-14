@@ -2,8 +2,8 @@
   <div id="settingform">
     <i class="fas fa-window-close fa-2x close-btn" @click="closeForm"></i>
     <div class="form-title">{{formTitle}}</div>
-    <PwChangingForm v-if="formTitle==='비밀번호 재설정'" />
-    <LocationChangingForm v-if="formTitle==='동네 재설정'" />
+    <PwChangingForm v-if="formTitle==='비밀번호 재설정'" @pwChangingCompleted="changingCompleted" />
+    <LocationChangingForm v-if="formTitle==='동네 재설정'" @changingAddressCompleted="changingCompleted" />
   </div>
 </template>
 
@@ -28,6 +28,10 @@ export default {
   },
   methods: {
     closeForm: function () {
+      const settingForm = document.getElementById('settingform')
+      settingForm.style.display = 'none'
+    },
+    changingCompleted: function () {
       const settingForm = document.getElementById('settingform')
       settingForm.style.display = 'none'
     }
