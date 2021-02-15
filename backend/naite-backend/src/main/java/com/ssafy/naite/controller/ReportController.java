@@ -27,22 +27,20 @@ public class ReportController {
 
     @PostMapping("/insert")
     @ApiOperation(value = "신고 등록",
-            notes = "신고할 게시물 혹은 댓글 인덱스를 파라미터에 담아 보냅니다.\n" +
-                    "boardNo와 commentNo 둘 중 하나는 0이 입력되어야 합니다.\n" +
+            notes = "[boardNo/commentNo] 신고받는 게시물 혹은 댓글 번호 <b>둘 중 하나는 반드시 0</b>이어야 합니다!\n" +
+                    "userNo] 신고자 인덱스 번호\n" +
+                    "[reportTargetNo] 신고받는 회원 인덱스 번호" +
+                    "[reportType] 0:게시물 1:댓글\n" +
                     "신고 등록 후 신고 번호를 리턴합니다.")
-    public ResponseEntity<Map<String, Object>> insertReport(@RequestBody ReportDto.ReportSaveRequestDto reportSaveRequestDto, HttpServletRequest req) {
-        Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = null;
+    public Response insertReport(@RequestBody ReportDto.ReportSaveRequestDto reportSaveRequestDto, HttpServletRequest req) {
+        int insertedReportNo;
         try{
             int userNo = getUserNo(req);
-            int insertedReportNo = reportService.insertReport(userNo, reportSaveRequestDto);
-            resultMap.put("report-no", insertedReportNo);
-            status = HttpStatus.CREATED;
+            insertedReportNo = reportService.insertReport(userNo, reportSaveRequestDto);
         } catch (Exception e) {
-            resultMap.put("message", "신고 실패");
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            return new Response("error", e.getMessage(), null);
         }
-        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+        return new Response("success", "신고 등록 성공", insertedReportNo);
     }
 
     public int getUserNo(HttpServletRequest req) {

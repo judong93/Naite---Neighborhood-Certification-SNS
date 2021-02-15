@@ -40,7 +40,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoards(int userNo) {
-        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+//        String userVillageName = villageRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalAccessError("유저 주소가 없습니다.")).getVillageName();
         return boardRepository.findAll()
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)
@@ -61,7 +61,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoardsByCategory(int bigCategoryNo, int userNo) {
-        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return boardRepository.findAll()
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)
@@ -83,7 +83,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findTopLikedBoardsByCategory(int bigCategoryNo, int userNo) {
-        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         List<BoardDto.BoardResponseDto> boardResponseDtoList = boardRepository.findAll()
                                                                             .stream()
                                                                             .filter(board -> board.getBoardIsDeleted() == 0)
@@ -131,7 +131,7 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoardsByTitle(String boardTitle, int userNo) {
-        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return boardRepository.findAll()
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)

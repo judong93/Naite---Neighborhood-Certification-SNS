@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public interface ReportRepository extends JpaRepository<Report, Integer> {
 
-    @Query("SELECT r FROM Board b, Report r WHERE b.boardNo = r.boardNo and r.userNo = :userNo")
-    public Optional<Report> findByBoardNoAndUserNo(int userNo);
-    @Query("SELECT r FROM Comment c, Report r WHERE c.commentNo = r.commentNo and r.userNo = :userNo")
-    public Optional<Report> findByCommentNoAndUserNo(int userNo);
+    @Query("SELECT r FROM Report r WHERE r.boardNo = ?1 and r.userNo = ?2")
+    public Optional<Report> findByBoardNoAndUserNo(int reportedBoardNo, int userNo);
+    @Query("SELECT r FROM Report r WHERE r.commentNo = ?1 and r.userNo = ?2")
+    public Optional<Report> findByCommentNoAndUserNo(int reportedCommentNo, int userNo);
 }
