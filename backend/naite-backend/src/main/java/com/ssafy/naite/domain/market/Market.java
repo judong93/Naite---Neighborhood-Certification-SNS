@@ -1,6 +1,7 @@
 package com.ssafy.naite.domain.market;
 
 import com.ssafy.naite.domain.board.Board;
+import com.ssafy.naite.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +33,10 @@ public class Market {
     @Column(nullable = false)
     private int marketIsCompleted;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "market_person")
+    private User marketPerson;
+
     @Builder
     public Market(int marketNo, Board board, int smallCategoryNo, int marketCost, int marketIsCompleted) {
         this.marketNo = marketNo;
@@ -51,5 +56,9 @@ public class Market {
 
     public void marketClose(int closeFlag) {
         this.marketIsCompleted = closeFlag;
+    }
+
+    public void updateMarketPerson(User user) {
+        this.marketPerson = user;
     }
 }

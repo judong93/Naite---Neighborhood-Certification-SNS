@@ -112,4 +112,53 @@ public class MarketDto {
             }
         }
     }
+
+    /**
+     * select market by user dto
+     */
+    @Getter
+    @Setter
+    public static class MarketByUserResponseDto {
+        private int marketNo;
+        private int boardNo;
+        private String boardTitle;
+        private String boardContent;
+        private int boardBigCategoryNo;
+        private int marketIsCompleted;
+        private int isSeller;
+        private int evalIsCompleted;
+
+        @Builder
+        public MarketByUserResponseDto(int marketNo, int boardNo, String boardTitle, String boardContent, int boardBigCategoryNo, int marketIsCompleted, int isSeller, int evalIsCompleted) {
+            this.marketNo = marketNo;
+            this.boardNo = boardNo;
+            this.boardTitle = boardTitle;
+            this.boardContent = boardContent;
+            this.boardBigCategoryNo = boardBigCategoryNo;
+            this.marketIsCompleted = marketIsCompleted;
+            this.isSeller = isSeller;
+            this.evalIsCompleted = evalIsCompleted;
+        }
+    }
+
+    /**
+     * update market complete dto
+     */
+    @Getter
+    @Setter
+    public static class MarketCompleteRequestDto {
+        private String buyerNick;
+        private int evalScore;
+        private String evalComment;
+    }
+
+    /**
+     * insert evaluation dto
+     */
+    @Getter
+    @Setter
+    public static class EvalSellerFromBuyerRequestDto {
+        private int evalScore;
+        private String evalComment;
+    }
 }
