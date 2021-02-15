@@ -556,38 +556,28 @@ hr {
 }
 
 
-@media screen and (max-width:767px) {
+@media screen and (max-width: 501px) {
+  #profile {
+    width: 100vw;
+    height: 100vh;
+  }
   .profile {
-    width: 767px;
+    top: 13%;
   }
   .profile-box {
-    width: 400px;
+    width: 90%;
+    justify-content: left;
   }
-  .img-container {
-    width: 75px;
-    height: 75px;
-    left: 50px;
+  .profile-img-container {
+    margin: 0 20px;
+    width: 90px;
+    height: 90px;
+  }
+  .profile-info {
+    width: 200px;
   }
   .username {
-    font-size: 17px;
-  }
-  .activities {
-    font-size: 15px;
-  }
-  .profile-cards {
-    width: 400px;
-  }
-  .profile-card {
-    width: 85px;
-    height: 100px;
-    font-size: 5px;
-  }
-  .posting-img {
-    height: 50px;
-    width: 65px;  
-  }
-  hr {
-    widows: 350px;
+    margin-left: 35px;
   }
 }
 </style>
