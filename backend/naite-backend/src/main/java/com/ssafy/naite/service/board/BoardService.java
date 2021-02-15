@@ -8,6 +8,7 @@ import com.ssafy.naite.domain.like.LikeRepository;
 import com.ssafy.naite.domain.picture.Picture;
 import com.ssafy.naite.domain.picture.PictureRepository;
 import com.ssafy.naite.domain.user.UserRepository;
+import com.ssafy.naite.domain.village.Village;
 import com.ssafy.naite.domain.village.VillageRepository;
 import com.ssafy.naite.dto.board.BoardDto;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +41,11 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoards(int userNo) {
-//        String userVillageName = villageRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalAccessError("유저 주소가 없습니다.")).getVillageName();
+        String userVillageName = villageRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalAccessError("주소가 없어요ㅜㅜ. 잘못된 계정입니다!")).getVillageName();
         return boardRepository.findAll()
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)
-//                .filter(board -> villageRepository.findByUserNo(board.getUserNo()).get().getVillageName().equals(userVillageName))
+//                .filter(board -> villageRepository.findByUserNo(board.getUserNo()).orElse(new Village(userNo, userVillageName)).getVillageName().equals(userVillageName))
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
@@ -61,12 +62,12 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoardsByCategory(int bigCategoryNo, int userNo) {
-//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+        String userVillageName = villageRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalAccessError("주소가 없어요ㅜㅜ. 잘못된 계정입니다!")).getVillageName();
         return boardRepository.findAll()
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)
                 .filter(board -> board.getBigCategoryNo() == bigCategoryNo)
-//                .filter(board -> villageRepository.findByUserNo(board.getUserNo()).get().getVillageName().equals(userVillageName))
+//                .filter(board -> villageRepository.findByUserNo(board.getUserNo()).orElse(new Village(userNo, userVillageName)).getVillageName().equals(userVillageName))
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
@@ -83,12 +84,12 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findTopLikedBoardsByCategory(int bigCategoryNo, int userNo) {
-//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+        String userVillageName = villageRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalAccessError("주소가 없어요ㅜㅜ. 잘못된 계정입니다!")).getVillageName();
         List<BoardDto.BoardResponseDto> boardResponseDtoList = boardRepository.findAll()
                                                                             .stream()
                                                                             .filter(board -> board.getBoardIsDeleted() == 0)
                                                                             .filter(board -> board.getBigCategoryNo() == bigCategoryNo)
-//                                                                            .filter(board -> villageRepository.findByUserNo(board.getUserNo()).get().getVillageName().equals(userVillageName))
+//                                                                            .filter(board -> villageRepository.findByUserNo(board.getUserNo()).orElse(new Village(userNo, userVillageName)).getVillageName().equals(userVillageName))
                                                                             .sorted(Comparator.comparingInt(Board::getBoardLikeCnt).reversed())
                                                                             .map(BoardDto.BoardResponseDto::new)
                                                                             .map(boardResponseDto -> {
@@ -131,12 +132,12 @@ public class BoardService {
      */
     @Transactional(readOnly = true)
     public List<BoardDto.BoardResponseDto> findAllBoardsByTitle(String boardTitle, int userNo) {
-//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+        String userVillageName = villageRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalAccessError("주소가 없어요ㅜㅜ. 잘못된 계정입니다!")).getVillageName();
         return boardRepository.findAll()
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)
                 .filter(board -> board.getBoardTitle().contains(boardTitle))
-//                .filter(board -> villageRepository.findByUserNo(board.getUserNo()).get().getVillageName().equals(userVillageName))
+//                .filter(board -> villageRepository.findByUserNo(board.getUserNo()).orElse(new Village(userNo, userVillageName)).getVillageName().equals(userVillageName))
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
