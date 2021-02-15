@@ -9,6 +9,7 @@ import com.ssafy.naite.domain.picture.PictureRepository;
 import com.ssafy.naite.domain.review.Review;
 import com.ssafy.naite.domain.review.ReviewRepository;
 import com.ssafy.naite.domain.user.UserRepository;
+import com.ssafy.naite.domain.village.Village;
 import com.ssafy.naite.domain.village.VillageRepository;
 import com.ssafy.naite.dto.board.BoardDto;
 import com.ssafy.naite.dto.review.ReviewDto;
@@ -45,11 +46,11 @@ public class ReviewService {
      */
     @Transactional(readOnly = true)
     public List<ReviewDto.ReviewResponseDto> findAllReviews(int userNo) {
-//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+        String userVillageName = villageRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalAccessError("주소가 없어요ㅜㅜ. 잘못된 계정입니다!")).getVillageName();
         return reviewRepository.findAll()
                 .stream()
                 .filter(review -> review.getBoard().getBoardIsDeleted() == 0)
-//                .filter(review -> villageRepository.findByUserNo(review.getBoard().getUserNo()).get().getVillageName().equals(userVillageName))
+//                .filter(review -> villageRepository.findByUserNo(review.getBoard().getUserNo()).orElse(new Village(userNo, userVillageName)).getVillageName().equals(userVillageName))
                 .sorted(comp)
                 .map(ReviewDto.ReviewResponseDto::new)
                 .map(reviewResponseDto->{
@@ -66,12 +67,12 @@ public class ReviewService {
      */
     @Transactional(readOnly = true)
     public List<ReviewDto.ReviewResponseDto> findAllReviewsByCategory(int smallCategoryNo, int userNo) {
-//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+        String userVillageName = villageRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalAccessError("주소가 없어요ㅜㅜ. 잘못된 계정입니다!")).getVillageName();
         return reviewRepository.findAll()
                 .stream()
                 .filter(review -> review.getBoard().getBoardIsDeleted() == 0)
                 .filter(review -> review.getSmallCategoryNo() == smallCategoryNo)
-//                .filter(review -> villageRepository.findByUserNo(review.getBoard().getUserNo()).get().getVillageName().equals(userVillageName))
+//                .filter(review -> villageRepository.findByUserNo(review.getBoard().getUserNo()).orElse(new Village(userNo, userVillageName)).getVillageName().equals(userVillageName))
                 .sorted(comp)
                 .map(ReviewDto.ReviewResponseDto::new)
                 .map(reviewResponseDto->{

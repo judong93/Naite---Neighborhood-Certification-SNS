@@ -14,6 +14,7 @@ import com.ssafy.naite.domain.picture.Picture;
 import com.ssafy.naite.domain.picture.PictureRepository;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
+import com.ssafy.naite.domain.village.Village;
 import com.ssafy.naite.domain.village.VillageRepository;
 import com.ssafy.naite.dto.board.BoardDto;
 import com.ssafy.naite.dto.market.MarketDto;
@@ -53,11 +54,11 @@ public class MarketService {
      */
     @Transactional(readOnly = true)
     public List<MarketDto.MarketResponseDto> findAllMarkets(int userNo) {
-//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+        String userVillageName = villageRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalAccessError("주소가 없어요ㅜㅜ. 잘못된 계정입니다!")).getVillageName();
         return marketRepository.findAll()
                 .stream()
                 .filter(market -> market.getBoard().getBoardIsDeleted() == 0)
-//                .filter(market -> villageRepository.findByUserNo(market.getBoard().getUserNo()).get().getVillageName().equals(userVillageName))
+//                .filter(market -> villageRepository.findByUserNo(market.getBoard().getUserNo()).orElse(new Village(userNo, userVillageName)).getVillageName().equals(userVillageName))
                 .sorted(comp)
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
@@ -74,12 +75,12 @@ public class MarketService {
      */
     @Transactional(readOnly = true)
     public List<MarketDto.MarketResponseDto> findAllMarketsByCategory(int smallCategoryNo, int userNo) {
-//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+        String userVillageName = villageRepository.findByUserNo(userNo).orElseThrow(() -> new IllegalAccessError("주소가 없어요ㅜㅜ. 잘못된 계정입니다!")).getVillageName();
         return marketRepository.findAll()
                 .stream()
                 .filter(market -> market.getBoard().getBoardIsDeleted() == 0)
                 .filter(market -> market.getSmallCategoryNo() == smallCategoryNo)
-//                .filter(market -> villageRepository.findByUserNo(market.getBoard().getUserNo()).get().getVillageName().equals(userVillageName))
+//                .filter(market -> villageRepository.findByUserNo(market.getBoard().getUserNo()).orElse(new Village(userNo, userVillageName)).getVillageName().equals(userVillageName))
                 .sorted(comp)
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
