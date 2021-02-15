@@ -45,7 +45,7 @@ public class ReviewService {
      */
     @Transactional(readOnly = true)
     public List<ReviewDto.ReviewResponseDto> findAllReviews(int userNo) {
-        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return reviewRepository.findAll()
                 .stream()
                 .filter(review -> review.getBoard().getBoardIsDeleted() == 0)
@@ -66,7 +66,7 @@ public class ReviewService {
      */
     @Transactional(readOnly = true)
     public List<ReviewDto.ReviewResponseDto> findAllReviewsByCategory(int smallCategoryNo, int userNo) {
-        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return reviewRepository.findAll()
                 .stream()
                 .filter(review -> review.getBoard().getBoardIsDeleted() == 0)
