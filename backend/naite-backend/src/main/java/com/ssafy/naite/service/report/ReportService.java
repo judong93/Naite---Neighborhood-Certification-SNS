@@ -34,7 +34,6 @@ public class ReportService {
         int reportType = reportSaveRequestDto.getReportType();
         Report report;
 
-//        try {
         if (reportType == 0) { // 게시물
 
             // 2. 해당 게시물을 신고한 회원인지 판별
@@ -63,7 +62,7 @@ public class ReportService {
                 User reportedUser = userRepository.findById(reportSaveRequestDto.getReportTargetNo()).orElseThrow(() -> new IllegalAccessError("해당 사용자가 존재하지 않습니다."));
                 int boardReportCnt = reportedBoard.getBoardReportCnt();
 
-                if (boardReportCnt >= 2) {
+                if (boardReportCnt >= 9) {
                     // 신고횟수 10회 이상 : 게시물 삭제, 신뢰도 - 1
                     reportedBoard.delete(1);
                     reportedUser.updateScore();
@@ -88,7 +87,7 @@ public class ReportService {
                 Comment reportedComment = commentRepository.findById(reportSaveRequestDto.getCommentNo()).orElseThrow(() -> new IllegalAccessError("해당 댓글이 존재하지 않습니다."));
                 User reportedUser = userRepository.findById(reportSaveRequestDto.getReportTargetNo()).orElseThrow(() -> new IllegalAccessError("해당 사용자가 존재하지 않습니다."));
                 int commentReportCnt = reportedComment.getCommentReportCnt();
-                if (commentReportCnt >= 2) {
+                if (commentReportCnt >= 9) {
                     reportedComment.updateDelete();
                     reportedComment.updateTime();
                     reportedUser.updateScore();
@@ -101,9 +100,6 @@ public class ReportService {
 
 
         return reportNo;
-//        } catch (Exception e) {
-//            throw new Exception("신고 등록 실패");
-//        }
     }
 
 
