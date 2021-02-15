@@ -13,14 +13,16 @@ public class UserGetProfileResponseDto {
     private int boardCnt;
     private int commentCnt;
     private int dealCnt;
+    private String userPic;
 
     @Builder
-    public UserGetProfileResponseDto(String userName, String userNick, int userScore, int boardCnt, int commentCnt, int dealCnt) {
+    public UserGetProfileResponseDto(String userName, String userNick, int userScore, int boardCnt, int commentCnt, int dealCnt, String userPic) {
         this.userName = userName;
         this.userNick = userNick;
         this.userScore = userScore;
         this.boardCnt = boardCnt;
         this.commentCnt = commentCnt;
         this.dealCnt = dealCnt;
+        this.userPic = userPic;
     }
 }

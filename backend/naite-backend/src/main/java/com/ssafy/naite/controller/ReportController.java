@@ -28,8 +28,8 @@ public class ReportController {
     @PostMapping("/insert")
     @ApiOperation(value = "신고 등록",
             notes = "[boardNo/commentNo] 신고받는 게시물 혹은 댓글 번호 <b>둘 중 하나는 반드시 0</b>이어야 합니다!\n" +
-                    "userNo] 신고자 인덱스 번호\n" +
-                    "[reportTargetNo] 신고받는 회원 인덱스 번호" +
+                    "[userNo] 신고자 인덱스 번호\n" +
+                    "[reportTargetNo] 신고받는 회원 인덱스 번호\n" +
                     "[reportType] 0:게시물 1:댓글\n" +
                     "신고 등록 후 신고 번호를 리턴합니다.")
     public Response insertReport(@RequestBody ReportDto.ReportSaveRequestDto reportSaveRequestDto, HttpServletRequest req) {
