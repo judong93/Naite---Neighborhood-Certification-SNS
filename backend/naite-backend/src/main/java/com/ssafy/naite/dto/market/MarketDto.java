@@ -123,18 +123,18 @@ public class MarketDto {
         private int boardNo;
         private String boardTitle;
         private String boardContent;
-        private int boardBigCategoryNo;
+        private int bigCategoryNo;
         private int marketIsCompleted;
         private int isSeller;
         private int evalIsCompleted;
 
         @Builder
-        public MarketByUserResponseDto(int marketNo, int boardNo, String boardTitle, String boardContent, int boardBigCategoryNo, int marketIsCompleted, int isSeller, int evalIsCompleted) {
+        public MarketByUserResponseDto(int marketNo, int boardNo, String boardTitle, String boardContent, int bigCategoryNo, int marketIsCompleted, int isSeller, int evalIsCompleted) {
             this.marketNo = marketNo;
             this.boardNo = boardNo;
             this.boardTitle = boardTitle;
             this.boardContent = boardContent;
-            this.boardBigCategoryNo = boardBigCategoryNo;
+            this.bigCategoryNo = bigCategoryNo;
             this.marketIsCompleted = marketIsCompleted;
             this.isSeller = isSeller;
             this.evalIsCompleted = evalIsCompleted;
