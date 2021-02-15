@@ -45,4 +45,17 @@ public class Report {
         this.reportTargetNo = reportTargetNo;
         this.reportDate = reportDate;
     }
+
+    @Override
+    public String toString() {
+        return "Report{" +
+                "reportNo=" + reportNo +
+                ", boardNo=" + boardNo +
+                ", commentNo=" + commentNo +
+                ", userNo=" + userNo +
+                ", reportType=" + reportType +
+                ", reportTargetNo=" + reportTargetNo +
+                ", reportDate=" + reportDate +
+                '}';
+    }
 }
