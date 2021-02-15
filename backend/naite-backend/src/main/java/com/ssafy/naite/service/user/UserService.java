@@ -130,6 +130,7 @@ public class UserService {
                 .commentCnt(commentCnt)
                 .boardCnt(boardCnt)
                 .dealCnt(dealCnt)
+                .userPic(user.getUserPic())
                 .build();
     }
 
@@ -151,7 +152,7 @@ public class UserService {
         else return false;
     }
 
-    /** 비밀번호 변경 */
+    /** 비밀번호 찾기에서 비밀번호 변경 */
     @Transactional
     public User updateUserPw(String id, PwUpdateRequestDto requestDto) throws Exception {
         Optional<User> existed = userRepository.findByUserId(id);
@@ -166,6 +167,25 @@ public class UserService {
             user.setUserSalt(salt);
             return user;
         }
+    }
+
+    /** 프로필에서 비밀번호 변경 */
+    @Transactional
+    public int updateUserProfilePw(int userNo, ProfilePwUpdateRequestDto requestDto) throws Exception {
+        User user = findByUserNo(userNo);
+
+        String salt = user.getUserSalt();
+        String password = saltUtil.encodePassword(salt, requestDto.getCurrentPw());
+        // 비밀번호 일치여부 확인
+        if (!user.getUserPw().equals(password)) throw new Exception("현재 비밀번호가 일치하지 않습니다.");
+        else {
+            String newSalt = BCrypt.gensalt();
+            String encodedPw = BCrypt.hashpw(requestDto.getNewPw(), newSalt);
+
+            user.setUserPw(encodedPw);
+            user.setUserSalt(newSalt);
+        }
+        return user.getUserNo();
     }
 
     /** 회원 주소 변경 */
@@ -208,9 +228,11 @@ public class UserService {
         return UserGetProfileResponseDto.builder()
                 .userName(user.getUserName())
                 .userNick(user.getUserNick())
+                .userScore(user.getUserScore())
                 .commentCnt(commentCnt)
                 .boardCnt(boardCnt)
                 .dealCnt(dealCnt)
+                .userPic(user.getUserPic())
                 .build();
     }
 

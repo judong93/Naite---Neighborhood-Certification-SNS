@@ -228,14 +228,13 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "비밀번호 변경", notes = "프로필에서 비밀번호 변경을 통해 비밀번호를 변경합니다.")
+    @ApiOperation(value = "프로필에서 비밀번호 변경", notes = "프로필에서 비밀번호 변경을 통해 비밀번호를 변경합니다.\n성공 시 userNo를 리턴합니다.")
     @PutMapping("/profile/password")
-    public Response updatePasswordInProfile(@RequestBody PwUpdateRequestDto pwUpdateRequestDto,HttpServletRequest req) {
+    public Response updatePasswordInProfile(@RequestBody ProfilePwUpdateRequestDto requestDto, HttpServletRequest req) {
         try {
             int userNo = getUserNo(req);
-            User user = userService.findByUserNo(userNo);
-            User updatedUser = userService.updateUserPw(user.getUserId(), pwUpdateRequestDto);
-            return new Response("success","비밀번호 재설정 완료", updatedUser);
+            int updatedUserNo = userService.updateUserProfilePw(userNo, requestDto);
+            return new Response("success","비밀번호 재설정 완료", updatedUserNo);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);
         }
