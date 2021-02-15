@@ -18,10 +18,6 @@ public class User {
     @Id
     private Integer userNo;
 
-//    @OneToOne
-//    @JoinColumn(name = "user_no")
-//    private AuthKey authKey;
-
     @Column(length = 15, nullable = false)
     private String userId;
 
@@ -83,5 +79,9 @@ public class User {
     public void updateAddress(String userBasicAddress, String userDetailAddress){
         this.userBasicAddress = userBasicAddress;
         this.userDetailAddress = userDetailAddress;
+    }
+
+    public void updateNick(String newNick) {
+        this.userNick = newNick;
     }
 }
