@@ -70,6 +70,7 @@ public class CommentService {
 
             CommentGetResponseDto dto = new CommentGetResponseDto(
                     c.getCommentNo(),
+                    c.getUser().getUserNo(),
                     c.getUser().getUserNick(),
                     c.getUser().getUserPic(),
                     createdAt,
@@ -119,6 +120,7 @@ public class CommentService {
 
             CommentGetResponseDto dto = new CommentGetResponseDto(
                     newComment.getCommentNo(),
+                    userNo,
                     userService.findByUserNo(newComment.getUser().getUserNo()).getUserNick(),
                     userService.findByUserNo(newComment.getUser().getUserNo()).getUserPic(),
                     createdAt,
