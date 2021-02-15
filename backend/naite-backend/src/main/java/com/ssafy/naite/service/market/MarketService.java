@@ -6,15 +6,22 @@ import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.like.LikeRepository;
 import com.ssafy.naite.domain.market.Market;
 import com.ssafy.naite.domain.market.MarketRepository;
+import com.ssafy.naite.domain.picture.Picture;
+import com.ssafy.naite.domain.picture.PictureRepository;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
+import com.ssafy.naite.domain.village.VillageRepository;
 import com.ssafy.naite.dto.board.BoardDto;
 import com.ssafy.naite.dto.market.MarketDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -29,6 +36,8 @@ public class MarketService {
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
+    private final PictureRepository pictureRepository;
+    private final VillageRepository villageRepository;
 
     private final Comparator<Market> comp = (m1,m2) -> m2.getBoard().getBoardCreatedAt().compareTo(m1.getBoard().getBoardCreatedAt());
 
@@ -36,15 +45,18 @@ public class MarketService {
      * 장터 게시글 전체 조회
      */
     @Transactional(readOnly = true)
-    public List<MarketDto.MarketResponseDto> findAllMarkets() {
+    public List<MarketDto.MarketResponseDto> findAllMarkets(int userNo) {
+        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return marketRepository.findAll()
                 .stream()
                 .filter(market -> market.getBoard().getBoardIsDeleted() == 0)
+//                .filter(market -> villageRepository.findByUserNo(market.getBoard().getUserNo()).get().getVillageName().equals(userVillageName))
                 .sorted(comp)
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
                     marketResponseDto.setUserNick(userRepository.findById(marketResponseDto.getBoard().getUserNo()).get().getUserNick());
                     marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
+                    marketResponseDto.setFiles(pictureRepository.findPicByBoardNo(marketResponseDto.getBoard().getBoardNo()));
                     return marketResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -54,16 +66,19 @@ public class MarketService {
      * 장터 게시글 세부 카테고리별 조회
      */
     @Transactional(readOnly = true)
-    public List<MarketDto.MarketResponseDto> findAllMarketsByCategory(int smallCategoryNo) {
+    public List<MarketDto.MarketResponseDto> findAllMarketsByCategory(int smallCategoryNo, int userNo) {
+        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return marketRepository.findAll()
                 .stream()
                 .filter(market -> market.getBoard().getBoardIsDeleted() == 0)
                 .filter(market -> market.getSmallCategoryNo() == smallCategoryNo)
+//                .filter(market -> villageRepository.findByUserNo(market.getBoard().getUserNo()).get().getVillageName().equals(userVillageName))
                 .sorted(comp)
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
                     marketResponseDto.setUserNick(userRepository.findById(marketResponseDto.getBoard().getUserNo()).get().getUserNick());
                     marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
+                    marketResponseDto.setFiles(pictureRepository.findPicByBoardNo(marketResponseDto.getBoard().getBoardNo()));
                     return marketResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -85,6 +100,7 @@ public class MarketService {
         }
         marketResponseDto.setUsersWithLike(likeUserList);
         marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
+        marketResponseDto.setFiles(pictureRepository.findPicByBoardNo(marketResponseDto.getBoard().getBoardNo()));
         return marketResponseDto;
     }
 
@@ -92,8 +108,33 @@ public class MarketService {
      * 장터 게시글 등록
      */
     @Transactional
-    public int insertMarket(MarketDto.MarketSaveRequestDto marketSaveRequestDto, int userNo) {
-        return marketRepository.save(marketSaveRequestDto.toEntity(userNo)).getMarketNo();
+    public int insertMarket(MarketDto.MarketSaveRequestDto marketSaveRequestDto, int userNo) throws IOException {
+        Board board = Board.builder()
+                .userNo(userNo)
+                .bigCategoryNo(marketSaveRequestDto.getBigCategoryNo())
+                .boardTitle(marketSaveRequestDto.getBoardTitle())
+                .boardContent(marketSaveRequestDto.getBoardContent())
+                .boardPic(marketSaveRequestDto.getBoardPic())
+                .boardCreatedAt(LocalDateTime.now())
+                .openFlag(marketSaveRequestDto.getOpenFlag())
+                .unknownFlag(marketSaveRequestDto.getUnknownFlag())
+                .build();
+        int insertedMarketNo = marketRepository.save(marketSaveRequestDto.toEntity(board)).getMarketNo();
+        int insertedBoardNo = marketRepository.findById(insertedMarketNo).get().getBoard().getBoardNo();
+        if(marketSaveRequestDto.getFiles() != null) {
+            String rootPath = "/home/ubuntu/images/board/";
+            String apiPath = "https://i4a402.p.ssafy.io/images/board/";
+            List<MultipartFile> files = marketSaveRequestDto.getFiles();
+            for(MultipartFile file : files) {
+                String changeName = insertedBoardNo + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmSSS")) + "_" + file.getOriginalFilename();
+                String filePath = rootPath + changeName;
+                System.out.println(filePath);
+                File dest = new File(filePath);
+                file.transferTo(dest);
+                pictureRepository.save(Picture.builder().boardNo(insertedBoardNo).boardPic(apiPath + changeName).build());
+            }
+        }
+        return insertedMarketNo;
     }
 
     /**
@@ -132,10 +173,12 @@ public class MarketService {
                 .stream()
                 .filter(market -> market.getBoard().getUserNo() == userNo)
                 .filter(market -> market.getBoard().getBoardIsDeleted() == 0)
+                .sorted(comp)
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
                     marketResponseDto.setUserNick(userRepository.findById(userNo).get().getUserNick());
                     marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
+                    marketResponseDto.setFiles(pictureRepository.findPicByBoardNo(marketResponseDto.getBoard().getBoardNo()));
                     return marketResponseDto;
                 })
                 .collect(Collectors.toList());

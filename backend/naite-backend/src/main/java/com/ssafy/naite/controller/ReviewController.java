@@ -30,8 +30,9 @@ public class ReviewController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "리뷰 게시글 전체 조회")
-    public ResponseEntity<List<ReviewDto.ReviewResponseDto>> findAllReviews() {
-        List<ReviewDto.ReviewResponseDto> reviewResponseDtoList = reviewService.findAllReviews();
+    public ResponseEntity<List<ReviewDto.ReviewResponseDto>> findAllReviews(HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        List<ReviewDto.ReviewResponseDto> reviewResponseDtoList = reviewService.findAllReviews(userNo);
         return new ResponseEntity<List<ReviewDto.ReviewResponseDto>>(reviewResponseDtoList, HttpStatus.OK);
     }
 
@@ -40,8 +41,9 @@ public class ReviewController {
      */
     @GetMapping("/list/{small_category_no}")
     @ApiOperation(value = "리뷰 게시글 카테고리별 조회")
-    public ResponseEntity<List<ReviewDto.ReviewResponseDto>> findAllReviewsByCategory(@PathVariable int small_category_no) {
-        List<ReviewDto.ReviewResponseDto> reviewResponseDtoList = reviewService.findAllReviewsByCategory(small_category_no);
+    public ResponseEntity<List<ReviewDto.ReviewResponseDto>> findAllReviewsByCategory(@PathVariable int small_category_no, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        List<ReviewDto.ReviewResponseDto> reviewResponseDtoList = reviewService.findAllReviewsByCategory(small_category_no, userNo);
         return new ResponseEntity<List<ReviewDto.ReviewResponseDto>>(reviewResponseDtoList, HttpStatus.OK);
     }
 
@@ -60,10 +62,14 @@ public class ReviewController {
      */
     @PostMapping("/insert")
     @ApiOperation(value = "리뷰 게시글 등록")
-    public ResponseEntity<Integer> insertReview(@RequestBody ReviewDto.ReviewSaveRequestDto reviewSaveRequestDto, HttpServletRequest req) {
+    public ResponseEntity<Integer> insertReview(@ModelAttribute ReviewDto.ReviewSaveRequestDto reviewSaveRequestDto, HttpServletRequest req) {
         int userNo = getUserNo(req);
-        int insertedReviewNo = reviewService.insertReview(reviewSaveRequestDto, userNo);
-        return new ResponseEntity<Integer>(insertedReviewNo, HttpStatus.CREATED);
+        try {
+            int insertedReviewNo = reviewService.insertReview(reviewSaveRequestDto, userNo);
+            return new ResponseEntity<Integer>(insertedReviewNo, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<Integer>(-1, HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     /**

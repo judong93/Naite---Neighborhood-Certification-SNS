@@ -30,8 +30,9 @@ public class MarketController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "장터 게시글 전체 조회")
-    public ResponseEntity<List<MarketDto.MarketResponseDto>> findAllMarkets() {
-        List<MarketDto.MarketResponseDto> marketResponseDtoList = marketService.findAllMarkets();
+    public ResponseEntity<List<MarketDto.MarketResponseDto>> findAllMarkets(HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        List<MarketDto.MarketResponseDto> marketResponseDtoList = marketService.findAllMarkets(userNo);
         return new ResponseEntity<List<MarketDto.MarketResponseDto>>(marketResponseDtoList, HttpStatus.OK);
     }
 
@@ -40,8 +41,9 @@ public class MarketController {
      */
     @GetMapping("/list/{smallCategoryNo}")
     @ApiOperation(value = "장터 게시글 카테고리별 조회")
-    public ResponseEntity<List<MarketDto.MarketResponseDto>> findAllMarketsByCategory(@PathVariable int smallCategoryNo) {
-        List<MarketDto.MarketResponseDto> marketResponseDtoList = marketService.findAllMarketsByCategory(smallCategoryNo);
+    public ResponseEntity<List<MarketDto.MarketResponseDto>> findAllMarketsByCategory(@PathVariable int smallCategoryNo, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        List<MarketDto.MarketResponseDto> marketResponseDtoList = marketService.findAllMarketsByCategory(smallCategoryNo, userNo);
         return new ResponseEntity<List<MarketDto.MarketResponseDto>>(marketResponseDtoList, HttpStatus.OK);
     }
 
@@ -70,10 +72,14 @@ public class MarketController {
      */
     @PostMapping("/insert")
     @ApiOperation(value = "장터 게시글 등록")
-    public ResponseEntity<Integer> insertMarket(@RequestBody MarketDto.MarketSaveRequestDto marketSaveRequestDto, HttpServletRequest req) {
+    public ResponseEntity<Integer> insertMarket(@ModelAttribute MarketDto.MarketSaveRequestDto marketSaveRequestDto, HttpServletRequest req) {
         int userNo = getUserNo(req);
-        int insertedMarketNo = marketService.insertMarket(marketSaveRequestDto, userNo);
-        return new ResponseEntity<Integer>(insertedMarketNo, HttpStatus.CREATED);
+        try {
+            int insertedMarketNo = marketService.insertMarket(marketSaveRequestDto, userNo);
+            return new ResponseEntity<Integer>(insertedMarketNo, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<Integer>(-1, HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     /**
