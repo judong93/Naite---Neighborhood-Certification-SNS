@@ -357,8 +357,8 @@ public class MarketService {
 
         // user 신뢰도 반영
         int sellerScore = seller.getUserScore();
-        int buyerMarketScore = dto.getEvalScore();
-        switch (buyerMarketScore) {
+        int sellerMarketScore = dto.getEvalScore();
+        switch (sellerMarketScore) {
             case 1:
                 sellerScore -= 3;
                 break;
