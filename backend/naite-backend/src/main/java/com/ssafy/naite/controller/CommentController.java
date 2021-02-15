@@ -86,7 +86,7 @@ public class CommentController {
     public Response getBoardByUserComment(@PathVariable int userNo) {
         try {
             User user = userService.findByUserNo(userNo);
-            List<BoardDto.BoardByUserResponseDto> result = commentService.getBoardByUserComment(user);
+            List<BoardDto.BoardResponseDto> result = commentService.getBoardByUserComment(user);
             return new Response("success", "댓글 쓴 게시글 조회 성공", result);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);

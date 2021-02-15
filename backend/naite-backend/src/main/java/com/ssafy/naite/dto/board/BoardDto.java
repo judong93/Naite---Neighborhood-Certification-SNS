@@ -125,58 +125,6 @@ public class BoardDto {
     }
 
     /**
-     * select board by user dto
-     */
-    @Getter
-    @Setter
-    public static class BoardByUserResponseDto {
-
-        private int boardNo;
-        private int marketNo;
-        private int userNo;
-        private int bigCategoryNo;
-        private String boardTitle;
-        private String boardContent;
-        private String boardCreatedAt;
-        private String boardUpdatedAt;
-        private String boardPic;
-        private int boardLikeCnt;
-        private int unknownFlag;
-        private int boardReportCnt;
-        private int openFlag;
-        private int boardIsDeleted;
-        private List<String> usersWithLike = new ArrayList<String>();
-        private String userNick;
-        private int boardCommentCnt;
-        private List<String> files = new ArrayList<String>();
-
-        public BoardByUserResponseDto(Board board, int marketNo) {
-            this.boardNo = board.getBoardNo();
-            this.marketNo = marketNo;
-            this.userNo = board.getUserNo();
-            this.bigCategoryNo = board.getBigCategoryNo();
-            this.boardTitle = board.getBoardTitle();
-            this.boardContent = board.getBoardContent();
-            this.boardPic = board.getBoardPic();
-            if(board.getBoardCreatedAt().plusHours(1).isAfter(LocalDateTime.now())) {
-                this.boardCreatedAt = "방금 전";
-            } else if (board.getBoardCreatedAt().plusDays(1).isAfter(LocalDateTime.now())) {
-                int subHour = LocalDateTime.now().getHour() - board.getBoardCreatedAt().getHour();
-                if(subHour < 0) subHour += 24;
-                this.boardCreatedAt = subHour + "시간 전";
-            } else {
-                this.boardCreatedAt = board.getBoardCreatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
-            }
-            this.boardUpdatedAt = board.getBoardUpdatedAt().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)"));
-            this.boardLikeCnt = board.getBoardLikeCnt();
-            this.unknownFlag = board.getUnknownFlag();
-            this.boardReportCnt = board.getBoardReportCnt();
-            this.openFlag = board.getOpenFlag();
-            this.boardIsDeleted = board.getBoardIsDeleted();
-        }
-    }
-
-    /**
      * add like to board
      */
     @Getter
