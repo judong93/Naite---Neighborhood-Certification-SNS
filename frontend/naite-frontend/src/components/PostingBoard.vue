@@ -55,6 +55,7 @@
                 <input v-if='params.bigCategoryNo === "1"' type="checkbox" style='margin-left:5px'>
                 <button class='postingBtn' @click='createForm'>게시하기</button>
             </div>
+            <div v-if = 'formImages' class='postImageName'>{{formImagesName}}</div>
 
         </footer>
 
@@ -79,6 +80,7 @@ export default {
             contentExplain:'',
             marketCost:'',
             formImages:'',
+            formImagesName:'',
         }
     },
     methods:{
@@ -86,9 +88,16 @@ export default {
             var files = e.target.files || e.dataTransfer.files;
             if (!files.length) {
                 this.formImages = ''
+                this.formImagesName = ''
                 return;
             }
             this.formImages = files            
+            this.formImagesName += '선택된 사진:'
+            for (let i=0;i<files.length;i++){
+                this.formImagesName += files[i].name
+                this.formImagesName += ', '
+            }
+            console.log(this.formImagesName)
             console.log(this.formImages)
         },
         createForm:function(){
@@ -253,6 +262,13 @@ export default {
     visibility: hidden;
 }
 
+.postImageName {
+    font-family: font1;
+    color:white;
+    position: absolute;
+    left: 10%;
+    bottom:5%;
+}
 
 
 

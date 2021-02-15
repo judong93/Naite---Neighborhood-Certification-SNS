@@ -60,6 +60,7 @@ export default {
                 'auth-token':`${token}`
                 }
             }
+    
             return config 
         },
     },

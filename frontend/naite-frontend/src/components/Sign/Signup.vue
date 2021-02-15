@@ -229,8 +229,7 @@ export default {
                 let signupFormData = new FormData()
                 const paramsKey =["userBasicAddress","userDetailAddress",'userDong',"userEmail","userId","userName","userNick","userPw"]
                 for (let i=0;i<8;i++){
-                    signupFormData.append(`${paramsKey[i]}`,this.params[`${paramsKey[i]}`])
-                    console.log(this.params[`${paramsKey[i]}`])
+                    signupFormData.append(`${paramsKey[i]}`,this.params[`${paramsKey[i]}`])                    
                 }
 
                 if(this.userPic){
