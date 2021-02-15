@@ -249,6 +249,29 @@ public class MarketService {
                                 .evalComment(dto.getEvalComment())
                                 .evalIsSeller(1)
                             .build());
+
+        // user 신뢰도 반영
+        int buyerScore = buyer.getUserScore();
+        int buyerMarketScore = dto.getEvalScore();
+        switch (buyerMarketScore) {
+            case 1:
+                buyerScore -= 3;
+                break;
+            case 2:
+                buyerScore -= 1;
+                break;
+            case 3:
+                break;
+            case 4:
+                buyerScore += 1;
+                break;
+            case 5:
+                buyerScore += 3;
+                break;
+        }
+        buyer.updateScoreAfterMarket(buyerScore);
+        userRepository.save(buyer);
+
         return "success";
     }
 
@@ -314,6 +337,9 @@ public class MarketService {
      */
     public String evalSellerFromBuyer(int userNo, int marketNo, MarketDto.EvalSellerFromBuyerRequestDto dto) {
         Market market = marketRepository.findById(marketNo).orElseThrow(() -> new IllegalAccessError("[marketNo=" + marketNo + "] 해당 게시글이 존재하지 않습니다."));
+        Board board = marketRepository.findById(marketNo).get().getBoard();
+        User seller = userRepository.findById(board.getUserNo()).get();
+
         if (evaluationRepository.findByMarketAndEvalIsSeller(market, 0) != null)
             return "평가가 이미 존재합니다.";
 
@@ -328,6 +354,29 @@ public class MarketService {
                 .evalComment(dto.getEvalComment())
                 .evalIsSeller(0)
                 .build());
+
+        // user 신뢰도 반영
+        int sellerScore = seller.getUserScore();
+        int sellerMarketScore = dto.getEvalScore();
+        switch (sellerMarketScore) {
+            case 1:
+                sellerScore -= 3;
+                break;
+            case 2:
+                sellerScore -= 1;
+                break;
+            case 3:
+                break;
+            case 4:
+                sellerScore += 1;
+                break;
+            case 5:
+                sellerScore += 3;
+                break;
+        }
+        seller.updateScoreAfterMarket(sellerScore);
+        userRepository.save(seller);
+
         return "success";
     }
 

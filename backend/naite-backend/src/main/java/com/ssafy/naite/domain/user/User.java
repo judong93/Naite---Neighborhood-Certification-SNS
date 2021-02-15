@@ -67,6 +67,10 @@ public class User {
         this.userSalt = userSalt;
     }
 
+    public void updateScoreAfterMarket(int newScore) {
+        this.userScore = newScore;
+    }
+
     public void updateScore(){
         if (this.userScore > 0)
             this.userScore -= 1;
