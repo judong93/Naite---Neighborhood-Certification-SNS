@@ -53,7 +53,7 @@ public class MarketService {
      */
     @Transactional(readOnly = true)
     public List<MarketDto.MarketResponseDto> findAllMarkets(int userNo) {
-        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return marketRepository.findAll()
                 .stream()
                 .filter(market -> market.getBoard().getBoardIsDeleted() == 0)
@@ -74,7 +74,7 @@ public class MarketService {
      */
     @Transactional(readOnly = true)
     public List<MarketDto.MarketResponseDto> findAllMarketsByCategory(int smallCategoryNo, int userNo) {
-        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
+//        String userVillageName = villageRepository.findByUserNo(userNo).get().getVillageName();
         return marketRepository.findAll()
                 .stream()
                 .filter(market -> market.getBoard().getBoardIsDeleted() == 0)
