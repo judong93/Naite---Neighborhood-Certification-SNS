@@ -84,5 +84,4 @@ public class User {
     public void updateNick(String newNick) {
         this.userNick = newNick;
     }
-
 }
