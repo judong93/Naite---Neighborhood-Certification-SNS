@@ -10,8 +10,8 @@
         <p v-show="isNickInputOpen===false" @click="openNickInput" 
         class="nickname">닉네임: {{userNick}}</p>
         <form action="#" v-show="isNickInputOpen===true">
-          <label for="nick-input" >변경할 닉네임:</label> 
-          <input @keypress.enter="changeNick" v-model="changedNick" 
+          <label for="nick-input" >닉네임:</label> 
+          <input @keypress.enter="changeNick" v-model="changedNick" @keypress.space="checkSpace" 
           maxlength="8" id="nick-input" type="text">
           <button @click="changeNick">변경</button>
           <button @click="closeNickInput" v-show="isNickInputOpen===true">취소</button>
@@ -92,14 +92,24 @@ export default {
       this.isNickInputOpen = true
     },
     changeNick: function () {
-      console.log(this.changedNick)
-      this.isNickInputOpen = false
-      this.changedNick = ''
+      axios.put(`${SERVER_URL}/user/profile/nick/${this.changedNick}`, {}, this.setToken())
+        .then((res) => {
+          if (res.data.response==="error") {
+            alert(res.data.message)
+          } else {
+            alert('변경이 완료되었습니다. 다시 로그인하시면 변경사항이 적용됩니다!')
+          }
+          this.isNickInputOpen = false
+          this.changedNick = ''
+        })
     },
     closeNickInput: function () {
       this.isNickInputOpen = false
       this.changedNick = ''
-    }
+    },
+    checkSpace: function () {
+      event.returnValue=false;
+    },
   },
   created: function () {
     const decode = jwt_decode(localStorage.getItem('jwt'))
@@ -173,5 +183,21 @@ export default {
 }
 .delete-account {
   color: rgb(196, 4, 4);
+}
+
+@media screen and (max-width: 501px) {
+  #profile-settings {
+    width: 100vw;
+    height: 100vh;
+  }
+  .setting-title {
+    margin-top: 30%;
+  }
+  .settings-content {
+    width: 80%;
+  }
+  #settingform {
+    width: 80%;
+  }
 }
 </style>
