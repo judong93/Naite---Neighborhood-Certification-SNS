@@ -126,6 +126,7 @@ public class UserService {
         return UserGetProfileResponseDto.builder()
                 .userName(user.getUserName())
                 .userNick(user.getUserNick())
+                .userScore(user.getUserScore())
                 .commentCnt(commentCnt)
                 .boardCnt(boardCnt)
                 .dealCnt(dealCnt)
