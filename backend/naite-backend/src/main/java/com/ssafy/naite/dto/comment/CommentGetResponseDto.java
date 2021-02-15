@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 public class CommentGetResponseDto {
     private Integer commentNo;
     private String userNick;
+    private String userPic;
     private String createdAt;
     private String updatedAt;
     private String content;
@@ -23,9 +24,10 @@ public class CommentGetResponseDto {
     private byte isUnknown;
     private byte isDeleted;
 
-    public CommentGetResponseDto(Integer commentNo, String userNick, String createdAt, String updatedAt, String content, int parentId, boolean userOwn, byte isUnknown, byte isDeleted) {
+    public CommentGetResponseDto(Integer commentNo, String userNick, String userPic, String createdAt, String updatedAt, String content, int parentId, boolean userOwn, byte isUnknown, byte isDeleted) {
         this.commentNo = commentNo;
         this.userNick = userNick;
+        this.userPic = userPic;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.content = content;
