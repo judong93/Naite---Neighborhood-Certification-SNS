@@ -71,6 +71,11 @@ public class Comment {
             this.commentReportCnt += 1;
     }
 
+    public void updateReportCnt(){
+        if (this.commentReportCnt < 100)
+            this.commentReportCnt += 1;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
