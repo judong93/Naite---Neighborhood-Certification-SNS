@@ -6,6 +6,7 @@ import com.ssafy.naite.domain.board.Board;
 import com.ssafy.naite.domain.board.BoardRepository;
 import com.ssafy.naite.domain.comment.Comment;
 import com.ssafy.naite.domain.comment.CommentRepository;
+import com.ssafy.naite.domain.market.MarketRepository;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.dto.board.BoardDto;
 import com.ssafy.naite.dto.comment.CommentGetResponseDto;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+    private final MarketRepository marketRepository;
     private final JwtService jwtService;
     private final UserService userService;
 
@@ -163,14 +165,16 @@ public class CommentService {
         }
     }
 
-    public List<BoardDto.BoardResponseDto> getBoardByUserComment(User user) {
+    public List<BoardDto.BoardByUserResponseDto> getBoardByUserComment(User user) {
         List<Board> boards = commentRepository.findByUserComment(user);
-        List<BoardDto.BoardResponseDto> result = new ArrayList<>();
+        List<BoardDto.BoardByUserResponseDto> result = new ArrayList<>();
 
         for (int i = 0; i < boards.size(); i++) {
             if (boards.get(i).getBoardIsDeleted() == 1) continue;
             Board b = boardRepository.findById(boards.get(i).getBoardNo()).get();
-            result.add(new BoardDto.BoardResponseDto(b));
+            int marketNo = -1;
+            if (b.getBigCategoryNo() == 5) marketNo = marketRepository.findByBoard(b).get().getMarketNo();
+            result.add(new BoardDto.BoardByUserResponseDto(b, marketNo));
         }
 
         return result;
