@@ -1,17 +1,6 @@
 <template>
   <div id='test'>
-    <div id="a">a</div>
-    <div id="b">b</div>
-    <div id="c">c</div>
-    
-    <div id="d">d</div>
-    <div id="e">e</div>
-    <div id="f">f</div>
-    <div id="g">g</div>
-    <div id="h">h</div>
-    <div id="i">i</div>
-    <div id="j">j</div>
-
+    asd
   </div>
 </template>
 <script>

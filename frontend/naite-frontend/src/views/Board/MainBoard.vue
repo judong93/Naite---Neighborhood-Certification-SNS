@@ -71,4 +71,15 @@ export default {
     color:white;
 }
 
+@media screen and (max-width: 501px){
+    #main {
+        position:relative;
+        width: 100vw;
+        height:100vh;
+        overflow:hidden;
+        background-color: rgb(250, 246, 240);
+    }
+
+}
+
 </style>

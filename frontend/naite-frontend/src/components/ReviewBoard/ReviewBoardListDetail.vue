@@ -1,13 +1,13 @@
 <template>
-    <div id='boardlistdetail'>        
-        <div class='detailInfo'>
-            <div class="detailHead">
-                <div class="detailUser">
+    <div id='reviewboardlistdetail'>        
+        <div class='reviewdetailInfo'>
+            <div class="reviewdetailHead">
+                <div class="reviewdetailUser">
                     <img src="../../assets/cha2.png">
                 </div>
                 <div>
-                    <div class="detailTitle">{{apiData['board'].boardTitle}}</div>
-                    <div class="detailBar">
+                    <div class="reviewdetailTitle">{{apiData['board'].boardTitle}}</div>
+                    <div class="reviewdetailBar">
                         <i class="far fa-comments" @click='sendMessage'  v-if='thisBoardUserNo !== apiData.board.userNo'></i>
                         <span @click='sendMessage'  v-if='thisBoardUserNo !== apiData.board.userNo'>메세지</span>
                         <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.board.userNo'></i>
@@ -25,21 +25,21 @@
                         </div>
 
                     </div>
-                    <div class='detailHeadInfo'>                        
-                        <div class='detailUserNick'>{{apiData.userNick}}님의 {{smallCategoryNmae[apiData.smallCategoryNo]}}시설에 대한 글 
-                             <span v-if='apiData.smallCategoryNo===1'>&#xf2e7;</span>
+                    <div class='reviewdetailHeadInfo'>                        
+                        <div class='reviewdetailUserNick'>{{apiData.userNick}}님의 {{smallCategoryNmae[apiData.smallCategoryNo]}}시설에 대한 글 
+                            <span v-if='apiData.smallCategoryNo===1'>&#xf2e7;</span>
                             <span v-if='apiData.smallCategoryNo===2'>&#xf0f9;</span>
                             <span v-if='apiData.smallCategoryNo===3'>&#xf70c;</span>
                             <span v-if='apiData.smallCategoryNo===4'>&#xf0c4;</span>
                             <span v-if='apiData.smallCategoryNo===5'>&#xf563;</span>
                         </div>
-                        <div class='detailMes'>
+                        <div class='reviewdetailMes'>
                             <i class="far fa-thumbs-up" @click='likeBoard' v-if='!liked'></i>
                             <i class="fas fa-thumbs-up" @click='likeBoard' v-else></i>
                             <span>{{apiData.board.boardLikeCnt}}</span>
                             <i class="far fa-comment-dots"></i>
                             <span>{{apiData.boardCommentCnt}}</span>
-                             <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
                             <span>{{apiData.reviewStar}}점</span>    
                             <i class="far fa-clock"></i>
                             <span>{{apiData.board.boardCreatedAt}}</span>
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <hr style='background-color:white;margin:10px;'>            
-            <div class="detailBody" v-if='!update' v-html='apiData.board.boardContent'>
+            <div class="reviewdetailBody" v-if='!update' v-html='apiData.board.boardContent'>
                 <!-- 보드의 내용물보이는 부분 -->
             </div>
             <div class="detailBody" v-else>
@@ -62,7 +62,7 @@
                 <button v-if='update' @click = 'completeUpdate'>수정하기</button>
             </div>
         </div>
-        <div class='detailImg' v-if='apiData.board.boardPic'>
+        <div class='reviewdetailImg' v-if='apiData.board.boardPic'>
         <!-- <div class='detailImg'> -->
             <img src="https://i4a402.p.ssafy.io/img/signpast.fbb26c75.jpg" alt="" width='100%'>
         </div>
@@ -100,7 +100,15 @@ export default {
     },
     methods:{
         sendMessage:function(){
-            alert('메세지 기능은 추후 업데이트 됩니다. 빠른 시일내에 구현하겠습니다!')
+            const userNick = this.apiData.userNick
+            
+            axios.post(`${SERVER_URL}/chat/room?otherNick=${userNick}`,{},this.setToken())
+                .then(res=>{
+                    this.$emit('sendMessageDirect',res.data,userNick)
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
         },
         likeBoard:function(){
             const params = {
@@ -189,8 +197,8 @@ export default {
          
 
             const img = this.apiData.board.boardPic
-            const headBottom = document.querySelector('.detailHeadInfo')
-            const detailBar = document.querySelector('.detailBar')
+            const headBottom = document.querySelector('.reviewdetailHeadInfo')
+            const detailBar = document.querySelector('.reviewdetailBar')
                         
             this.apiData.board.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')
             this.apiData.board.boardContent.split('\n').join('<br />')
@@ -213,7 +221,7 @@ export default {
 
 <style>
 
-#boardlistdetail{
+#reviewboardlistdetail{
     position:absolute;
     width: 60%;
     height: 40%;
@@ -225,7 +233,7 @@ export default {
     color:white;
 }
 
-.detailInfo {
+.reviewdetailInfo {
     width: 100%;
     height: 100%;
     background-color: teal;
@@ -234,18 +242,18 @@ export default {
 }
 
 
-.detailImg {
+.reviewdetailImg {
     width:400px;
     /* height: 100%; */
     background-color: white;
 }
 
-.detailHead {
+.reviewdetailHead {
     width: 100%;
     height: 20%;
     display:flex;
 }
-.detailTitle {
+.reviewdetailTitle {
     width: 80%;
     height:48px;
     text-align: left;
@@ -255,24 +263,24 @@ export default {
     text-overflow: ellipsis;
     margin-left: 12px;
 }
-.detailUserNick {
+.reviewdetailUserNick {
     text-align: left;
 }
 
-.detailUserNick span {
+.reviewdetailUserNick span {
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;    
 }
 
 
-.detailUser > img {
+.reviewdetailUser > img {
     height: 80px;
     border: 1px solid rgb(172, 172, 172);
     border-radius: 20%;
     background-color: white;
 }
 
-.detailHeadInfo{
+.reviewdetailHeadInfo{
     width: 740px;    
     margin-left: 12px;
     display: flex;
@@ -285,15 +293,15 @@ export default {
 
 
 
-.detailHeadInfo i {
+.reviewdetailHeadInfo i {
     margin: 0 5px;
     margin-right: 10px;
 }
-.detailHeadInfo span{
+.reviewdetailHeadInfo span{
     margin-right: 10px;
 }
 
-.detailBody {
+.reviewdetailBody {
     padding:0 10px;
     max-height: 190px;
     overflow: auto;
@@ -302,28 +310,28 @@ export default {
     transition:0.3s
 }
 
-.detailBody::-webkit-scrollbar {
+.reviewdetailBody::-webkit-scrollbar {
     display:none
 }
 
-.detailBody:hover::-webkit-scrollbar{
+.reviewdetailBody:hover::-webkit-scrollbar{
     display:contents;
 }
 
-.detailBar {
+.reviewdetailBar {
     position: absolute;
     top:4%;    
     right:28%;
     cursor: pointer;
     
 }
-.detailBar > span {
+.reviewdetailBar > span {
     margin-right: 10px;
     margin-left: 5px;
 }
 
 
-.detailMes{
+.reviewdetailMes{
     cursor:pointer;
     font-size: 14px;
 }

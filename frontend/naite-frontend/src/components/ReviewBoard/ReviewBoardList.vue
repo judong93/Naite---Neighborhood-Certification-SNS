@@ -1,25 +1,29 @@
 <template>
-    <div id="boardlist">
-        <div class="writeBoard">
+    <div id="reviewboardlist">
+        <div class="reviewwriteBoard">
             <ReviewCategory @changeSmallCategory='changeSmallCategory'/>
-            <span class='writeBoardNext' @click='writeBoard'>글 쓰기 </span>
+            <span class='reviewwriteBoardNext' @click='writeBoard'>글 쓰기 </span>
         </div>
-        <div class="listBox"> 
-            <div class="Box">
+        <div class='reviewmobileBoardTitle'>
+            <h3 >수군수군</h3>
+            <span>우리동네 리뷰게시판</span>
+        </div >
+        <div class="reviewlistBox"> 
+            <div class="reviewBox">
                 <div v-for='(list,idx) in apiData' :key='idx'>                    
-                    <div class='list' @click='toDetail(list.reviewNo,list.board.boardNo)'>                                      
-                        <div class='listInfo'>
-                            <div class='listTitle'>
+                    <div class='reviewlist' @click='toDetail(list.reviewNo,list.board.boardNo)'>                                      
+                        <div class='reviewlistInfo'>
+                            <div class='reviewlistTitle'>
                                 <div>
                                     {{list.board.boardTitle}}
                                 </div>
-                                <div class='listContent'>
+                                <div class='reviewlistContent'>
                                     {{list.board.boardContent}}
                                 </div>
                             </div>
                             
-                            <div class='subList'>                                
-                                <div class='listUser'>                                    
+                            <div class='reviewsubList'>                                
+                                <div class='reviewlistUser'>                                    
                                     <div>{{list.userNick}}님이 {{smallCategoryNmae[list.smallCategoryNo]}}에 대해 {{categoryName[list.board.bigCategoryNo]}}
                                         <span v-if='list.smallCategoryNo===1'>&#xf2e7;</span>
                                         <span v-if='list.smallCategoryNo===2'>&#xf0f9;</span>
@@ -74,7 +78,7 @@ export default {
     },
     methods:{
         loadList: function(){
-            axios.get(`${SERVER_URL}/review/list`)
+            axios.get(`${SERVER_URL}/review/list`,this.setToken())
                 .then(res=>{
                     this.apiData = res.data   
                                 
@@ -91,7 +95,7 @@ export default {
         },
         changeSmallCategory:function(smallNo){
             if (smallNo !== 0 && smallNo!==-1) {
-                axios.get(`${SERVER_URL}/review/list/${smallNo}`)
+                axios.get(`${SERVER_URL}/review/list/${smallNo}`,this.setToken())
                     .then(res=>{
                         this.apiData = res.data  
                         console.log(this.apiData) 
@@ -102,6 +106,15 @@ export default {
             } else {
                 this.loadList()
             }
+        },
+        setToken:function(){
+            const token=localStorage.getItem('jwt')
+            const config = {
+                headers: {
+                'auth-token':`${token}`
+                }
+            }
+            return config 
         }
     },
     watch:{
@@ -116,11 +129,14 @@ export default {
 </script>
 
 <style>
-#boardlist {
+#reviewboardlist {
+    position:relative;    
     font-family: font1;
+    width:100%;
+    height:100%;
 }
 
-.writeBoard {
+.reviewwriteBoard {
     position:absolute;
     top: 24%;
     left:19.7%;
@@ -131,7 +147,7 @@ export default {
     
 }
 
-.writeBoardNext{
+.reviewwriteBoardNext{
     cursor:pointer;
     font-size: 20px;
     background-color: #3F9F47;
@@ -142,7 +158,7 @@ export default {
 }
 
 
-.listBox{
+.reviewlistBox{
     position:absolute;
     width: 60%;
     height: 70%;
@@ -158,7 +174,7 @@ export default {
     display:flex;
 }
 
-.Box {
+.reviewBox {
     width: 100%;
     height: 100%;
     border-right: 0.1px solid rgb(255, 255, 255);
@@ -166,7 +182,7 @@ export default {
 }
 
 
-.list {   
+.reviewlist {   
     display:flex;
     /* border-bottom: 1px solid #ffffff; */
     border-bottom: 1px solid #6e6e6e;
@@ -178,7 +194,7 @@ export default {
     cursor: pointer;
 }
 
-.subList{    
+.reviewsubList{    
     justify-content: space-between;
     /* width: 550px; */
     height:55px;
@@ -186,23 +202,23 @@ export default {
     width:480px;
 }
 
-.subList i {
+.reviewsubList i {
     margin-left: 5px;
 }
 
-.subList span {
+.reviewsubList span {
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;    
 }
 
-.listInfo {
+.reviewlistInfo {
     margin:10px;
     display:flex;
 }
 
 
 
-.listTitle{
+.reviewlistTitle{
     font-size: 23px;
     text-align: left;
     width:600px;
@@ -213,7 +229,7 @@ export default {
 }
 
 
-.listContent{
+.reviewlistContent{
     font-size: 14px;
     margin: 5px 0;
     overflow:hidden;
@@ -223,15 +239,140 @@ export default {
 }
 
 
-.subList {
+.reviewsubList {
     /* font-size: 10px; */
     font-size: 12px;
     text-align: right;
 }
 
-.listUser {
+.reviewlistUser {
     height:37px;
     font-size: 15px;
 }
+
+@media screen and (max-width:501px) {
+    #reviewboardlist{
+        width:100vw;
+        height: 100vh;
+        text-align: left;
+     
+    }
+    .reviewmobileBoardTitle{
+        position:relative;
+        display: initial;
+        text-align: left;
+        top:10%;
+        left:0;
+        margin-left: 5%;
+        display: flex;
+
+    }
+    .reviewmobileBoardTitle > span {
+        margin-left: 5%;
+        margin-top: 2%;
+    }
+    .reviewwriteBoard {        
+        display: none;
+    }
+
+    .reviewlistBox{
+        width: 96%;
+        height: 100%;
+        /* background-color:#e5c09d; */
+        /* background-color: blue; */
+        /* background-color:transparent; */
+        left: 0%;
+        border-radius: 0px;
+        margin-left: 2%;
+        top: 15%;         
+        border: none;
+        display:flex;
+        padding:2%;
+        overflow: auto;
+        
+    }
+
+    .reviewBox {
+        width: 100%;
+        height: 80%;
+        
+        border-right: 0.1px solid rgb(255, 255, 255);
+        padding-top: 0px;
+        overflow: auto;
+    }
+
+
+    .reviewlist {   
+        display:flex;
+        /* border-bottom: 1px solid #ffffff; */
+        border-bottom: 1px solid #6e6e6e;
+        /* width:80%; */
+        width:100%;
+        justify-content: space-between;
+        /* margin-left: 100px; */
+        margin-left: 0px;  
+        cursor: pointer;
+    }
+    .reviewlistInfo {
+        padding:2%;
+        width: 100%;   
+        margin:0;     
+    }
+
+    .reviewsubList{    
+        justify-content: space-between;
+        height:100%;
+        width:50%;        
+    }
+
+
+
+
+    .reviewlistTitle{
+        font-size: 15px;
+        text-align: left;        
+        height:55px;
+        overflow:hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .reviewlistTitle :nth-child(1){
+        width:200px;
+        overflow:hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+
+    .reviewlistContent{
+        font-size: 10px;
+        margin: 8% 0 0 0 ;
+        width: 180px;
+        overflow:hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        
+    }
+
+
+    .reviewsubList {
+        /* font-size: 10px; */
+        font-size: 10px;
+        text-align: right;
+        margin-right: 10px;
+    }
+
+    .reviewlistUser {        
+        font-size: 10px;
+    }
+
+    .reviewlistUser + div {        
+        white-space: nowrap;
+    }
+
+}
+
+
 
 </style>

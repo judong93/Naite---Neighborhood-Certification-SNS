@@ -99,5 +99,14 @@ export default {
     font-family: font1;
 }
 
+@media screen  and (max-width: 501px){
+
+    #testposting {
+    width: 100vw;
+    height:100vh;
+
+}
+}
+
 
 </style>

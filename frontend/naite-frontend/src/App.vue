@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <Navbar v-if='signNav' />
-    <router-view/>
-    <Message v-if='signNav' />
+    <router-view @sendMessageDirect='sendMessageDirect'/>
+    <Message v-if='signNav' :directMessageRoomNo='directMessageRoomNo' />
   </div>
 </template>
 <script>
@@ -21,9 +21,18 @@ export default {
   data: function(){
     return {
       signNav: false,
+      mobileMessageState:false,
+      directMessageRoomNo:'',
     }
   },
   methods:{
+    sendMessageDirect:function(roomNo,userNick){
+      this.directMessageRoomNo = {
+        'roomNo':roomNo,
+        'userNick':userNick
+      }
+
+    },
     showing:function(){
       const jwt = localStorage.getItem('jwt')
       if (jwt) {
@@ -98,11 +107,12 @@ export default {
   color: #2c3e50;
 }
 
-
-@media screen and (max-width: 500px) {
+ 
+@media screen and (max-width: 501px) {
     #app {
-        width: 360px;
-        height: 640px;
+        width: 100vw;
+        height: 100vh;
+        overflow: auto;
     }
 }
 

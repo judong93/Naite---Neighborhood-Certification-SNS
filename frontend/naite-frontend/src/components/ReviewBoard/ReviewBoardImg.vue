@@ -6,7 +6,7 @@
 <script>
 
 export default {
-    name:'BoardImge',
+    name:'ReviewBoardImge',
     components:{        
     },
     data: function() {
@@ -44,4 +44,13 @@ export default {
     color:white;
     overflow:hidden;
 }
+
+@media screen and (max-width:501px) {
+    #reviewboardimg {
+        display:none;
+    }
+    
+}
+
+
 </style>

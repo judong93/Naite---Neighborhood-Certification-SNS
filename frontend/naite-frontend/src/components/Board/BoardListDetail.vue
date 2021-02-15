@@ -8,10 +8,14 @@
                 <div>
                     <div class="detailTitle">{{apiData.boardTitle}}</div>
                     <div class="detailBar">
-                        <i class="far fa-comments" @click='sendMessage'  v-if='thisBoardUserNo !== apiData.userNo'></i>
-                        <span @click='sendMessage'  v-if='thisBoardUserNo !== apiData.userNo'>메세지</span>
-                        <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.userNo'></i>
-                        <span v-if='thisBoardUserNo !== apiData.userNo'>신고</span>
+                        <div @click='sendMessage'>
+                            <i class="far fa-comments" v-if='thisBoardUserNo !== apiData.userNo'></i>
+                            <span   v-if='thisBoardUserNo !== apiData.userNo'>메세지</span>
+                        </div>
+                        <div @click='reportBoard()'>
+                            <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.userNo'></i>
+                            <span v-if='thisBoardUserNo !== apiData.userNo'>신고</span>
+                        </div>
                         <div v-if='thisBoardUserNo === apiData.userNo' style='display:flex'>
                             <div  @click='updateBoard' style='margin-right:10px'>
                                 <i class="far fa-edit"  ></i>
@@ -61,14 +65,14 @@
             <img src="https://i4a402.p.ssafy.io/img/signpast.fbb26c75.jpg" alt="" width='100%'>
         </div>
 
+
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
-const today = new Date()
-console.log(today)
+
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 // const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
@@ -92,8 +96,32 @@ export default {
         }
     },
     methods:{
+        reportBoard:function(){
+            const params = {
+                "boardNo": this.boardNo,
+                "commentNo": 0,
+                "reportTargetNo": this.apiData.userNo,
+                "reportType": 0,
+            }
+            axios.post(`${SERVER_URL}/report/insert`,params,this.setToken())
+                .then(res=>{
+                    res
+                    alert(`${this.apiData.boardTitle}에 대한 신고가 접수되었습니다`)
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
+        },
         sendMessage:function(){
-            alert('메세지 기능은 추후 업데이트 됩니다. 빠른 시일내에 구현하겠습니다!')
+            const userNick = this.apiData.userNick
+
+            axios.post(`${SERVER_URL}/chat/room?otherNick=${userNick}`,{},this.setToken())
+                .then(res=>{
+                    this.$emit('sendMessageDirect',res.data,userNick)                    
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
         },
         likeBoard:function(){
             const params = {
@@ -302,9 +330,10 @@ export default {
     top:4%;    
     right:28%;
     cursor: pointer;
+    display: flex;
     
 }
-.detailBar > span {
+.detailBar > div > span {
     margin-right: 10px;
     margin-left: 5px;
 }
@@ -314,5 +343,125 @@ export default {
     cursor:pointer;
     font-size: 14px;
 }
+
+@media screen and (max-width:501px) {
+    #boardlistdetail{
+        position:absolute;
+        width: 100%;
+        height: 40%;
+        background-color: #A87A4F;
+        top: 8%;
+        left: 0%;          
+    }
+/* 
+    .detailInfo {
+        width: 100%;
+        height: 100%;
+        background-color: teal;
+        font-family: font1;
+        text-align: left;
+    } */
+
+
+    .detailImg {
+        width:400px;
+        /* height: 100%; */
+        background-color: white;
+    }
+
+    .detailHead {
+        width: 100%;
+        height: 20%;
+        display:flex;
+    }
+    .detailTitle {
+        width: 80%;
+        height:48px;
+        text-align: left;
+        font-size: 30px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin-left: 12px;
+    }
+    .detailUserNick {
+        text-align: left;
+    }
+
+
+    .detailUser > img {
+        height: 80px;
+        border: 1px solid rgb(172, 172, 172);
+        border-radius: 20%;
+        background-color: white;
+    }
+
+    .detailHeadInfo{
+        width: 740px;    
+        margin-left: 12px;
+        display: flex;
+        justify-content: space-between;
+        color:white;
+        font-size: 12px;
+        margin-top: 10px;
+    }
+
+
+
+
+    .detailHeadInfo i {
+        margin: 0 5px;
+        margin-right: 10px;
+    }
+    .detailHeadInfo span{
+        margin-right: 10px;
+    }
+
+    .detailBody {
+        padding:0 10px;
+        max-height: 190px;
+        overflow: auto;
+        overflow-x: hidden;
+        white-space: pre-wrap;
+        transition:0.3s
+    }
+
+    .detailBody::-webkit-scrollbar {
+        display:none
+    }
+
+    .detailBody:hover::-webkit-scrollbar{
+        display:contents;
+    }
+
+    .detailBar {
+        position: absolute;
+        top:4%;    
+        right:28%;
+        cursor: pointer;
+        
+    }
+    .detailBar > span {
+        margin-right: 10px;
+        margin-left: 5px;
+    }
+
+
+    .detailMes{
+        cursor:pointer;
+        font-size: 14px;
+    }
+
+    
+}
+
+
+
+
+
+
+
+
+
 
 </style>

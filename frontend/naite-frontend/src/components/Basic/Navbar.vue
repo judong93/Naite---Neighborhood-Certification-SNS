@@ -1,35 +1,119 @@
 <template>
     <nav id="navbar">
-        <div class="navBorder"></div>
-        <div class="nav-title" @click='showCategory(0)'>
-            나의 이웃테두리: 나이테
-        </div>
-        <div class="nav-link">
-            <a href="#" @click='showCategory(0)'>골목길</a>
-            <a href="#" @click='showCategory(1)'>번화가</a>
-            <a href="#" @click='showCategory(2)'>동사무소</a>
-            <a href="#" @click='showCategory(3)'>수군수군</a>
-            <a href="#" @click='showCategory(4)'>소리소문</a>
-            <a href="#" @click='showCategory(5)'>장터</a>
-            <a href="#" @click='showCategory(6)'>확성기</a>
-        </div>
-        <div class="nav-right">
-            <!-- <input type="text" readonly/>
-            <i class="fas fa-search"></i>
-            -->
-            <!-- <div class='statusHover'>
-                
-            </div> -->
-            <span>{{greeting}}</span>
-            <div class="nav-status">
-                <div class="statusHover">   
+        <div class="webNav">
+            <div class="navBorder"></div>
+            <div class="nav-title" @click='showCategory(0)'>
+                나의 이웃테두리: 나이테
+            </div>
+            <div class="nav-link">
+                <a href="#" @click='showCategory(0)'>골목길</a>
+                <a href="#" @click='showCategory(1)'>번화가</a>
+                <a href="#" @click='showCategory(2)'>동사무소</a>
+                <a href="#" @click='showCategory(3)'>수군수군</a>
+                <a href="#" @click='showCategory(4)'>소리소문</a>
+                <a href="#" @click='showCategory(5)'>장터</a>
+                <a href="#" @click='showCategory(6)'>확성기</a>
+            </div>
+            <div class="nav-right">
+                <!-- <input type="text" readonly/>
+                <i class="fas fa-search"></i>
+                -->
+                <!-- <div class='statusHover'>
                     
-                    <a href="#" @click='profile'>내 프로필</a> <br>
-                    <a href="#" @click='logout'>로그아웃</a>
+                </div> -->
+                <span>{{greeting}}</span>
+                <div class="nav-status">
+                    <div class="statusHover">   
+                        
+                        <a href="#" @click='profile'>내 프로필</a> <br>
+                        <a href="#" @click='logout'>로그아웃</a>
+                    </div>
                 </div>
             </div>
         </div>
-        
+
+        <div class='mobileNav'>
+            <div class='mobileNavHeader'>
+                <img src="../../assets/naitelogo.png" alt="" width='30%'>
+            </div>
+            <div class='mobileNavBottom'>                
+                <div @click='mobileMenu'>
+                    <i class="fas fa-bars"></i><br>
+                    <span>Menu</span>
+                </div>
+                <div @click='mobileMessage'>
+                    <i class="far fa-comments"></i><br>
+                    <span>Message</span>
+                </div>
+                <div @click='showCategory(0)'>
+                    <i class="fas fa-home"></i><br>
+                    <span>Home</span>
+                </div>
+                <div @click='mobileWrite()'>
+                    <i class="fas fa-pen-alt"></i><br>
+                    <span>Write</span>
+                </div>
+                <div>
+                    <i class="fas fa-user-alt"></i><br>
+                    <span>My profile</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div>
+        <div class="menu">
+            <div @click='showCategory(1)'>
+                <div class='menu1'>
+                    <img src="../../assets/번화가.png" alt="" width='100%'>
+                </div>
+                <span>번화가</span>
+                
+            </div>
+            <div @click='showCategory(2)'>
+                 <div class='menu2'>
+                    <img src="../../assets/동사무소.png" alt="" width='100%'>
+                </div>
+                <span>동사무소</span>
+                
+            </div>
+            <div @click='showCategory(3)'>
+                 <div class='menu3'>
+                    <img src="../../assets/수군수군2.png" alt="" width='100%'>
+                </div>
+                <span>수군수군</span>
+                
+            </div>
+            <div @click='showCategory(4)'>
+                 <div class='menu4'>
+                    <img src="../../assets/소리소문1.png" alt="" width='100%'>
+                </div>
+                <span>소리소문</span>
+                
+            </div>
+            <div @click='showCategory(5)'>
+                <div class='menu5'>
+                    <img src="../../assets/장터1.png" alt="" width='100%'>
+                </div>
+                <span>장터</span>
+            </div>
+            <div @click='showCategory(6)'>
+                <div class='menu6'>
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <span>확성기</span>
+            </div>
+            <div>
+                <div class='menu7'>
+
+                    <i class="fab fa-sistrix"></i>
+                </div>
+                <span>검색</span>
+            </div>
+        </div>
+
+
+        </div>
 
 
     </nav>
@@ -37,6 +121,7 @@
 </template>
 <script>
 import jwt_decode from 'jwt-decode'
+import _ from 'lodash'
 
 
 export default {
@@ -48,10 +133,14 @@ export default {
         return {
             greeting:'',
             userNo:'',
+            mobileMenuBoo:false,
         }
     },
     methods:{
         showCategory:function(num){
+            this.mobileMenuBoo = true
+            this.mobileMenu()
+
             if (num===0) {
                 this.$router.push({name:'MainBoard'})
             } else if (num===5){
@@ -71,6 +160,37 @@ export default {
         },
         profile:function(){
             this.$router.push({name:'Profile', params:{userNo:this.userNo}})
+        },
+        mobileMenu:function(){
+            let category = document.querySelectorAll('.menu > div')
+            let i = 1
+            let color =['rgba(53,105,165,0.7)','rgba(0,200,252,0.7)','rgba(252,186,39,0.7)','rgba(221,75,57,0,7)','rgba(247,230,0,0.7)','rgba(45,180,0,0.7)','rgba(168,122,79,0.7)']
+            if (!this.mobileMenuBoo){
+                category.forEach(ca => {
+                    const top =700+i*(-75)
+                    const caBtn = document.querySelector(`.menu${i}`)
+                    let j = _.random(0,color.length-1)
+                    ca.style.visibility='visible'
+                    ca.style.top = `${top}px`
+                    caBtn.style.backgroundColor = color[j]
+                    color.splice(j,1)
+                    i += 1
+                    this.mobileMenuBoo = true
+                    
+                });
+            } else {
+                category.forEach(ca=>{
+                    ca.style.visibility = 'hidden'
+                    ca.style.top = '768px'
+                })
+                this.mobileMenuBoo=false
+            }
+        },
+        mobileWrite:function(){
+            this.$router.push({name:'Posting'})
+        },
+        mobileMessage:function(){
+            this.$router.push({name:'MobileMessage'})
         }
     },
     computed: {
@@ -80,8 +200,7 @@ export default {
         const token = localStorage.getItem('jwt')
         const decode = jwt_decode(token)
         this.userNo = decode.user.userNo
-        this.greeting = decode.greeting
-        console.log(decode)
+        this.greeting = decode.greeting        
     }
 
     
@@ -89,6 +208,10 @@ export default {
 </script>
 
 <style>
+.webNav {
+    width:100%;
+    display: flex;
+}
 .navBorder {
     position:absolute;
     left:2%;
@@ -97,9 +220,6 @@ export default {
     height:0;
     border-bottom: 1px solid rgb(179, 179, 179);
     z-index: 0;
-    
-    
-
 }
 #navbar {
     position:absolute;
@@ -208,6 +328,103 @@ export default {
 .statusHover {
     display: none;
     transition: 0.3s;
+}
+
+.mobileNav{
+    display:none;
+}
+.menu {
+    display:none
+}
+
+@media screen and (max-width: 501px){
+    #navbar {
+        position:relative;
+        /* background-color:transparent; */
+        width:0;
+        height:0;    
+        z-index: 1;
+        bottom:0;
+    
+    }
+    .navBorder {
+        position:absolute;
+        left:0%;
+        top:0%;
+        width: 100vw;
+        height:100vh;
+    }
+    .webNav {
+        display:none;
+    }
+    .mobileNav{        
+        display:initial
+    }
+    .mobileNavHeader{
+        position:fixed;
+        height: 7%;
+        width: 100%;
+        background-color: rgb(250, 246, 240);
+        box-shadow:0 0 3px black;
+        -webkit-backface-visibility: hidden;
+    }
+    .mobileNavHeader > img {
+        margin-top: 3%;
+
+    }
+
+
+    .mobileNavBottom{
+        position:fixed;
+        left:0;
+        bottom:0;
+        width: 100%;
+        height:7%;        
+        background-color:#3F9F47;
+        box-shadow:2px 0 0 black;
+        padding-top: 5px;
+        display: flex;        
+        -webkit-backface-visibility: hidden;
+    }
+    .mobileNavBottom > div {
+        width:20%;
+        height:100%;
+        color:rgba(255, 255, 255, 0.8);
+    }
+    .menu{
+        display: initial;
+        background-color: rgba(0,0,0,1);
+        
+    }
+    .menu > div{
+
+        visibility: hidden;
+        position:fixed;
+        top:768px;
+        left:20px;
+        transition: 0.3s;
+        background-color: rgba(255,255,255,0.9);
+        border-radius: 5px;
+        padding:1px 3px;
+        
+    }
+    .menu > div > div {
+        overflow: hidden;
+        width: 50px;
+        height: 50px;
+        background-color: teal;  
+        padding-top: 10px;
+        border-radius: 100%;
+        font-size: 20px;
+        color:white;
+        
+    }
+    .menu > div > span {
+        color:black;
+        white-space: nowrap;
+        font-size: 15px;
+    }
+
 }
 
 

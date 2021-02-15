@@ -1,6 +1,6 @@
 <template>
     <div id="boarddetail">
-        <ReviewBoardListDetail :apiData='apiData' :boardNo='boardNo' :updateCommentCntCheck='updateCommentCntCheck' />
+        <ReviewBoardListDetail :apiData='apiData' :boardNo='boardNo' :updateCommentCntCheck='updateCommentCntCheck' @sendMessageDirect='sendMessageDirect' />
         <BoardComment :bigCategoryNo='bigCategoryNo' @updateCommentCnt='updateCommentCnt' />
     </div>
     
@@ -44,6 +44,9 @@ export default {
                 }
                 }        
             return config 
+        },
+        sendMessageDirect:function(roomNo,userNick){
+            this.$emit('sendMessageDirect',roomNo,userNick)
         }
         
     },
@@ -72,12 +75,20 @@ export default {
 </script>
 
 <style>
-#boarddetail {
+#reviewboarddetail {
     position:relative;
     width: 1920px;
     height:969px;
     overflow:auto;
     background-color: rgb(250, 246, 240);
+    
+}
+
+@media screen and (max-width:501px) {
+    #reviewboarddetail {
+        width: 100vw;
+        heigt:100vh;
+    }
     
 }
 </style>

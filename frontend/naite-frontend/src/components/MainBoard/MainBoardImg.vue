@@ -51,5 +51,11 @@ export default {
     font-family: font1;
 }
 
+@media screen and (max-width:500px) {
+    #mainboardimg {
+        display: none
+    }
+    
+}
 
 </style>

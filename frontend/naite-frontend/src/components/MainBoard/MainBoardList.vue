@@ -53,21 +53,29 @@ export default {
         toDetail:function(num){
             this.$router.push({name:'BoardDetail',params:{boardNo:num}})
         },
+        setToken:function(){
+            const token=localStorage.getItem('jwt')
+            const config = {
+                headers: {
+                'auth-token':`${token}`
+                }
+            }
+            return config 
+        },
     },
     computed:{
-        
     },
     created(){
         for (let i=0;i<3;i++){
-            axios.get(`${SERVER_URL}/board/list/top/${this.boardNo[i]}`)
+            console.log(this.setToken())
+            axios.get(`${SERVER_URL}/board/list/top/${this.boardNo[i]}`,this.setToken())
                 .then(res => {
                     this.apiData[`${i}`] = res.data               
-                })
+                })  
                 .catch(err=>{
                     console.log(err)
                 })
             }       
-
     }
     
 
@@ -153,5 +161,34 @@ export default {
     width:170px;
 }
 
+@media screen and (max-width:501px) {
+    #mainboardlist {
+        position:absolute;
+        top: 8%;
+        left: 0%;
+        width: 100%;
+        height:83%;        
+    }
+
+
+    .mainboardBack {        
+        display:block;
+        height:100%;
+        overflow: auto;
+    }
+
+    .mainboardBack > div {
+        position:relative;
+        border-radius: 10px;
+        width: 100%;
+        max-height: 100%;    
+        margin: auto;
+        margin-top: 5%;
+        
+        
+    }
+   
+    
+}
 
 </style>

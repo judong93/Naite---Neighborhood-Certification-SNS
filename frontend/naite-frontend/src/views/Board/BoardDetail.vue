@@ -1,6 +1,6 @@
 <template>
     <div id="boarddetail">
-        <BoardListDetail :apiData='apiData' :boardNo='boardNo' :updateCommentCntCheck='updateCommentCntCheck' />
+        <BoardListDetail :apiData='apiData' :boardNo='boardNo' :updateCommentCntCheck='updateCommentCntCheck' @sendMessageDirect='sendMessageDirect' />
         <BoardComment :bigCategoryNo='bigCategoryNo' @updateCommentCnt='updateCommentCnt' />
     </div>
     
@@ -34,6 +34,9 @@ export default {
     methods:{
         updateCommentCnt:function(){
             this.updateCommentCntCheck+=1
+        },
+        sendMessageDirect:function(roomNo,userNick){
+            this.$emit('sendMessageDirect',roomNo,userNick)
         }
         
     },
@@ -69,6 +72,14 @@ export default {
     height:969px;
     overflow:auto;
     background-color: rgb(250, 246, 240);
+    
+}
+
+@media screen and (max-width:501px) {
+    #boarddetail {
+        width: 100vw;
+        height:100vh;
+    }
     
 }
 </style>

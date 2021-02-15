@@ -3,6 +3,10 @@
         <div class="writeBoard">
             <span class='writeBoardNext' @click='writeBoard'>글 쓰기 </span>
         </div>
+        <div class='mobileBoardTitle'>
+            <h3 >{{categoryName[bigCategoryNo]}}</h3>
+            <span>{{mobileCategory[bigCategoryNo]}}</span>
+        </div >
         <div class="listBox"> 
             <div class="Box">
                 <div v-for='(list,idx) in apiData' :key='idx'>
@@ -24,7 +28,7 @@
                                 </div>
                                 <div>
                                     <i class="far fa-images"></i>
-                                    {{list.boardPic.length}}
+                                    <!-- {{list.boardPic.length}} -->
                                     <i class="far fa-thumbs-up"></i>
                                     {{list.boardLikeCnt}}&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="far fa-comment-dots"></i>
@@ -57,7 +61,8 @@ export default {
     data: function() {
         return {
             apiData: {},
-            categoryName:['','번화가','동사무소','수군수군','소리소문','장터'],
+            categoryName:['','번화가','동사무소','수군수군','소리소문','장터','확성기'],
+            mobileCategory:['','우리동네 자유게시판','우리동네 질문게시판','수군수군','우리동네 중요사항','장터','우리동네 공지사항'],
             imgCnt:0,
         }
     },
@@ -66,7 +71,7 @@ export default {
     },
     methods:{
         loadList: function(){
-            axios.get(`${SERVER_URL}/board/list/${this.bigCategoryNo}`)
+            axios.get(`${SERVER_URL}/board/list/${this.bigCategoryNo}`,this.setToken())
                 .then(res=>{
                     this.apiData = res.data                    
                 })
@@ -79,7 +84,16 @@ export default {
         } ,
         toDetail:function(num){
             this.$router.push({name:'BoardDetail',params:{boardNo:num}})
-        }  
+        },
+        setToken:function(){
+            const token=localStorage.getItem('jwt')
+            const config = {
+                headers: {
+                'auth-token':`${token}`
+                }
+            }
+            return config 
+        }
     },
     watch:{
         bigCategoryNo:function(){
@@ -94,7 +108,10 @@ export default {
 
 <style>
 #boardlist {
+    position:relative;    
     font-family: font1;
+    width:100%;
+    height:100%;
 }
 
 
@@ -200,5 +217,134 @@ export default {
     height:37px;
     font-size: 15px;
 }
+.mobileBoardTitle{
+    display: none;
+}
+
+
+@media screen and (max-width: 501px) {
+    #boardlist{
+        width:100vw;
+        height: 100vh;
+        text-align: left;
+     
+    }
+    .mobileBoardTitle{
+        position:relative;
+        display: initial;
+        text-align: left;
+        top:10%;
+        left:0;
+        margin-left: 5%;
+        display: flex;
+
+    }
+    .mobileBoardTitle > span {
+        margin-left: 5%;
+        margin-top: 2%;
+    }
+    .writeBoard {        
+        display: none;
+    }
+
+    .listBox{
+        width: 96%;
+        height: 100%;
+        /* background-color:#e5c09d; */
+        /* background-color: blue; */
+        /* background-color:transparent; */
+        left: 0%;
+        border-radius: 0px;
+        margin-left: 2%;
+        top: 15%;         
+        border: none;
+        display:flex;
+        padding:2%;
+        overflow: auto;
+        
+    }
+
+    .Box {
+        width: 100%;
+        height: 80%;
+        
+        border-right: 0.1px solid rgb(255, 255, 255);
+        padding-top: 0px;
+        overflow: auto;
+    }
+
+
+    .list {   
+        display:flex;
+        /* border-bottom: 1px solid #ffffff; */
+        border-bottom: 1px solid #6e6e6e;
+        /* width:80%; */
+        width:100%;
+        justify-content: space-between;
+        /* margin-left: 100px; */
+        margin-left: 0px;  
+        cursor: pointer;
+    }
+    .listInfo {
+        padding:2%;
+        width: 100%;   
+        margin:0;     
+    }
+
+    .subList{    
+        justify-content: space-between;
+        height:100%;
+        width:50%;        
+    }
+
+
+
+
+    .listTitle{
+        font-size: 15px;
+        text-align: left;        
+        height:55px;
+        overflow:hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .listTitle :nth-child(1){
+        width:200px;
+        overflow:hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+
+    .listContent{
+        font-size: 10px;
+        margin: 8% 0 0 0 ;
+        width: 180px;
+        overflow:hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        
+    }
+
+
+    .subList {
+        /* font-size: 10px; */
+        font-size: 10px;
+        text-align: right;
+        margin-right: 10px;
+    }
+
+    .listUser {        
+        font-size: 10px;
+    }
+
+    .listUser + div {        
+        white-space: nowrap;
+    }
+
+    
+}
+
 
 </style>

@@ -1,17 +1,26 @@
 <template>
-    <div id="message"  @click='changeWindow'>
-        <div v-if='firstmessage'>icon</div>
-        <div v-else-if='secondmessage'>message목록</div>
-        <div v-else>dm창</div>
-        <button class="test" @click='testback'>test:backtofirstmessage</button>
+    <div id="message" >
+        <div v-if='firstmessage'  @click='changeWindow'><i class="far fa-comment-dots"></i></div>
+        <MessageStateSecond v-else-if='secondmessage' @messageDetail='messageDetail' @closeSecond='closeSecond' />
+        <MessageDetail :roomNo='roomNo' :otherNick='otherNick' @backtosecondstate='backtosecondstate' v-else />
+       
+        
     </div>
     
 </template>
 <script>
+import MessageStateSecond from './MessageStateSecond'
+import MessageDetail from './MessageDetail'
+
 
 export default {
     name:'Message',
-    components:{                
+    components:{   
+        MessageStateSecond,
+        MessageDetail,
+    },
+    props:{
+        directMessageRoomNo:[Object,String],
     },
     data: function() {
         return {
@@ -19,25 +28,47 @@ export default {
             secondmessage: false,
             thirdmessage: false,
             test: false,
+            roomNo:0,
+            otherNick:'',
 
         }
     },
     methods:{
+        backtosecondstate:function(){
+            this.firstmessage = true
+            this.secondmessage = false
+            this.thirdmessage = false
+            this.test = false
+            this.changeWindow()
+        },
+        messageDetail:function(roomNo,otherNick){
+            this.changeWindow()
+            this.roomNo = roomNo
+            this.otherNick = otherNick
+
+        },
+        closeSecond:function(){
+            this.testback()
+        },
         changeWindow:function(){
             const messageWindow = document.getElementById('message')
             
             if (this.firstmessage&& !this.test) {
-                messageWindow.style.width='250px'
-                messageWindow.style.height='500px'
+                messageWindow.style.width='18%'
+                messageWindow.style.height='70%'
                 messageWindow.style.borderRadius='10px'
+                messageWindow.style.transform='none'
+                messageWindow.style.right = '1%'
+                messageWindow.style.bottom='5vh'
                 this.firstmessage=false
                 this.secondmessage=true                
             } else if(this.secondmessage){
-                messageWindow.style.width='1300px'
-                messageWindow.style.height='600px'
+                messageWindow.style.width='65%'
+                messageWindow.style.height='65%'
                 messageWindow.style.borderRadius='10px'
-                messageWindow.style.right='300px'
-                messageWindow.style.bottom='200px'
+                messageWindow.style.right='50%'
+                messageWindow.style.bottom='50%'
+                messageWindow.style.transform='translate(50%,50%)'                
                 this.secondmessage=false
                 this.thirdmessage=true
             }
@@ -48,6 +79,7 @@ export default {
             messageWindow.style.width='100px'
             messageWindow.style.height='100px'
             messageWindow.style.borderRadius='100%'
+            messageWindow.style.transform='none'
             messageWindow.style.right='5vh'
             messageWindow.style.bottom='5vh'
             this.firstmessage=true
@@ -58,9 +90,17 @@ export default {
         }
 
     },
-    computed: {
+    watch:{
+        directMessageRoomNo:function(){
+            this.roomNo = this.directMessageRoomNo.roomNo
+            this.otherNick = this.directMessageRoomNo.userNick
+            this.firstmessage=false
+            this.secondmessage=true
+            this.thirdmessage = false
+            this.changeWindow()
+        }
+    }
 
-    },
     
 }
 </script>
@@ -72,15 +112,28 @@ export default {
     right: 5vh;
     width: 100px;
     height: 100px;
+    
     /* background-color: red; */
     border: black solid 1px;
     border-radius: 100%;
-    background-color: #FDD692;
+    background-color: transparent;
     /* background-color: #9B8281; */
     /* background-color: #75D701; */
     transition: 0.3s;
+    cursor: pointer;
     
 }
+#message > div > i{
+    font-size: 60px;
+    margin-top: 20px;
+}
 
+
+@media screen and (max-width:501px) {
+    #message{
+        display: none;
+    }
+    
+}
 
 </style>
