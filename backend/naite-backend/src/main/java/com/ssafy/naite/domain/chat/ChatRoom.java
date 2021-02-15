@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class ChatRoom {
 
     private Integer userOne;
     private Integer userTwo;
+    private LocalDateTime updatedAt;
 
     public ChatRoom () {}
 
@@ -28,6 +30,7 @@ public class ChatRoom {
     public ChatRoom (Integer userOne, Integer userTwo) {
         this.userOne = userOne;
         this.userTwo = userTwo;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public ChatRoom(Integer roomNo) {
@@ -39,6 +42,10 @@ public class ChatRoom {
                 .userOne(userOne)
                 .userTwo(userTwo)
         .build();
+    }
+
+    public void updateTime() {
+        this.updatedAt = LocalDateTime.now();
     }
 
     @Override

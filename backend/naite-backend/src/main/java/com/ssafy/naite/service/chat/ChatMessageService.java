@@ -3,6 +3,7 @@ package com.ssafy.naite.service.chat;
 import com.ssafy.naite.domain.chat.ChatMessage;
 import com.ssafy.naite.domain.chat.ChatMessageRepository;
 import com.ssafy.naite.domain.chat.ChatRoom;
+import com.ssafy.naite.domain.chat.ChatRoomRepository;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.dto.chat.ChatMessageGetDto;
 import com.ssafy.naite.dto.chat.ChatMessagePostDto;
@@ -19,8 +20,12 @@ import java.util.List;
 public class ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
+    private final ChatRoomRepository chatRoomRepository;
     private final UserService userService;
 
+    /**
+     * 채팅 메세지 저장
+     */
     public ChatMessageGetDto save(ChatMessagePostDto dto, int userNo) {
        ChatMessage chatMessage =  chatMessageRepository.save(ChatMessage.builder()
         .message(dto.getMessage())
@@ -42,6 +47,11 @@ public class ChatMessageService {
         else {
             messageTime = chatMessage.getTime().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
         }
+
+        // 채팅방 마지막 메세지 시간 업데이트
+        ChatRoom chatRoom = chatRoomRepository.findById(dto.getRoomNo()).get();
+        chatRoom.updateTime();
+        chatRoomRepository.save(chatRoom);
 
        return ChatMessageGetDto.builder()
                .roomNo(chatMessage.getChatRoom().getRoomNo())

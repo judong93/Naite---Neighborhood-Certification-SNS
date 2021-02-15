@@ -26,7 +26,9 @@ public class ChatRoomService {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    // 다른 유저와 채팅하기 누를 시
+    /**
+     * 채팅방 개설
+     */
     public ChatRoom makeNewRoom(Integer userNo, String otherNick) {
 
         Optional<User> other = userRepository.findByUserNick(otherNick);
@@ -46,12 +48,16 @@ public class ChatRoomService {
         return newRoom;
     }
 
+    /**
+     * 채팅방 목록 조회
+     */
     public List<ChatRoomGetDto> getRooms(Integer userNo) {
         List<Integer> roomIds = chatRoomJoinService.getRoomIdsByUserNo(userNo);
+        List<Integer> sortedRoomIds = chatRoomRepository.getSortedRoomIds(roomIds);
         List<ChatRoomGetDto> result = new ArrayList<>();
 
-        for (int i = 0; i < roomIds.size(); i++) {
-            int roomId = roomIds.get(i);
+        for (int i = 0; i < sortedRoomIds.size(); i++) {
+            int roomId = sortedRoomIds.get(i);
             int otherUserNo = 0; // 상대방 유저 넘버
 
             Optional<ChatRoom> chatRoom = chatRoomRepository.findById(roomId);
@@ -90,6 +96,9 @@ public class ChatRoomService {
         return result;
     }
 
+    /**
+     * 채팅방 상세 조회 (메세지 조회)
+     */
     public List<ChatMessageGetDto> getMessages(Integer roomNo, Integer userNo) {
         List<ChatMessage> messages = chatMessageService.getMessages(roomNo);
         List<ChatMessageGetDto> result = new ArrayList<>();
@@ -143,13 +152,13 @@ public class ChatRoomService {
         return result;
     }
 
+    /**
+     * 마지막 메세지 가져오기
+     */
     public ChatMessage getLastMessage(Integer roomNo) {
         List<ChatMessage> messages = chatMessageService.getMessages(roomNo);
         if (messages.size() == 0) return null;
         else return messages.get(messages.size()-1);
     }
 
-    public ChatRoom findByRoomNo(Integer roomNo) {
-        return chatRoomRepository.findById(roomNo).get();
-    }
 }
