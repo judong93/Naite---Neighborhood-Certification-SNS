@@ -300,6 +300,18 @@ public class UserController {
         }
     }
 
+    @PutMapping("/profile/nick/{newNick}")
+    @ApiOperation(value = "닉네임 변경")
+    public Response updateUserNick(@ApiParam(value = "변경 할 새로운 닉네임") @PathVariable String newNick, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        try {
+            userService.updateUserNick(userNo, newNick);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+        return new Response("success", "닉네임이 성공적으로 변경되었습니다.", null);
+    }
+
 
     public int getUserNo(HttpServletRequest req) {
         Map<String, Object> resultMap = new HashMap<>();
