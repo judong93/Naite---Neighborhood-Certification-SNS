@@ -88,6 +88,7 @@ public class ReviewDto {
         private String boardCreatedAt;
         private int boardCommentCnt;
         private List<String> files = new ArrayList<String>();
+        private String userPic;
 
         public ReviewResponseDto(Review review) {
             this.reviewNo = review.getReviewNo();

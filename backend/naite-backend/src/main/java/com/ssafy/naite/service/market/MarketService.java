@@ -62,7 +62,9 @@ public class MarketService {
                 .sorted(comp)
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
-                    marketResponseDto.setUserNick(userRepository.findById(marketResponseDto.getBoard().getUserNo()).get().getUserNick());
+                    User user = userRepository.findById(marketResponseDto.getBoard().getUserNo()).get();
+                    marketResponseDto.setUserNick(user.getUserNick());
+                    marketResponseDto.setUserPic(user.getUserPic());
                     marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     marketResponseDto.setFiles(pictureRepository.findPicByBoardNo(marketResponseDto.getBoard().getBoardNo()));
                     return marketResponseDto;
@@ -84,7 +86,9 @@ public class MarketService {
                 .sorted(comp)
                 .map(MarketDto.MarketResponseDto::new)
                 .map(marketResponseDto -> {
-                    marketResponseDto.setUserNick(userRepository.findById(marketResponseDto.getBoard().getUserNo()).get().getUserNick());
+                    User user = userRepository.findById(marketResponseDto.getBoard().getUserNo()).get();
+                    marketResponseDto.setUserNick(user.getUserNick());
+                    marketResponseDto.setUserPic(user.getUserPic());
                     marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     marketResponseDto.setFiles(pictureRepository.findPicByBoardNo(marketResponseDto.getBoard().getBoardNo()));
                     return marketResponseDto;
@@ -99,7 +103,9 @@ public class MarketService {
     public MarketDto.MarketResponseDto findMarketById(int marketNo) {
         Market market = marketRepository.findById(marketNo).orElseThrow(() -> new IllegalAccessError("[market_no=" + marketNo + "] 해당 게시글이 존재하지 않습니다."));
         MarketDto.MarketResponseDto marketResponseDto = new MarketDto.MarketResponseDto(market);
-        marketResponseDto.setUserNick(userRepository.findById(marketResponseDto.getBoard().getUserNo()).get().getUserNick());
+        User user = userRepository.findById(marketResponseDto.getBoard().getUserNo()).get();
+        marketResponseDto.setUserNick(user.getUserNick());
+        marketResponseDto.setUserPic(user.getUserPic());
 
         List<BoardDto.LikeResponseDto> likeResponseDtoList = likeRepository.findAll().stream().filter(boardLike -> boardLike.getBoardNo() == marketResponseDto.getBoard().getBoardNo()).map(BoardDto.LikeResponseDto::new).collect(Collectors.toList());
         List<String> likeUserList = new ArrayList<String>();
