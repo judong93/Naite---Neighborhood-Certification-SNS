@@ -1,6 +1,5 @@
 <template>
   <div id="profile-settings">
-    <Navbar />
     <SettingBox 
     :formIsOpen='formIsOpen' :formTitle='formTitle' />
     <p class="setting-title">프로필 세팅</p>
@@ -17,6 +16,7 @@
           <button @click="closeNickInput" v-show="isNickInputOpen===true">취소</button>
         </form>
       </div>
+      <p><span @click="openProfileImgChangingForm">프로필 이미지 변경하기</span> </p>
       <p><span @click="openPwChangingForm">비밀번호 재설정하기</span> </p>
       <p><span @click="openLocationChangingForm">동네 재설정하기</span> </p>
       <p class="delete-account" @click="deleteAccount"><span>회원탈퇴</span></p>
@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import Navbar from '@/components/Basic/Navbar'
 import SettingBox from '@/components/Profile/SettingBox'
 import jwt_decode from 'jwt-decode'
 import axios from 'axios'
@@ -47,7 +46,6 @@ export default {
     }
   },
   components: { 
-    Navbar,
     SettingBox
   },
   methods: {
@@ -83,6 +81,10 @@ export default {
       this.formIsOpen = !this.formIsOpen
       this.formTitle = '비밀번호 재설정'
       console.log(this.formIsOpen)
+    },
+    openProfileImgChangingForm: function () {
+      this.formIsOpen = !this.formIsOpen
+      this.formTitle = '프로필 이미지 변경'
     },
     openLocationChangingForm: function () {
       this.formIsOpen = !this.formIsOpen
@@ -135,7 +137,7 @@ export default {
 .setting-title {
   position: relative;
   font-size: 40px;
-  margin-top: 10%;
+  margin-top: 9%;
 }
 .settings-content {
   display: flex;
@@ -191,7 +193,7 @@ export default {
     height: 100vh;
   }
   .setting-title {
-    margin-top: 30%;
+    margin-top: 20%;
   }
   .settings-content {
     width: 80%;
