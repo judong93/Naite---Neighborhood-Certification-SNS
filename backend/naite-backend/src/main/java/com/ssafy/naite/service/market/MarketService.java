@@ -392,4 +392,28 @@ public class MarketService {
         return "success";
     }
 
+    /**
+     * 구매자, 판매자 서로의 평가 조회
+     */
+    public MarketDto.EvalsResponseDto getEvals(int marketNo) throws Exception{
+        Market market = marketRepository.findById(marketNo).orElseThrow(() -> new IllegalAccessError("[marketNo=" + marketNo + "] 해당 마켓글이 존재하지 않습니다."));
+        Evaluation evalByBuyer = evaluationRepository.findByMarketAndEvalIsSeller(market, 0);
+        Evaluation evalBySeller = evaluationRepository.findByMarketAndEvalIsSeller(market, 1);
+
+
+        if (evalBySeller == null)
+            throw new Exception("판매자의 평가가 이루어지지 않았습니다.");
+        if (evalByBuyer == null)
+            throw new Exception("구매자의 평가가 이루어지지 않았습니다.");
+
+        return MarketDto.EvalsResponseDto.builder()
+                .buyerScore(evalBySeller.getEvalScore())
+                .buyerComment(evalBySeller.getEvalComment())
+                .sellerScore(evalByBuyer.getEvalScore())
+                .sellerComment(evalByBuyer.getEvalComment())
+                .build();
+    }
+
+
+
 }

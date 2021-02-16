@@ -170,6 +170,21 @@ public class MarketController {
         return new ResponseEntity<String>("구매자의 판매자 평가 성공", HttpStatus.CREATED);
     }
 
+    /**
+     * 판매자, 구매자 서로의 평가 조회
+     */
+    @GetMapping("/eval/{marketNo}")
+    @ApiOperation(value = "구매자, 판매자 서로의 평가들을 조회")
+    public Response getEvals(@PathVariable int marketNo) {
+        MarketDto.EvalsResponseDto dto;
+        try {
+            dto = marketService.getEvals(marketNo);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+        return new Response("success", "평가 조회 성공", dto);
+    }
+
     public int getUserNo(HttpServletRequest req) {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.putAll(jwtService.get(req.getHeader("auth-token")));

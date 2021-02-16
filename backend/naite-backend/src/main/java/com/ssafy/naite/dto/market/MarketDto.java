@@ -165,4 +165,24 @@ public class MarketDto {
         private int evalScore;
         private String evalComment;
     }
+
+    /**
+     * get evaluations dto
+     */
+    @Getter
+    @Setter
+    public static class EvalsResponseDto {
+        private int sellerScore;
+        private String sellerComment;
+        private int buyerScore;
+        private String buyerComment;
+
+        @Builder
+        public EvalsResponseDto(int sellerScore, String sellerComment, int buyerScore, String buyerComment) {
+            this.sellerScore = sellerScore;
+            this.sellerComment = sellerComment;
+            this.buyerScore = buyerScore;
+            this.buyerComment = buyerComment;
+        }
+    }
 }
