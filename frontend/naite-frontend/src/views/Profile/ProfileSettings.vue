@@ -135,8 +135,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 1918px;
-  height: 935px;
+  width: 1920px;
+  height: 969px;
   overflow:hidden;
   background-color: rgb(250, 246, 240);
   font-family: font1;

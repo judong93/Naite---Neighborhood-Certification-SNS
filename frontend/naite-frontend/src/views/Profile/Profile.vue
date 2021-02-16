@@ -31,7 +31,7 @@
           <div class="profile-card-container">
             <div v-for="(card,idx) in userPosting" :key="idx" class="profile-card">
               <button @click="evalBuyer(card.marketNo, card.isSeller)" v-if="card.isSeller===0 && card.evalIsCompleted===0" class="eval-btn">평가를 부탁드려요!</button>
-              <img @click="toBoardDetail(card.boardNo, card.marketNo, card.bigCategoryNo)" :src="card.files ? card.files[0]: replacedImgSrc" class="posting-img">
+              <img @click="toBoardDetail(card.boardNo, card.marketNo, card.bigCategoryNo)" :src="card.files.length>0 ? card.files[0]: require('../../assets/이미지없을시.jpg')" class="posting-img">
               <div class="img-cover"></div>
               <div @click="toBoardDetail(card.boardNo, card.marketNo, card.bigCategoryNo)" class="card-title">
                 {{ card.boardTitle }}
@@ -41,9 +41,9 @@
               </div>
               <div class="card-category">{{ bigCategory[card.bigCategoryNo] }}게시글</div>
               <button v-if="activityCheckNum===1 && userNo===loginedUserNo" @click="deletePosting(card.boardNo)" class="profile-card-button cdb">삭제하기</button>
-              <div v-if="card.marketIsCompleted===0" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo)" 
+              <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===0" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo)" 
               class="profile-card-button market-not-completed"> <span>모집중</span> </div>
-              <div v-if="card.marketIsCompleted===1" 
+              <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===1" 
               class="profile-card-button market-is-completed"> <span>거래완료</span> </div>
             </div>
           </div>
@@ -319,8 +319,8 @@ export default {
 <style scoped>
 #profile {
   position:relative;
-  width: 1918px;
-  height: 935px;
+  width: 1920px;
+  height: 969px;
   overflow:hidden;
   background-color: rgb(250, 246, 240);
   font-family: font1;
@@ -445,7 +445,7 @@ hr {
 }
 .carouselactive {
   opacity: 1;
-  z-index: 1;
+  z-index: 0;
   transform: none;
 }
 .profile-card-container {
