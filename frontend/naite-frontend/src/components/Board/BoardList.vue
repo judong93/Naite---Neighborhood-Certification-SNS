@@ -27,8 +27,9 @@
                                     <div v-else>{{list.userNick}}님이 {{categoryName[list.bigCategoryNo]}}에 남긴 글</div>
                                 </div>
                                 <div>
+                                    
                                     <i class="far fa-images"></i>
-                                    <!-- {{list.boardPic.length}} -->
+                                    {{list.files.length}}
                                     <i class="far fa-thumbs-up"></i>
                                     {{list.boardLikeCnt}}&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="far fa-comment-dots"></i>

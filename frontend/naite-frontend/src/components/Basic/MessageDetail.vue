@@ -1,49 +1,58 @@
 <template>
-    <div id='messagedetail'>        
-        <div class="messageDetailTitle">
-                <i class="fas fa-arrow-left" @click='backtosecondstate'></i>
-                <h3>{{otherNick}}님과의 채팅방</h3>
-        </div>         
-        <div style='margin-top:6%'></div>
-        <div class="chatList" v-for='(chat,idx) in chatDetail' :key='idx'  @change="scrolltobottom">
-            <div class='otherMessage' v-if='chat.userNick !== myNick'>                
-                <img src="../../assets/cha2.png" v-if='(chatDetail[idx-1]&&chatDetail[idx-1].userPic !== chat.userPic) || !chatDetail[idx-1] || chatDetail[idx-1]&&chatDetail[idx-1].time !== chat.time'>
-                <div style = 'width: 70px;' v-else></div>
-                <div class='messageInfo'>
-                    <span v-if='(chatDetail[idx-1]&&chatDetail[idx-1].userPic !== chat.userPic) || !chatDetail[idx-1]||chatDetail[idx-1]&&chatDetail[idx-1].time!==chat.time' >{{chat.userNick}}</span>
-                    <div style='margin:-20px' v-else></div>
-                    <br>
-                    <div>
-                        <div class='messageContent'>{{chat.message}}</div>
-                        <div v-if='(chatDetail[idx+1]&&chatDetail[idx+1].time!==chat.time &&chat.userNick===chatDetail[idx+1].userNick) || !chatDetail[idx+1] || (chatDetail[idx+1] && chatDetail[idx+1].userNick !== chat.userNick)'>{{chat.time}}</div>
+    <div id="messagedetail">
+        <header>
+            <i class="fas fa-arrow-left" @click='backtosecondstate'></i>
+            <h3>{{otherNick}}님과의 채팅방</h3>
+        </header>
+
+        <body>
+            <div>
+                <div v-for='(chat,idx) in chatDetail' :key='idx'>
+                    <div v-if='chat.userNick !== myNick' class='otherChat'>
+                        <div>
+                            <div style='border-radius:30%;display:block;overflow:hidden;width:50px;margin-right:10px;'>
+                                <img :src="chat.userPic" alt="" width='50px' v-if='idx===0 || chatDetail[idx-1].userNick !==chat.userNick&& chatDetail[idx-1].time !==chat.time ||chatDetail[idx-1].userNick !==chat.userNick'>
+                            </div>
+                        </div>
+                        <div class='otherChatmsg'>
+                            <header v-if='idx===0 || chatDetail[idx-1].userNick !==chat.userNick&& chatDetail[idx-1].time !==chat.time||chatDetail[idx-1].userNick !==chat.userNick'>
+                                {{chat.userNick}}
+                            </header>
+                            <div>
+                                <body>
+                                    <div>
+                                        {{chat.message}}
+                                    </div>
+                                </body>
+                                <footer v-if='!idx|| chatDetail[idx+1]&&chatDetail[idx+1].userNick!==chat.userNick||!chatDetail[idx+1]'>
+                                    {{chat.time}}
+                                </footer>
+                            </div>
+                        </div>
+
+
                     </div>
+                    <div v-else class='myChat'>
+                        <body >
+                            {{chat.message}}
+                        </body>
+                        <footer  v-if='!idx|| chatDetail[idx+1]&&chatDetail[idx+1].userNick!==chat.userNick||!chatDetail[idx+1]'>
+                            {{chat.time}}
+                        </footer>
+                    </div>
+
                 </div>
 
             </div>
 
+        </body>
+        <footer>
+            <input type="text" class='chatInput' v-model='myMessage' @keypress.enter="sendMessage()">
+            <button @click='sendMessage()'><i class="fas fa-paper-plane"></i> 전송</button>
+        </footer>
 
-            <div class="myMessage" v-else>
-                
-
-                <div class='mymessageInfo'>
-                    <span v-if='(chatDetail[idx-1]&&chatDetail[idx-1].userPic !== chat.userPic) || !chatDetail[idx-1]||chatDetail[idx-1]&&chatDetail[idx-1].time!==chat.time' >{{chat.userNick}}</span>
-                    <div style='margin:-10px' v-else></div>
-                    <br>
-                    <div>
-                        <div v-if='(chatDetail[idx+1]&&chatDetail[idx+1].time!==chat.time &&chat.userNick===chatDetail[idx+1].userNick) || !chatDetail[idx+1] || (chatDetail[idx+1] && chatDetail[idx+1].userNick !== chat.userNick)' class='myTime'>{{chat.time}}</div>
-                        <div class='mymessageContent'>{{chat.message}}</div>
-                    </div>
-                </div>
-
-                <img src="../../assets/naitelogo.png" v-if='(chatDetail[idx-1]&&chatDetail[idx-1].userPic !== chat.userPic) || !chatDetail[idx-1] || chatDetail[idx-1]&&chatDetail[idx-1].time !== chat.time'>
-                <div style = 'width: 70px;' v-else></div>
-            </div>
-        </div>
-
-        <input type="text" class='chatInput' v-model='myMessage' @keypress.enter="sendMessage()">
-        <button @click='sendMessage()'>메시지 전송</button>
-        <div class='messageLoading'>
-            <div class="spinner-border text-white" role="status">
+        <div class='MessageLoading'>
+            <div class="spinner-border text-primary" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
             <vue-typer class='typerConnecting'
@@ -60,9 +69,9 @@
                 caret-animation='solid'
             >
             </vue-typer>
-            
         </div>
     </div>
+
 </template>
 <script>
 import axios from 'axios'
@@ -189,7 +198,7 @@ export default {
             })
             setTimeout(() => {
                 this.scrollDown()
-                const loading = document.querySelector('.messageLoading')
+                const loading = document.querySelector('.MessageLoading')
                 loading.style.display='none'
             }, 2200);
             
@@ -201,7 +210,7 @@ export default {
             this.myPic = decoder.user.userPic
         },
         scrollDown:function(){
-            const chattingRoom = document.getElementById('messagedetail')
+            const chattingRoom = document.querySelector('#messagedetail>body>div')
             chattingRoom.scrollTop = chattingRoom.scrollHeight  
         }
         
@@ -228,166 +237,145 @@ export default {
 </script>
 <style>
 #messagedetail{
-    position: relative;
+        display:block;
+        width:100%;
+        max-height:100%;
+        font-family: font1;
+    }
+#messagedetail > header {
+    position:relative;
+    display:flex;
+    padding:2% 1%;
+    width:100%;
+    background-color: #a87a4ffa;
+    color:white;        
+}
+#messagedetail>header>i{
+    margin:0 3%;
+    padding:0.5% 0;
+    font-size: 24px;
+}
+#messagedetail>body{
+    position:relative;
+}
+#messagedetail>body>div{
+    position:relative;
+    background-color: rgb(241, 236, 183);
+    width:100%;
+    height:50vh;
+    overflow: auto;
+    padding:10px;
+}
+#messagedetail>body>div>div {
+    margin-bottom: 10px;
+}
+
+.otherChat {
+    display:flex;
+}
+.otherChatmsg {
+    font-family: font1;
+}
+
+.otherChatmsg>header {
+    font-size: 12px;
+}
+.otherChatmsg>div>body {
+    background-color: rgba(70, 226, 70, 0.534);
+    font-family: font1;
+    border-radius: 10px;
+    margin-right: 1%; 
+    width:100%;
+    padding-right: 10px;
+}
+.otherChatmsg>div>body>div{
+    padding:10px 10px;
+    font-size: 14px;
+    width:120%;
+    max-width: 700px;
+    white-space: normal;
+}
+
+.otherChatmsg>div {
+    display:flex;
+    align-items: flex-end;
+    
+}
+.otherChatmsg>div>footer {
+    font-size: 5px;
+    white-space: nowrap;
+}
+
+
+.myChat {
+    display:flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items:flex-end;
+}
+.myChat>body {
+    padding:10px 15px;
+    font-size: 14px;
+    background-color: #a87a4fbe;
+    font-family: font1;
+    border-radius: 10px;        
+    margin-left: 1%;
+    min-width: 50px;
+    width:fit-content;
+    max-width: 700px;
+    white-space: normal;
+    text-align: left;
+}
+
+.myChat>footer {
+    font-size: 5px;
+    white-space: nowrap;
+}
+
+
+#messagedetail > footer {
+    position:relative;
+    width:100%;
+    height: 100%;
+    background-color: white;
+}
+.chatInput {
+    position:relative;
+    width:90%;
+    height:100%;
+    border:none;
+    outline: none;
+    padding:1.5%; 
+    border-radius: 10px;   
+    background-color: white;
+    border: 1px solid black;
+}
+.chatInput +button {
+    width:10%;
+    border:none;padding:1.5%; 
+    outline: none;
+    background-color: #a87a4fbe;
+    color:white;
+    border-radius: 10px;
+}
+
+
+
+
+
+.MessageLoading {
+    position:fixed;
+    top:0%;
     width:100%;
     height:100%;
-    background-color: rgb(214, 213, 213);
-    color:black;
-    font-family: font1;
-    overflow: auto;
-    padding-bottom: 3%;
+    background-color: rgba(211, 211, 211, 0.521);
 }
-
-.messageDetailTitle{
+.MessageLoading>.spinner-border{
     position:fixed;
-    background-color: #3F9F47;
-    display:flex;
-    text-align: left;
-    padding: 1%;
-    width:100%;
-    box-shadow: 0 0 5px 0 black;
-    margin-bottom: 2%;
-    color:white;
-    
+    top:48%;
+    left:49%;
     
 }
-.messageDetailTitle > i {
-    font-size: 30px;
-    
-    margin-right: 2%;
-}
-
-.chatInput {
-    position:fixed;
-    bottom:-8%;
-    height: 8%;
-    width: 90%;
-    left:0;
-    text-align: right;
-    padding:1%;
-    border-radius: 1%;
-    /* border:1px solid black; */
-    border:none;
-    outline: none;
-    box-shadow: 0 0 5px 0 black;
-}
-
-.chatInput+button {
-    position:fixed;
-    bottom:-8%;
-    height: 8%;
-    width: 10%;
-    right:0%;
-    border:none;
-    outline: none;
-    background-color: #A87A4F;
-    color:white;
-    box-shadow: 0 0 5px 0 black;
-    
-}
-.chatList {
-    /* height:10%; */
-}
-
-.chatList > .otherMessage >img {
-    width: 60px;
-    height: 60px;
-    border-radius: 100%;
-    border: 1px rgb(187, 187, 187) solid;
-    margin-right: 10px;
-
-}
-
-.otherMessage {
-    display:flex;
-    padding: 1%;
-    text-align: left;
-}
-
-
-
-.messageContent{
-    background-color: rgb(241, 234, 234);
-    border-radius: 5px;
-    padding:1% 1% 1% 3%;
-    width: 120%;
-
-}
-
-
-.messageInfo {
-    max-width: 40%;    
-}
-
-.messageInfo > div {
-    display:flex;
-    width:120%;
-    align-items: flex-end;
-
-}
-
-.messageContent + div {
-    white-space: nowrap;
-    font-size: 5px;
-    margin: 0 10px;
-}
-
-.myMessage {
-    padding-right: 1%;
-    display:flex;
-    justify-content: flex-end;
-    width:100%;
-}
-.myMessage > img {
-    width: 60px;
-    height:60px;
-    overflow: hidden;
-    border-radius: 100%;
-    margin-left: 10px;
-    
-}
-
-.mymessageInfo {
-    text-align: right;
-    margin-right: 5px;    
-    max-width:40%;
-}
-
-.mymessageInfo > div {
-    display:flex;
-    align-items: flex-end;
-   
-    
-}
-.mymessageContent{
-    background-color: rgb(241, 234, 234);
-    border-radius: 5px;    
-    text-align: left;
-    padding:1% 0;    
-    /* width: %;     */
-
-}
-
-.myTime {
-    font-size: 5px;
-    white-space: nowrap;
-    margin-right: 10px;
-}
-
-.messageLoading{
-    position:fixed;
-    background-color: rgba(0, 0, 0, 0.384);
-    top:0;
-    width: 100%;
-    height:108%;
-}
-
-.messageLoading > div {
-    position:absolute;
-    top:50%;
-    left:48.5%;    
-}
-
 .typerConnecting {
     color:white;
     position:absolute;
@@ -396,16 +384,8 @@ export default {
     transform:translateX(-50%)
 }
 
-.vue-typer .custom.char{
-    color:white;
-}
 
-.vue-typer .custom.caret.selecting{
-    display: inline-block;
-    background-color: black;
-}
+    
 
-.vue-typer .custom.char.selected {
-  background-color: white;
-}
+
 </style>

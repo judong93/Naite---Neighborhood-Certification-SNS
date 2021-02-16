@@ -70,7 +70,7 @@ export default {
             params:{
                 "bigCategoryNo": "",
                 "boardContent": "",
-                "boardPic": "test",
+                "boardPic": "",
                 "boardTitle": "",
                 "openFlag": 0,
                 "unknownFlag": 0,
@@ -79,26 +79,28 @@ export default {
             reviewStar:0,
             contentExplain:'',
             marketCost:'',
-            formImages:'',
+            formImages:[],
             formImagesName:'',
         }
     },
     methods:{
         saveFile:function(e){
             var files = e.target.files || e.dataTransfer.files;
+            this.formImagesName = ''
             if (!files.length) {
                 this.formImages = ''
-                this.formImagesName = ''
+                
                 return;
             }
-            this.formImages = files            
+            this.formImages = files
             this.formImagesName += '선택된 사진:'
             for (let i=0;i<files.length;i++){
                 this.formImagesName += files[i].name
                 this.formImagesName += ', '
             }
-            console.log(this.formImagesName)
-            console.log(this.formImages)
+            console.log(this.formImages,this.formImagesName)
+            
+            
         },
         createForm:function(){
             const unKnown = document.querySelector('.postingFooter input')
@@ -123,7 +125,8 @@ export default {
                 alert('평점을 선택해주세요!')
             } else if (this.params.bigCategoryNo==='5' && this.smallCategoryNo && !this.marketCost){
                 alert('가격을 입력해주세요')
-            } else {
+            } 
+            else {
                 this.$emit('createForm',this.params,this.smallCategoryNo,this.reviewStar,this.marketCost,this.formImages)
             }
         },

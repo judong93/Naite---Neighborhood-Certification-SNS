@@ -1,7 +1,7 @@
 <template>
     <div id="boarddetail">
         <BoardListDetail :apiData='apiData' :boardNo='boardNo' :updateCommentCntCheck='updateCommentCntCheck' @sendMessageDirect='sendMessageDirect' />
-        <BoardComment :bigCategoryNo='bigCategoryNo' @updateCommentCnt='updateCommentCnt' />
+        <BoardComment :bigCategoryNo='bigCategoryNo' @updateCommentCnt='updateCommentCnt' @sendMessageDirect='sendMessageDirect'  />
     </div>
     
 </template>
@@ -33,10 +33,15 @@ export default {
     },
     methods:{
         updateCommentCnt:function(){
+            
             this.updateCommentCntCheck+=1
         },
         sendMessageDirect:function(roomNo,userNick){
-            this.$emit('sendMessageDirect',roomNo,userNick)
+            if (screen.width < 501) {
+                this.$router.push({name:'MobileMessage',params:{'roomNo':roomNo,'otherNick':userNick}})
+            } else {
+                this.$emit('sendMessageDirect',roomNo,userNick)
+            }
         }
         
     },
@@ -79,6 +84,7 @@ export default {
     #boarddetail {
         width: 100vw;
         height:100vh;
+        overflow-x: hidden;
     }
     
 }

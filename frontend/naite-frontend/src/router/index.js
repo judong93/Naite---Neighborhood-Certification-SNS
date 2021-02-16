@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Sign from '@/views/Sign/Sign'
+import Search from '@/components/Basic/Search'
 import MainBoard from '@/views/Board/MainBoard'
 import Board from '@/views/Board/Board'
 import BoardDetail from '@/views/Board/BoardDetail'
@@ -22,6 +23,11 @@ const routes = [
     path:'/sign',
     name: 'Sign',
     component: Sign,
+  },
+  {
+    path:'/search',
+    name: 'Search',
+    component: Search,
   },
   {
     path:'/mainboard',
@@ -84,7 +90,7 @@ const routes = [
     component: ProfileSettings,
   },
   {
-    path:'/mobileMessage',
+    path:'/mobileMessage/:roomNo?/:otherNick?',
     name: 'MobileMessage',
     component:MobileMessage,
   }

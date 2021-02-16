@@ -3,7 +3,7 @@
         <div class='detailInfo'>
             <div class="detailHead">
                 <div class="detailUser">
-                    <img src="../../assets/cha2.png">
+                    <img :src="apiData.userPic">
                 </div>
                 <div>
                     <div class="detailTitle">{{apiData.boardTitle}}</div>
@@ -49,30 +49,27 @@
             <hr style='background-color:white;margin:10px;'>
             
             <div class="detailBody" v-if='!update' v-html='apiData.boardContent'>
-                <!-- 보드의 내용물보이는 부분 -->
+                <!-- 보드의 내용물보이는 부분 -->               
             </div>
             <div class="detailBody" v-else>
-                <textarea name="" id="" cols="87" rows="18" v-model='updateContent'></textarea>
-                
+                <textarea name="" id="" cols="120" rows="18" v-model='updateContent'></textarea>
             </div>
+            
             <div class="detailFooter">
                 <button v-if='update' @click = 'updateBoard'>수정취소</button>
                 <button v-if='update' @click = 'completeUpdate'>수정하기</button>
             </div>
-        </div>
-        <div class='detailImg' v-if='apiData.boardPic'>
-        <!-- <div class='detailImg'> -->
-            <img src="https://i4a402.p.ssafy.io/img/signpast.fbb26c75.jpg" alt="" width='100%'>
-        </div>
-
-
+        </div>  
+        <br>
+        <BoardDetailImg :boardImg = 'apiData.files' v-if='apiData.files' />
+       
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
-
+import BoardDetailImg from '@/components/Board/BoardDetailImg'
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 // const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
@@ -85,6 +82,9 @@ export default {
         apiData:Object,
         boardNo:[String,Number],
         updateCommentCntCheck:Number,
+    },
+    components:{
+        BoardDetailImg,
     },
     data:function(){
         return {
@@ -105,8 +105,11 @@ export default {
             }
             axios.post(`${SERVER_URL}/report/insert`,params,this.setToken())
                 .then(res=>{
-                    res
-                    alert(`${this.apiData.boardTitle}에 대한 신고가 접수되었습니다`)
+                    if (res.data.response ==='error'){
+                        alert(res.data.message)
+                    } else {
+                        alert(`${this.apiData.boardTitle} 글에 대한 신고가 접수되었습니다`)
+                    }
                 })
                 .catch(err=>{
                     console.log(err)
@@ -206,24 +209,13 @@ export default {
                 if (this.apiData.usersWithLike[i] === decode.user.userNick) {
                     this.liked = true                
                 }
-            }
-            const img = this.apiData.boardPic
-            const headBottom = document.querySelector('.detailHeadInfo')
-            const detailBar = document.querySelector('.detailBar')
+            }            
                         
-            this.apiData.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')
-            // this.apiData.boardContent.split('\n').join('<br />')
-            
-            if (!img) {
-                headBottom.style.width = '1038px'
-                detailBar.style.right ='1%'
-            } else {
-                headBottom.style.width = '740px'
-                detailBar.style.right ='28%'
-            }
+            this.apiData.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')            
+
+
         },
-        updateCommentCntCheck:function(){
-            console.log('왜안올라가누')
+        updateCommentCntCheck:function(){            
             this.apiData.boardCommentCnt += 1
         }
         
@@ -234,15 +226,17 @@ export default {
 <style>
 
 #boardlistdetail{
-    position:absolute;
+    position:relative;
     width: 60%;
-    height: 40%;
+    /* max-height: 40%; */
     background-color: #A87A4F;
     top: 13%;
     left: 20%;  
     display:flex;  
     padding:10px;
     color:white;
+    flex-wrap: wrap;
+    
 }
 
 .detailInfo {
@@ -251,6 +245,7 @@ export default {
     background-color: teal;
     font-family: font1;
     text-align: left;
+    padding-bottom: 5%;
 }
 
 
@@ -288,7 +283,7 @@ export default {
 }
 
 .detailHeadInfo{
-    width: 740px;    
+    width: 1038px;    
     margin-left: 12px;
     display: flex;
     justify-content: space-between;
@@ -309,12 +304,11 @@ export default {
 }
 
 .detailBody {
-    padding:0 10px;
-    max-height: 190px;
+    padding:0 10px;    
     overflow: auto;
     overflow-x: hidden;
     white-space: pre-wrap;
-    transition:0.3s
+    transition:0.3s; 
 }
 
 .detailBody::-webkit-scrollbar {
@@ -328,7 +322,7 @@ export default {
 .detailBar {
     position: absolute;
     top:4%;    
-    right:28%;
+    right:2%;
     cursor: pointer;
     display: flex;
     
@@ -346,26 +340,14 @@ export default {
 
 @media screen and (max-width:501px) {
     #boardlistdetail{
-        position:absolute;
-        width: 100%;
-        height: 40%;
+        position:relative;
+        width: 100%;        
         background-color: #A87A4F;
         top: 8%;
         left: 0%;          
     }
-/* 
-    .detailInfo {
-        width: 100%;
-        height: 100%;
-        background-color: teal;
-        font-family: font1;
-        text-align: left;
-    } */
-
-
     .detailImg {
         width:400px;
-        /* height: 100%; */
         background-color: white;
     }
 
@@ -375,14 +357,13 @@ export default {
         display:flex;
     }
     .detailTitle {
-        width: 80%;
-        height:48px;
+        width: 200px;
+        height:37px;
         text-align: left;
-        font-size: 30px;
+        font-size: 14px;
         overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        margin-left: 12px;
+        white-space:pre-wrap;        
+        margin-left: 12px;        
     }
     .detailUserNick {
         text-align: left;
@@ -390,40 +371,39 @@ export default {
 
 
     .detailUser > img {
-        height: 80px;
+        height: 60px;
         border: 1px solid rgb(172, 172, 172);
         border-radius: 20%;
         background-color: white;
     }
 
     .detailHeadInfo{
-        width: 740px;    
+        width: 100%;    
         margin-left: 12px;
         display: flex;
         justify-content: space-between;
         color:white;
-        font-size: 12px;
+        font-size: 10px;
         margin-top: 10px;
     }
 
 
 
 
-    .detailHeadInfo i {
-        margin: 0 5px;
-        margin-right: 10px;
+    .detailHeadInfo i {        
+        margin-right:2px;
     }
     .detailHeadInfo span{
-        margin-right: 10px;
+        margin-right: 2px;
     }
 
     .detailBody {
-        padding:0 10px;
-        max-height: 190px;
+        padding:0 10px;        
         overflow: auto;
         overflow-x: hidden;
         white-space: pre-wrap;
-        transition:0.3s
+        transition:0.3s;
+        font-size: 13px;
     }
 
     .detailBody::-webkit-scrollbar {
@@ -437,8 +417,9 @@ export default {
     .detailBar {
         position: absolute;
         top:4%;    
-        right:28%;
+        right:4%;
         cursor: pointer;
+        font-size: 12px;
         
     }
     .detailBar > span {
@@ -449,7 +430,7 @@ export default {
 
     .detailMes{
         cursor:pointer;
-        font-size: 14px;
+        font-size: 10px;
     }
 
     

@@ -1,5 +1,5 @@
 <template>
-    <div v-if='!beforeSelectPic'>
+    <div v-if='!beforeSelectPic' style='position:relative'>
         <div id='preview'>
             <img :src="image" alt="" width='150px' height="150px">  
         </div>
@@ -47,9 +47,10 @@ export default {
 
 <style>
 #mobilePreview{
-    visibility: hidden;
+    display: none;
 }
 #preview {
+    position: relative;
     width: 150px;
     height:150px;    
     border-radius: 100%;
@@ -59,8 +60,9 @@ export default {
 
 
 #mobilePreview + button {
-
+    position:relative;
     font-size: 15px;
+    top:0;
     height: 40px;
     margin-left: 170px;
     color:white;
@@ -74,24 +76,30 @@ export default {
         display: none;
     }
     #mobilePreview {
-        visibility: visible;
+        position:relative;
+        display: block;
         width: 100px;
         height:100px;
         border-radius: 100%;
         overflow: hidden;
-        margin:0 auto;
+        margin:0;
+        left:35%;
+        /* transform:translateX(-50%) */
     }
     #mobilePreview + button {
-
+        
+        position:relative;
         font-size: 15px;
         height: 5%;
-        margin-left:50%;
-        margin-top: 5%;
+        margin-left:0%;
+        margin-top: 0%;
         transform: translateX(-50%);
-        color:white;
+        color:black;
         border:none;
         border-radius: 10px;
-        background-color: rgb(212, 143, 143);
+        background-color: rgb(247, 247, 247);
+        top:50%;
+        left: 50%;
 
     }
 

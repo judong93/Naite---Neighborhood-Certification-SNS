@@ -1,46 +1,54 @@
 <template>
-    <div id='mobilemessagedetail'>        
-        <div class="mobilemessageDetailTitle">
-                <i class="fas fa-arrow-left" @click='backtosecondstate'></i>
-                <h3>{{otherNick}}님과의 채팅방</h3>
-        </div>         
-        <div style='margin-top:6%'></div>
-        <div class="mobilechatList" v-for='(chat,idx) in chatDetail' :key='idx'>
-            <div class='mobileotherMessage' v-if='chat.userNick !== myNick'>                
-                <img src="../assets/cha2.png" v-if='(chatDetail[idx-1]&&chatDetail[idx-1].userPic !== chat.userPic) || !chatDetail[idx-1] || chatDetail[idx-1]&&chatDetail[idx-1].time !== chat.time'>
-                <div style = 'width: 70px;' v-else></div>
-                <div class='mobilemessageInfo'>
-                    <span v-if='(chatDetail[idx-1]&&chatDetail[idx-1].userPic !== chat.userPic) || !chatDetail[idx-1]||chatDetail[idx-1]&&chatDetail[idx-1].time!==chat.time' >{{chat.userNick}}</span>
-                    <div style='margin:-10px' v-else></div>
-                    <br>
-                    <div>
-                        <div class='mobilemessageContent'>{{chat.message}}</div>
-                        <div v-if='(chatDetail[idx+1]&&chatDetail[idx+1].time!==chat.time &&chat.userNick===chatDetail[idx+1].userNick) || !chatDetail[idx+1] || (chatDetail[idx+1] && chatDetail[idx+1].userNick !== chat.userNick)'>{{chat.time}}</div>
+    <div id="mobilemessagedetail">
+        <header>
+            <i class="fas fa-arrow-left" @click='backtosecondstate'></i>
+            <h5>{{otherNick}}님과의 채팅방</h5>
+        </header>
+
+        <body>
+            <div>
+                <div v-for='(chat,idx) in chatDetail' :key='idx'>
+                    <div v-if='chat.userNick !== myNick' class='mobileotherChat'>
+                        <div>
+                            <div style='border-radius:30%;display:block;overflow:hidden;width:50px;margin-right:10px;'>
+                                <img :src="chat.userPic" alt="" width='50px' v-if='idx===0 || chatDetail[idx-1].userNick !==chat.userNick&& chatDetail[idx-1].time !==chat.time ||chatDetail[idx-1].userNick !==chat.userNick'>
+                            </div>
+                        </div>
+                        <div class='mobileotherChatmsg'>
+                            <header v-if='idx===0 || chatDetail[idx-1].userNick !==chat.userNick&& chatDetail[idx-1].time !==chat.time||chatDetail[idx-1].userNick !==chat.userNick'>
+                                {{chat.userNick}}
+                            </header>
+                            <div>
+                                <body>
+                                    {{chat.message}}
+                                </body>
+                                <footer v-if='!idx|| chatDetail[idx+1]&&chatDetail[idx+1].userNick!==chat.userNick||!chatDetail[idx+1]'>
+                                    {{chat.time}}
+                                </footer>
+                            </div>
+                        </div>
+
+
                     </div>
+                    <div v-else class='mobilemyChat'>
+                        <body >
+                            {{chat.message}}
+                        </body>
+                        <footer  v-if='!idx|| chatDetail[idx+1]&&chatDetail[idx+1].userNick!==chat.userNick||!chatDetail[idx+1]'>
+                            {{chat.time}}
+                        </footer>
+                    </div>
+
                 </div>
 
             </div>
 
+        </body>
+        <footer>
+            <input type="text" class='mobilechatInput' v-model='myMessage' @keypress.enter="sendMessage()">
+            <button @click='sendMessage()'><i class="fas fa-paper-plane"></i> 전송</button>
+        </footer>
 
-            <div class="mobilemyMessage" v-else>
-                
-
-                <div class='mobilemymessageInfo'>
-                    <span v-if='(chatDetail[idx-1]&&chatDetail[idx-1].userPic !== chat.userPic) || !chatDetail[idx-1]||chatDetail[idx-1]&&chatDetail[idx-1].time!==chat.time' >{{chat.userNick}}</span>
-                    <div style='margin:-10px' v-else></div>
-                    <br>
-                    <div>
-                        <div v-if='(chatDetail[idx+1]&&chatDetail[idx+1].time!==chat.time &&chat.userNick===chatDetail[idx+1].userNick) || !chatDetail[idx+1] || (chatDetail[idx+1] && chatDetail[idx+1].userNick !== chat.userNick)' class='myTime'>{{chat.time}}</div>
-                        <div class='mobilemymessageContent'>{{chat.message}}</div>
-                    </div>
-                </div>
-
-                <img src="../assets/naitelogo.png" v-if='(chatDetail[idx-1]&&chatDetail[idx-1].userPic !== chat.userPic) || !chatDetail[idx-1] || chatDetail[idx-1]&&chatDetail[idx-1].time !== chat.time'>
-                <div style = 'width: 70px;' v-else></div>
-            </div>
-
-
-        </div>
         <div class='mobileMessageLoading'>
             <div class="spinner-border text-primary" role="status">
                 <span class="sr-only">Loading...</span>
@@ -60,9 +68,13 @@
             >
             </vue-typer>
         </div>
-        <input type="text" class='mobilechatInput' v-model='myMessage' @keypress.enter="sendMessage()">
-        <button @click='sendMessage()'>전송</button>
-        
+
+
+
+
+
+
+
     </div>
 </template>
 <script>
@@ -162,7 +174,9 @@ export default {
             'userPic': recv.userPic,
             "userOwn": recv.userOwn,
             })
-            this.scrollDown()
+            setTimeout(() => {  
+                this.scrollDown()
+            }, 100);
             
 
         },
@@ -199,9 +213,9 @@ export default {
             this.myPic = decoder.user.userPic
         },
         scrollDown:function(){
-            const chattingRoom = document.getElementById('mobilemessagedetail')            
+            const chattingRoom = document.querySelector('#mobilemessagedetail>body>div')
             chattingRoom.scrollTop = chattingRoom.scrollHeight  
-            console.log(chattingRoom)
+            console.log(chattingRoom,chattingRoom.scrollTop)
         }
         
     },
@@ -237,155 +251,122 @@ export default {
 }
 @media screen and (max-width:501px) {
     #mobilemessagedetail{
-        display: block;
-        position: relative;
+        display:block;
         width:100%;
-        height:93%;
-        background-color: rgb(214, 213, 213);
-        top:0%;
-        color:black;
-        font-family: font1;
+        max-height:100%;
+    }
+    #mobilemessagedetail > header {
+        position:relative;
+        display:flex;
+        padding:2% 1%;
+        width:100%;
+        background-color: #a87a4fc4;
+        color:white;        
+    }
+    #mobilemessagedetail>header>i{
+        margin:0 3%;
+        padding:0.5% 0;
+    }
+    #mobilemessagedetail>body{
+        position:relative;
+    }
+    #mobilemessagedetail>body>div{
+        position:relative;
+        background-color: khaki;
+        width:100%;
+        height:73vh;
         overflow: auto;
-        padding-bottom: 3%;
+        padding:10px;
+    }
+    #mobilemessagedetail>body>div>div {
+        margin-bottom: 10px;
     }
 
-    .mobilemessageDetailTitle{
-        position:fixed;
-        background-color: #3F9F47;
+    .mobileotherChat {
         display:flex;
-        text-align: left;
-        padding: 1%;
-        width:100%;
-        box-shadow: 0 0 5px 0 black;
-        margin-bottom: 2%;
-        color:white;
-        
-        
     }
-    .mobilemessageDetailTitle > i {
-        font-size: 30px;
-        
-        margin-right: 2%;
+    .mobileotherChatmsg {
+        font-family: font1;
     }
-
-    .mobilechatInput {
-        position:fixed;
-        background-color:#A87A4F;
-        bottom:7%;
-        height: 6.5%;
-        width: 80%;
-        left:0;
-        text-align: right;
-        padding:1%;
-        border-radius: 1%;
-        /* border:1px solid black; */
-        border:none;
-        outline: none;
-        box-shadow: 0 0 5px 0 black;
-        color:white;
-    }
-
-    .mobilechatInput+button {
-        position:fixed;
-        bottom:7%;
-        height: 6.5%;
-        width: 20%;
-        right:0%;
-        border:none;
-        outline: none;
-        background-color: #A87A4F;
-        color:white;
-        box-shadow: 0 0 5px 0 black;
-        
-    }
-    .mobilechatList {
-        /* height:10%; */
-    }
-
-    .mobilechatList > .mobileotherMessage >img {
-        width: 60px;
-        height: 60px;
-        border-radius: 100%;
-        border: 1px rgb(187, 187, 187) solid;
-        margin-right: 10px;
-
-    }
-
-    .mobileotherMessage {
-        display:flex;
-        padding: 1%;
-        text-align: left;
-    }
-
-
-
-    .mobilemessageContent{
-        background-color: rgb(241, 234, 234);
-        border-radius: 5px;
-        padding:1% 1% 1% 3%;
-        width: 120%;
-
-    }
-
-
-    .mobilemessageInfo {
-        max-width: 40%;    
-    }
-
-    .mobilemessageInfo > div {
-        display:flex;
-        width:120%;
-        align-items: flex-end;
-
-    }
-
-    .mobilemessageContent + div {
-        white-space: nowrap;
-        font-size: 5px;
-        margin: 0 10px;
-    }
-
-    .mobilemyMessage {
-        padding-right: 1%;
-        display:flex;
-        justify-content: flex-end;
-        width:100%;
-    }
-    .mobilemyMessage > img {
-        width: 60px;
-        height:60px;
-        overflow: hidden;
-        border-radius: 100%;
-        margin-left: 10px;
-        
-    }
-
-    .mobilemymessageInfo {
-        text-align: right;
-        margin-right: 5px;    
-        max-width:40%;
-    }
-
-    .mobilemymessageInfo > div {
-        display:flex;
-        align-items: flex-end;
     
+    .mobileotherChatmsg>header {
+        font-size: 12px;
+    }
+    .mobileotherChatmsg>div>body {
+        padding:2% 0 2% 3%;
+        font-size: 14px;
+        background-color: rgba(70, 226, 70, 0.534);
+        font-family: font1;
+        border-radius: 10px;
+        margin-right: 1%;
+        min-width: 40px;
+        width:fit-content;
+        max-width: 200px;
+        white-space: normal;
+
+    }
+    .mobileotherChatmsg>div {
+        display:flex;
+        align-items: flex-end;
         
     }
-    .mobilemymessageContent{
-        background-color: rgb(241, 234, 234);
-        border-radius: 5px;    
-        text-align: left;
-        padding:1% 0;    
-        /* width: %;     */
-
-    }
-
-    .mobilemyTime {
+    .mobileotherChatmsg>div>footer {
         font-size: 5px;
         white-space: nowrap;
-        margin-right: 10px;
     }
+
+
+    .mobilemyChat {
+        display:flex;
+        flex-direction: row-reverse;
+        justify-content: flex-start;
+        align-items:flex-end;
+    }
+    .mobilemyChat>body {
+        padding:2% 3%;
+        font-size: 14px;
+        background-color: #a87a4fbe;
+        font-family: font1;
+        border-radius: 10px;        
+        margin-left: 1%;
+        min-width: 40px;
+        width:fit-content;
+        max-width: 200px;
+        white-space: normal;
+        text-align: left;
+    }
+    
+    .mobilemyChat>footer {
+        font-size: 5px;
+        white-space: nowrap;
+    }
+
+
+    #mobilemessagedetail > footer {
+        position:relative;
+        width:100%;
+        height: 100%;
+    }
+    .mobilechatInput {
+        position:relative;
+        width:80%;
+        height:100%;
+        border:none;
+        outline: none;
+        padding-top: 3%;
+    }
+    .mobilechatInput +button {
+        width:20%;
+        border:none;
+        outline: none;
+        background-color: #a87a4fbe;
+        color:white;
+        border-radius: 10px;
+    }
+
+
+
+
 
     .mobileMessageLoading {
         position:fixed;
@@ -394,12 +375,13 @@ export default {
         height:100%;
         background-color: rgba(211, 211, 211, 0.521);
     }
-    .spinner-border{
+    .mobileMessageLoading>.spinner-border{
         position:fixed;
         top:45%;
         left:45%;
         
     }
+
 
     
 }

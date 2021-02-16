@@ -6,13 +6,13 @@
                 <h4>채팅</h4>            
             </div>
             <div class='mobilemessageList' v-for='(message,idx) in myChatList' :key="idx">
-                <div class="mobilemessageListBox" @click='messageDetail(message.roomNo,message.otherNick)'>
-                    <img src="../assets/cha2.png" alt="">
+                <div class="mobilemessageListBox" @click='messageDetail(message.roomNo,message.otherNick)'>                    
+                    <img :src='message.otherPic' alt="">
                     <div>
                         <span>{{message.otherNick}}</span><br>
                         <div class='mobilemessageListList'>
 
-                            <div>{{message.lastMessage}}</div>
+                            <div>{{message.lastMessage ? message.lastMessage: `${message.otherNick}님과의 채팅방이 개설되었습니다!` }}</div>
                             <div>{{message.lastMessageTime}}</div>
                         </div>
                     </div>
@@ -77,6 +77,12 @@ export default {
     },
     created(){
         this.renderChatList()
+        const checkRoom = this.$route.params.roomNo
+        if (checkRoom > 0) {
+            this.roomNo = checkRoom
+            this.otherNick = this.$route.params.otherNick
+            this.messageDetailBoolean = true
+        }
     }
 }
 </script>
@@ -93,16 +99,19 @@ export default {
         overflow: auto;
         overflow-x: hidden;
         font-family: font1;
-        padding:5px 0;
+        padding:0 0 0px 0;
         border: 1px solid #3F9F47;
         border-radius: 0px;        
         top:7%;
+        
     }
     .mobilemessage2ndTitle {
-        padding: 0 10px;
+        padding: 5px 10px;
         display:flex;
         justify-content: space-between;
-        border-bottom: 3px solid #3F9F47;
+        border-bottom: 3px solid #ffffff;
+        background-color: #c57f3d;
+        color:white;
     }
 
     .mobilemessage2ndTitle > i {
@@ -112,11 +121,12 @@ export default {
     .mobilemessageListBox {
         position:relative;
         width: 100%;
-        background-color: transparent;
+        background-color: #e0a063e5;
         transition:0.3s;
-        border-bottom: 1px solid rgb(138, 138, 138);
+        border-bottom: 1px solid rgb(255, 255, 255);
         display:flex;
         padding:2%;
+        color:black;
     }
     .mobilemessageListBox > img {
         margin-right: 2%;
@@ -132,30 +142,32 @@ export default {
 
     .mobilemessageListBox > div {
         text-align: left;
+        font-size: 15px;
     }
 
     .mobilemessageListList{
-        display: flex;
-        justify-content: space-between;
         height:60%;
         width: 100%;
+
         
         
     }
 
     .mobilemessageListList :nth-child(1) {    
-        width: 80%;
+        width: fit-content;
+        max-width: 300px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;    
         margin-top: auto;
+        font-size: 12px;
         
         
     }
 
     .mobilemessageListList :nth-child(2){
-        font-size: 12px;
-        margin-top: auto;        
+        font-size: 10px;
+        margin-top: 3px;        
         white-space: nowrap;        
     }
     

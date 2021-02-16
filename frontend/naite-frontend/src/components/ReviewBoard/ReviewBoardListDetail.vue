@@ -3,15 +3,20 @@
         <div class='reviewdetailInfo'>
             <div class="reviewdetailHead">
                 <div class="reviewdetailUser">
-                    <img src="../../assets/cha2.png">
+                    <img :src="apiData.userPic">
                 </div>
+                
                 <div>
                     <div class="reviewdetailTitle">{{apiData['board'].boardTitle}}</div>
                     <div class="reviewdetailBar">
-                        <i class="far fa-comments" @click='sendMessage'  v-if='thisBoardUserNo !== apiData.board.userNo'></i>
-                        <span @click='sendMessage'  v-if='thisBoardUserNo !== apiData.board.userNo'>메세지</span>
-                        <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.board.userNo'></i>
-                        <span v-if='thisBoardUserNo !== apiData.board.userNo'>신고</span>
+                        <div @click='sendMessage'>
+                            <i class="far fa-comments" v-if='thisBoardUserNo !== apiData.userNo'></i>
+                            <span   v-if='thisBoardUserNo !== apiData.userNo'>메세지</span>
+                        </div>
+                        <div @click='reportBoard()'>
+                            <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.userNo'></i>
+                            <span v-if='thisBoardUserNo !== apiData.userNo'>신고</span>
+                        </div>
                         <div v-if='thisBoardUserNo === apiData.board.userNo' style='display:flex'>
                             <div  @click='updateBoard' style='margin-right:10px'>
                                 <i class="far fa-edit"  ></i>
@@ -63,9 +68,10 @@
             </div>
         </div>
         <div class='reviewdetailImg' v-if='apiData.board.boardPic'>
-        <!-- <div class='detailImg'> -->
-            <img src="https://i4a402.p.ssafy.io/img/signpast.fbb26c75.jpg" alt="" width='100%'>
+            <!-- <img src="https://i4a402.p.ssafy.io/images/board/254_202102150613499_2.jpg" alt="" width='100%'> -->
+        
         </div>
+        <BoardDetailImg :boardImg = 'apiData.files' v-if='apiData.files' />
 
     </div>
 </template>
@@ -73,8 +79,8 @@
 <script>
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
-const today = new Date()
-console.log(today)
+import BoardDetailImg from '@/components/Board/BoardDetailImg'
+
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 // const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
@@ -88,6 +94,9 @@ export default {
         boardNo:[String,Number],
         updateCommentCntCheck:Number,
     },
+    components:{
+        BoardDetailImg,
+    },
     data:function(){
         return {
             categoryName:['','번화가','동사무소','수군수군','소리소문','장터'],
@@ -99,6 +108,25 @@ export default {
         }
     },
     methods:{
+         reportBoard:function(){
+            const params = {
+                "boardNo": this.boardNo,
+                "commentNo": 0,
+                "reportTargetNo": this.apiData.userNo,
+                "reportType": 0,
+            }
+            axios.post(`${SERVER_URL}/report/insert`,params,this.setToken())
+                .then(res=>{
+                    if (res.data.response ==='error'){
+                        alert(res.data.message)
+                    } else {
+                        alert(`${this.apiData.boardTitle} 글에 대한 신고가 접수되었습니다`)
+                    }
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
+        },
         sendMessage:function(){
             const userNick = this.apiData.userNick
             
@@ -193,23 +221,8 @@ export default {
                 if (this.apiData.usersWithLike[i] === decode.user.userNick) {
                     this.liked = true                
                 }
-            }
-         
-
-            const img = this.apiData.board.boardPic
-            const headBottom = document.querySelector('.reviewdetailHeadInfo')
-            const detailBar = document.querySelector('.reviewdetailBar')
-                        
-            this.apiData.board.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')
-            this.apiData.board.boardContent.split('\n').join('<br />')
-            
-            if (!img) {
-                headBottom.style.width = '1038px'
-                detailBar.style.right ='1%'
-            } else {
-                headBottom.style.width = '740px'
-                detailBar.style.right ='28%'
-            }
+            }       
+            this.apiData.board.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')          
         },
         updateCommentCntCheck:function(){            
             this.apiData.boardCommentCnt += 1
@@ -222,15 +235,15 @@ export default {
 <style>
 
 #reviewboardlistdetail{
-    position:absolute;
-    width: 60%;
-    height: 40%;
+    position:relative;
+    width: 60%;    
     background-color: #A87A4F;
     top: 13%;
     left: 20%;  
     display:flex;  
     padding:10px;
     color:white;
+    flex-wrap: wrap;
 }
 
 .reviewdetailInfo {
@@ -239,6 +252,7 @@ export default {
     background-color: teal;
     font-family: font1;
     text-align: left;
+    padding-bottom: 5%;
 }
 
 
@@ -255,13 +269,19 @@ export default {
 }
 .reviewdetailTitle {
     width: 80%;
-    height:48px;
+    height:37px;
     text-align: left;
     font-size: 30px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     margin-left: 12px;
+}
+.reviewdetailUser > img {
+    height: 80px;
+    border: 1px solid rgb(172, 172, 172);
+    border-radius: 20%;
+    background-color: white;
 }
 .reviewdetailUserNick {
     text-align: left;
@@ -273,15 +293,9 @@ export default {
 }
 
 
-.reviewdetailUser > img {
-    height: 80px;
-    border: 1px solid rgb(172, 172, 172);
-    border-radius: 20%;
-    background-color: white;
-}
 
 .reviewdetailHeadInfo{
-    width: 740px;    
+    width: 1038px;    
     margin-left: 12px;
     display: flex;
     justify-content: space-between;
@@ -321,10 +335,16 @@ export default {
 .reviewdetailBar {
     position: absolute;
     top:4%;    
-    right:28%;
+    right:1%;
     cursor: pointer;
+    display:flex;
     
 }
+.reviewdetailBar > div > span {
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
 .reviewdetailBar > span {
     margin-right: 10px;
     margin-left: 5px;
@@ -336,4 +356,104 @@ export default {
     font-size: 14px;
 }
 
+
+@media screen and (max-width:501px) {
+    #reviewboardlistdetail{
+        position:relative;
+        width: 100%;        
+        background-color: #A87A4F;
+        top: 8%;
+        left: 0%;          
+    }
+    .reviewdetailImg {
+        width:400px;
+        background-color: white;
+    }
+
+    .reviewdetailHead {
+        width: 100%;
+        height: 20%;
+        display:flex;
+    }
+    .reviewdetailTitle {
+        width: 200px;
+        height:37px;
+        text-align: left;
+        font-size: 14px;
+        overflow: hidden;
+        white-space:pre-wrap;        
+        margin-left: 12px;        
+    }
+    .reviewdetailUserNick {
+        text-align: left;
+    }
+
+
+    .reviewdetailUser > img {
+        height: 60px;
+        border: 1px solid rgb(172, 172, 172);
+        border-radius: 20%;
+        background-color: white;
+    }
+
+    .reviewdetailHeadInfo{
+        width: 100%;    
+        margin-left: 10px;
+        display: flex;
+        justify-content: space-between;
+        color:white;
+        font-size: 10px;
+        margin-top: 10px;
+    }
+
+
+
+
+    .reviewdetailHeadInfo i {        
+        margin-right:1px;
+    }
+    .reviewdetailHeadInfo span{
+        margin-right: 1px;
+    }
+
+    .reviewdetailBody {
+        padding:0 10px;        
+        overflow: auto;
+        overflow-x: hidden;
+        white-space: pre-wrap;
+        transition:0.3s;
+        font-size: 13px;
+    }
+
+    .reviewdetailBody::-webkit-scrollbar {
+        display:none
+    }
+
+    .reviewdetailBody:hover::-webkit-scrollbar{
+        display:contents;
+    }
+
+    .reviewdetailBar {
+        position: absolute;
+        top:4%;    
+        right:4%;
+        cursor: pointer;
+        font-size: 12px;
+        
+    }
+    .reviewdetailBar > span {
+        margin-right: 10px;
+        margin-left: 5px;
+    }
+
+
+    .reviewdetailMes{
+        cursor:pointer;
+        font-size: 10px;
+    }
+
+    
+}
+
+    
 </style>

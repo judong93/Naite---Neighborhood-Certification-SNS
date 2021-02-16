@@ -6,13 +6,17 @@
         </div>
         <div class='messageList' v-for='(message,idx) in myChatList' :key="idx">
             <div class="messageListBox" @click='messageDetail(message.roomNo,message.otherNick)'>
-                <img src="../../assets/cha2.png" alt="">
+                <img :src='message.otherPic' alt="">
                 <div>
                     <span>{{message.otherNick}}</span><br>
                     <div class='messageListList'>
 
-                        <div>{{message.lastMessage}}</div>
-                        <div>{{message.lastMessageTime}}</div>
+                        <div>
+                            {{message.lastMessage ? message.lastMessage: `${message.otherNick}님과의 채팅방이 개설되었습니다!` }}
+                        </div>
+                        <div>
+                            {{message.lastMessageTime}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,31 +79,42 @@ export default {
     height:100%;
     overflow: auto;
     overflow-x: hidden;
-    background-color: transparent;
+    background-color: white;
     font-family: font1;
-    padding:5px 0;
+    padding:0;
     border: 1px solid #3F9F47;
     border-radius: 10px;
 }
-.message2ndTitle {
+.message2ndTitle {    
+    
     padding: 0 10px;
     display:flex;
     justify-content: space-between;
-    border-bottom: 3px solid #3F9F47;
+    background-color: #a87a4fda;
+    border-bottom: 3px solid #ffffff;
+    color:white;
 }
 
 .message2ndTitle > i {
     margin-top: 2%;
 }
-
+.message2ndTitle > .fa-times-circle{
+    display:block;
+    position:relative;
+    right:0;
+    transform:none;
+    color:white;
+}
 .messageListBox {
     position:relative;
     width: 100%;
-    background-color: transparent;
+    background-color: #a7784c52;
     transition:0.3s;
-    border-bottom: 1px solid rgb(138, 138, 138);
+    border-bottom: 1px solid rgb(248, 248, 248);
     display:flex;
     padding:2%;
+    font-size: 15px;
+    color:black;
 }
 .messageListBox > img {
     margin-right: 2%;
@@ -117,16 +132,14 @@ export default {
     text-align: left;
 }
 
-.messageListList{
-    
-    display: flex;
-    justify-content: space-between;
+.messageListList{    
     height:60%;
+    font-size: 12px;
     
 }
 
 .messageListList :nth-child(1) {    
-    width: 200px;
+    width: 250px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;    

@@ -80,7 +80,6 @@ export default {
             geocoder.addressSearch(this.userBname,callback)          
         },
         closeLocation:function(){            
-            console.log('?')
             this.$emit('selectAddress',this.result) 
         }
     },

@@ -15,12 +15,10 @@
                 <a href="#" @click='showCategory(6)'>확성기</a>
             </div>
             <div class="nav-right">
-                <!-- <input type="text" readonly/>
-                <i class="fas fa-search"></i>
-                -->
-                <!-- <div class='statusHover'>
-                    
-                </div> -->
+                <i class="fas fa-search" @click="startSearch" ></i>
+                <input type="text" @click='realSearch'>
+                <span @click="startSearch">Click here >></span>
+                <i class="fas fa-times-circle" @click='closeSearch'></i>
                 <span>{{greeting}}</span>
                 <div class="nav-status">
                     <div class="statusHover">   
@@ -137,6 +135,46 @@ export default {
         }
     },
     methods:{
+        realSearch:function(){
+            const searchInput = document.querySelector('.fa-search+input')
+            searchInput.style.width = '700px'
+            searchInput.style.top = '388px'
+            searchInput.style.right = '610px'
+            searchInput.style.height='50px'
+            setTimeout(() => {
+                searchInput.style.width='0px'
+                searchInput.style.backgroundColor = 'transparent'
+                setTimeout(() => {
+                    this.closeSearch()
+                }, 500);
+            }, 500);
+            this.$router.push({name:'Search'})
+        },
+        startSearch:function(){
+            const icon = document.querySelector('.fa-search')
+            const searchInput = document.querySelector('.fa-search+input')
+            const searchSpan = document.querySelector('.fa-search+input+span')
+            const xbtn = document.querySelector('.fa-times-circle')
+            icon.style.right = '140%'
+            searchInput.style.width = '150px'
+            searchInput.style.backgroundColor = '#A87A4F'
+            searchSpan.style.display='none'
+            xbtn.style.display='initial'
+        },
+        closeSearch:function(){
+            const icon = document.querySelector('.fa-search')
+            const searchInput = document.querySelector('.fa-search+input')
+            const searchSpan = document.querySelector('.fa-search+input+span')
+            const xbtn = document.querySelector('.fa-times-circle')
+            icon.style.right = '100%'
+            searchInput.style.width = '0px'
+            searchInput.style.right = '100%'
+            searchInput.style.top = '50%'
+            searchInput.style.backgroundColor = 'transparent'
+            searchSpan.style.display='initial'
+            xbtn.style.display='none'
+            searchInput.style.height='26px'
+        },
         showCategory:function(num){
             this.mobileMenuBoo = true
             this.mobileMenu()
@@ -157,6 +195,7 @@ export default {
         logout:function(){
             localStorage.removeItem('jwt')
             this.$router.push({name:'Sign'})
+            this.$store.dispatch('logout')
         },
         profile:function(){
             this.$router.push({name:'Profile', params:{userNo:this.userNo}})
@@ -190,7 +229,7 @@ export default {
             this.$router.push({name:'Posting'})
         },
         mobileMessage:function(){
-            this.$router.push({name:'MobileMessage'})
+            this.$router.push({name:'MobileMessage',params:{'roomNo':-1,'otherNick':'동룡'}})
         }
     },
     computed: {
@@ -200,7 +239,12 @@ export default {
         const token = localStorage.getItem('jwt')
         const decode = jwt_decode(token)
         this.userNo = decode.user.userNo
-        this.greeting = decode.greeting        
+        this.greeting = decode.greeting  
+        console.log(decode)
+        setTimeout(() => {
+            const navImg = document.querySelector('.nav-status')   
+            navImg.style.backgroundImage= `url(${decode.userPic})`
+        }, 100);
     }
 
     
@@ -335,6 +379,66 @@ export default {
 }
 .menu {
     display:none
+}
+
+.fa-search {
+    position:absolute;
+    top: 50%;
+    transform:translateY(-50%);
+    right:100%;
+    
+    font-size: 20px;
+    transition:0.3s;
+    cursor:pointer;
+}
+
+.fa-search+input{
+    position: absolute;
+    /* display:none; */
+    width: 0px;
+    top: 50%;
+    transform:translateY(-50%);
+    right:100%;
+    border:none;
+    outline: none;
+    background-color: transparent;
+    border-radius: 10px;
+    transition:0.3s;
+}
+
+.fa-search+input+span{
+    white-space: nowrap;
+    position: absolute;
+    top:15%;
+    transform: translateY(-50%);
+    right:75%;
+    transition:0.3s;
+    cursor:pointer;
+}
+
+.fa-search+input+span:hover {
+    right: 80%;
+    color: blue;
+}
+
+.fa-search:hover+input+span {
+    right: 80%;
+    color: blue;
+}
+
+.fa-times-circle {
+    color:red;
+    position:absolute;
+    font-size: 20px;
+    right:93%;
+    top:38%;
+    transition: 0.6s;
+    cursor:pointer;
+    display:none;
+    
+}
+.fa-times-circle:hover{
+    transform:rotate(180deg)
 }
 
 @media screen and (max-width: 501px){

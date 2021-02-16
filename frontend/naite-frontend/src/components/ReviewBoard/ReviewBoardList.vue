@@ -34,7 +34,7 @@
                                 </div>
                                 <div>                                    
                                     <i class="far fa-images"></i>
-                                    {{list.board.boardPic ?list.board.boardPic.length:0 }}                                    
+                                    {{list.files ? list.files.length:0}}
                                     <i class="far fa-thumbs-up"></i>
                                     {{list.board.boardLikeCnt}}&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="far fa-comment-dots"></i>

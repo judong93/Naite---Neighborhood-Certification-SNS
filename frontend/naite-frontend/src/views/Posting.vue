@@ -23,14 +23,38 @@ export default {
 
             if (params.bigCategoryNo === '3') {
                 const param = {
-                    'board':params,
-                    'reviewStar':reviewStar,
-                    'smallCategoryNo':smallCategoryNo                    
+                    "bigCategoryNo": params.bigCategoryNo,
+                    "boardContent": params.boardContent,
+                    "boardPic": params.boardPic,
+                    "boardTitle": params.boardTitle,
+                    'files': files,                    
+                    "openFlag": params.openFlag,
+                    "reviewStar":reviewStar,
+                    'smallCategoryNo':smallCategoryNo,
+                    "unknownFlag": params.unknownFlag,                 
+                }  
+                let createFormData = new FormData()
+                const token = localStorage.getItem('jwt')
+                const paramKey = ["bigCategoryNo", "boardContent","boardPic","boardTitle",'files','marketCost',"openFlag",'smallCategoryNo',"unknownFlag"]
+                for (let i=0; i<9;i++){
+                    if (i!==4){
+                        createFormData.append(`${paramKey[i]}`,param[`${paramKey[i]}`])
+                    } else {
+                        for (let j=0;j<files.length;j++){
+                            createFormData.append(`${paramKey[i]}`,files[j])
+                        }
+                    }
+                    
                 }
-                axios.post(`${SERVER_URL}/review/insert`,param,this.setToken())
+                axios.post(`${SERVER_URL}/review/insert`,createFormData,{
+                    headers:{
+                        'Content-type':'multipart/form-data',
+                        'auth-token': token,
+                    }
+                })
                     .then(res=>{
                         console.log(res) 
-                        this.$router.push({name:'Board',params:{bigCategoryNo:params.bigCategoryNo}})
+                        this.$router.push({name:'ReviewBoard'})
                         
                     })
                     .catch(err=> {
@@ -41,12 +65,36 @@ export default {
                         })
             } else if (params.bigCategoryNo ==='5'){
                 const param = {
-                    'board':params,
+                    "bigCategoryNo": params.bigCategoryNo,
+                    "boardContent": params.boardContent,
+                    "boardPic": params.boardPic,
+                    "boardTitle": params.boardTitle,
+                    'files': files,
                     'marketCost':marketCost,
+                    "openFlag": params.openFlag,
                     'smallCategoryNo':smallCategoryNo,
+                    "unknownFlag": params.unknownFlag,                 
+                }  
+                let createFormData = new FormData()
+                const token = localStorage.getItem('jwt')
+                const paramKey = ["bigCategoryNo", "boardContent","boardPic","boardTitle",'files','marketCost',"openFlag",'smallCategoryNo',"unknownFlag"]
+                for (let i=0; i<9;i++){
+                    if (i!==4){
+                        createFormData.append(`${paramKey[i]}`,param[`${paramKey[i]}`])
+                    } else {
+                        for (let j=0;j<files.length;j++){
+                            createFormData.append(`${paramKey[i]}`,files[j])
+                        }
+                    }
+                    
                 }
                 
-                axios.post(`${SERVER_URL}/market/insert`,param,this.setToken())
+                axios.post(`${SERVER_URL}/market/insert`,createFormData,{
+                    headers:{
+                        'Content-type':'multipart/form-data',
+                        'auth-token': token,
+                    }
+                })
                     .then(res=> {
                         console.log(res)
                         this.$router.push({name:'MarketBoard'})
@@ -68,21 +116,19 @@ export default {
                     "openFlag": params.openFlag,
                     "unknownFlag": params.unknownFlag,                 
                 }  
-                console.log(param)
                 let createFormData = new FormData()
                 const token = localStorage.getItem('jwt')
                 const paramKey = ["bigCategoryNo", "boardContent","boardPic","boardTitle",'files',"openFlag","unknownFlag"]
                 for (let i=0; i<7;i++){
-                    console.log(i)
-                    createFormData.append(`${paramKey[i]}`,param[`${paramKey[i]}`])
+                    if (i!==4){
+                        createFormData.append(`${paramKey[i]}`,param[`${paramKey[i]}`])
+                    } else {
+                        for (let j=0;j<files.length;j++){
+                            createFormData.append(`${paramKey[i]}`,files[j])
+                        }
+                    }
+                    
                 }
-                for (var key of createFormData.keys()){
-                    console.log(key)
-                }
-                for (var value of createFormData.values()){
-                    console.log(value,'vlaue')
-                }
-                console.log(files)
                 axios.post(`${SERVER_URL}/board/insert`,createFormData,{
                     headers:{
                         'Content-type':'multipart/form-data',
