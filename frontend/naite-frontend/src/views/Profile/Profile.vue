@@ -4,7 +4,7 @@
     <div class="profile">
       <div class="profile-box">
         <div @mouseover="showReliability" @mouseout="showImg" class="profile-img-container">
-          <img v-if="onProfileImg===false" :src="imgData" alt="No Image" class="profile-img">
+          <img v-if="onProfileImg===false" :src="profileImg" alt="No Image" class="profile-img">
           <div v-if="onProfileImg===true" class="reliability-letter">신뢰도</div>
           <div v-if="onProfileImg===true" class="reliability">{{ userScore }}</div>
         </div>
@@ -31,7 +31,8 @@
           <div class="profile-card-container">
             <div v-for="(card,idx) in userPosting" :key="idx" class="profile-card">
               <button @click="evalBuyer(card.marketNo, card.isSeller)" v-if="card.isSeller===0 && card.evalIsCompleted===0" class="eval-btn">평가를 부탁드려요!</button>
-              <img @click="toBoardDetail(card.boardNo, card.marketNo, card.bigCategoryNo)" :src="imgData" alt="이미지가 없습니다!" class="posting-img">
+              <img @click="toBoardDetail(card.boardNo, card.marketNo, card.bigCategoryNo)" :src="card.files ? card.files[0]: replacedImgSrc" class="posting-img">
+              <div class="img-cover"></div>
               <div @click="toBoardDetail(card.boardNo, card.marketNo, card.bigCategoryNo)" class="card-title">
                 {{ card.boardTitle }}
               </div>
@@ -65,7 +66,7 @@ export default {
   name: 'Profile',
   data: function () {
     return {
-      imgData: "http://picsum.photos/200/300",
+      profileImg: '',
       postingCount: 0,
       marketCount: 0,
       commentCount: 0,
@@ -87,7 +88,8 @@ export default {
       formTitle: '',
       userJoinList: [],
       selectedMarketNo: 0,
-      isSeller: 5
+      isSeller: 5,
+      replacedImgSrc: 'src/assets/이미지없을시.jpg'
     }
   },
   components: {
@@ -187,6 +189,7 @@ export default {
               this.userPostings = this.userBoardPostings
             }
           }
+          console.log(this.userBoardPostings)
         })
         .catch((err) => {
           console.log(err)
@@ -228,8 +231,10 @@ export default {
       const config = this.setToken()
       axios.get(`${SERVER_URL}/user/profile/${this.userNo}`, config)
         .then((res) => {
+          console.log(res.data.data)
           this.userNick = res.data.data.userNick
           this.userScore = res.data.data.userScore
+          this.profileImg = res.data.data.userPic
         })
         .catch((err) => {
           console.log(err)
@@ -287,6 +292,9 @@ export default {
         this,this.carouselLength = this.userCommentPostings.length -1
       }
       this.carouselNo = 0
+    },
+    screen: function () {
+      console.log('!!!!')
     }
   },
   created: function () {
@@ -302,6 +310,9 @@ export default {
     this.getCommentList()
     this.activityCheckNum = 1
   },
+  updated: function () {
+    console.log('변한다')
+  }
 }
 </script>
   
@@ -330,7 +341,7 @@ hr {
   /* position: relative; */
   /* background-color: lightgray; */
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   /* top: 130px; */
   height: 180px;
   width: 60%;
@@ -340,6 +351,7 @@ hr {
   /* background-color: red; */
   width: 150px;
   height: 150px;
+  margin-right: 5%;
   overflow: hidden;
   border-radius: 50%;
   background-color: rgb(190, 208, 245, 0.5);
@@ -357,6 +369,8 @@ hr {
   /* background-color: black; */
   transform: rotateY(180deg);
   transition-duration: 0.9s;
+  opacity: 0.8;
+  cursor: pointer;
 }
 .profile-img-container:not(:hover) {
   transition-duration: 0.9s;
@@ -377,17 +391,19 @@ hr {
 }
 .username {
   position: relative;
+  width: 100%;
   font-size: 35px;
   top: 10px;
+  text-align: left;
 }
 .username-settings {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   height: 80px;
   /* padding-left: 60px; */
 }
 #settings-icon {
-  margin-left: 20px;
+  margin-left: 5%;
   cursor: pointer;
 }
 .profile-info {
@@ -448,44 +464,70 @@ hr {
   height: 290px;
   margin: 0 12px;
   cursor: pointer;
+  border-radius: 10px;
 }
 .profile-card:hover {
-  opacity: 0.5;
+  width: 200px;
+  height: 300px;
+  transition-duration: 0.5s;
 }
 .posting-img {
-  height: 38%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.posting-img:hover {
+  clip: rect(20%, 20%, 20%, 20%);
+  cursor: pointer;
+}
+.img-cover {
+  position: absolute;
+  width: 100%;
+  height: 86%;
+  background-color: rgba(0,0,0,0.4);
 }
 .card-title {
+  position: absolute;
+  color: white;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word; 
   line-height: 1.5em;
   overflow: hidden;
   text-align: left;
   margin-top: 14px;
-  margin-left: 10px;
   font-weight: bold;
   font-size: 120%;
-  height: 52px;
-  white-space: nowrap;
+  height: 20%;
+  width: 90%;
+  left: 5%;
+  white-space: normal;
   text-overflow: ellipsis;
 }
 .card-content {
+  position: absolute;
+  color: white;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   word-wrap:break-word; 
   line-height: 1.5em;
   overflow: hidden;
   text-align: left;
   padding-left: 10px;  
-  padding-right: 20px;  
-  height: 52px;
+  padding-right: 20px;
+  top: 30%;  
+  height: 35%;
   white-space: normal;
   text-overflow: ellipsis;
 }
 .card-category {
-  font-size: 12px;
-  margin-top: 13px;
-  margin-right: 20px;
-  text-align: right;
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  bottom: 17%;
+  right: 9%;
 }
 .underline {
   text-decoration: underline;
@@ -504,12 +546,13 @@ hr {
   width: 100%; 
   text-align: center;
   /* background:#DB4455; */
+  position: absolute;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   color:#fff;
   border:none;
-  position:relative;
   height: 14%;
   font-size:1.3em;
   padding:0;

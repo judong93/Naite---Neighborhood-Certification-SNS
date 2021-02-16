@@ -70,12 +70,12 @@ export default {
 #settingform {
   position: absolute;
   display: none;
-  top: 18%;
+  top: 23%;
   width: 20%;
-  height: 70%;
+  height: 64.2%;
   /* border: 3px solid red; */
   z-index: 2;
-  background-color: white;
+  background-color: rgb(189, 180, 99);
   border-radius: 10px;
   left: 40%;
   right: 40%;
@@ -109,12 +109,17 @@ export default {
 }
 @media screen and (max-width: 501px) {
   #settingform {
-    width: 70%;
-    left: 15%;
-    right: 15%;
+    width: 60%;
+    height: 67%;
+    left: 20%;
+    right: 20%;
+    top: 14%;
   }
   .setting-btn {
     top: 77%;
+  }
+  .close-btn {
+    transform: translate(133px);
   }
 }
 </style>
