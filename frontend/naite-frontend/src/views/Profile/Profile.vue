@@ -2,12 +2,13 @@
   <div id="profile">
     <Navbar />
     <Message />
+    <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' />
     <div class="profile">
       <div class="profile-box">
         <div @mouseover="showReliability" @mouseout="showImg" class="profile-img-container">
           <img v-if="onProfileImg===false" :src="imgData" alt="No Image" class="profile-img">
           <div v-if="onProfileImg===true" class="reliability-letter">신뢰도</div>
-          <div v-if="onProfileImg===true" class="reliability">42</div>
+          <div v-if="onProfileImg===true" class="reliability">{{ userScore }}</div>
         </div>
         <div class="profile-info">
           <div class="username-settings">
@@ -23,27 +24,32 @@
           </div>
         </div>  
       </div>
+      <div class="mobile-usernick">{{ userNick }}</div>
+      <div v-if="userNo===loginedUserNo" @click="selectSettings" class="mobile-profile-settings">프로필 편집</div>
       <hr>
       <div class="profile-cards-container">
         <div v-for="(userPosting,idx) in userPostings" :key=idx class="profile-cards" :class="{ carouselactive: idx===carouselNo}">
           <i @click="previousCarouselSet" v-if="carouselLength >=0" class="fas fa-chevron-left fa-2x carousel-move-btn"></i>
           <div class="profile-card-container">
             <div v-for="(card,idx) in userPosting" :key="idx" class="profile-card">
-              <img @click="toBoardDetail(card.boardNo)" :src="imgData" alt="이미지가 없습니다!" class="posting-img">
-              <div @click="toBoardDetail(card.boardNo)" class="card-title">
+              <button @click="evalBuyer(card.marketNo, card.isSeller)" v-if="card.isSeller===0 && card.evalIsCompleted===0" class="eval-btn">평가를 부탁드려요!</button>
+              <img @click="toBoardDetail(card.boardNo, card.marketNo, card.bigCategoryNo)" :src="imgData" alt="이미지가 없습니다!" class="posting-img">
+              <div @click="toBoardDetail(card.boardNo, card.marketNo, card.bigCategoryNo)" class="card-title">
                 {{ card.boardTitle }}
               </div>
-              <div @click="toBoardDetail(card.boardNo)" class="card-content">
+              <div @click="toBoardDetail(card.boardNo, card.marketNo, card.bigCategoryNo)" class="card-content">
                 {{ card.boardContent }}
               </div>
               <div class="card-category">{{ bigCategory[card.bigCategoryNo] }}게시글</div>
               <button v-if="activityCheckNum===1 && userNo===loginedUserNo" @click="deletePosting(card.boardNo)" class="profile-card-button cdb">삭제하기</button>
-              <div v-if="card.marketIsCompleted===0" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo)" class="profile-card-button market-not-completed">모집중</div>
-              <div v-if="card.marketIsCompleted===1" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo)" class="profile-card-button market-is-completed">거래완료</div>
+              <div v-if="card.marketIsCompleted===0" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo)" 
+              class="profile-card-button market-not-completed"> <span>모집중</span> </div>
+              <div v-if="card.marketIsCompleted===1" 
+              class="profile-card-button market-is-completed"> <span>거래완료</span> </div>
             </div>
           </div>
           <i @click="nextCarouselSet" class="fas fa-chevron-right fa-2x carousel-move-btn"></i>
-        </div>
+        </div>  
       </div>
     </div>
   </div>
@@ -55,6 +61,7 @@ import Navbar from '@/components/Basic/Navbar'
 import Message from '@/components/Basic/Message'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
+import SettingBox from '@/components/Profile/SettingBox'
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 
@@ -73,17 +80,24 @@ export default {
       postingImg: "https://picsum.photos/200/300",
       activityCheckNum: 0,
       userNick: '',
+      userScore: 0,
       userNo: 0,
       loginedUserNo: 0,
       onProfileImg: false,
       carouselNo: 0,
       carouselLength: 0,
       bigCategory: ['','번화가 ', '소리소문 ', '수군수군 ', '동사무소 ', '장터 ', '공지사항 '],
+      formIsOpen: false,
+      formTitle: '',
+      userJoinList: [],
+      selectedMarketNo: 0,
+      isSeller: 5
     }
   },
   components: {
     Navbar,
-    Message
+    Message,
+    SettingBox
   },
   methods: {
     postingList: function () {
@@ -130,10 +144,14 @@ export default {
         console.log(this.userBoardPostings)
       }
     },
-    toBoardDetail: function (boardNo) {
-      this.$router.push({ name: 'BoardDetail', params: {boardNo: boardNo} })
+    toBoardDetail: function (boardNo,marketNo,bigCategoryNo) {
+      if (bigCategoryNo===5) {
+        this.toMarketDetail(marketNo)
+      } else {
+        this.$router.push({ name: 'BoardDetail', params: {boardNo: boardNo} })
+      }
     },
-      toMarketDetail: function (marketNo) {
+    toMarketDetail: function (marketNo) {
       this.$router.push({name:'MarketBoardDetail',params:{marketNo:marketNo}})
     },
     showReliability: function () {
@@ -187,20 +205,11 @@ export default {
           const length = parseInt((res.data.length -1) / 5)
           this.userMarketPostings = []
           for (let i = 0; i <= length; i++) {
-            const fiveList = []
-            const x = res.data.splice(0,5)
-            for (let j = 0; j < x.length; j++) {
-              const y = x[j].board
-              y.marketIsCompleted = x[j].marketIsCompleted
-              y.marketNo = x[j].marketNo
-              fiveList.push(y)
+            this.userMarketPostings.push(res.data.splice(0,5))
             }
-            this.userMarketPostings.push(fiveList)
             if (this.activityCheckNum===2) {
               this.userPostings = this.userMarketPostings
             }
-          }
-          console.log(this.userMarketPostings)
         })
         .catch((err) => {
           console.log(err)
@@ -209,6 +218,7 @@ export default {
     getCommentList: function () {
       axios.get(`${SERVER_URL}/comment/user/${this.userNo}`)
         .then((res) => {
+          console.log(res)
           this.commentCount = res.data.data.length
           const length = parseInt((res.data.data.length -1) / 5)
           for (let i = 0; i <= length; i++) {
@@ -220,28 +230,42 @@ export default {
           console.log(err)
         })
     },
-    getUserNick: function () {
+    getUserInfo: function () {
       const config = this.setToken()
       axios.get(`${SERVER_URL}/user/profile/${this.userNo}`, config)
         .then((res) => {
           this.userNick = res.data.data.userNick
+          this.userScore = res.data.data.userScore
         })
         .catch((err) => {
           console.log(err)
         })
     },
+    evalBuyer: function (marketNo, isSeller) {
+      this.formIsOpen = !this.formIsOpen
+      this.formTitle = '평가를 남겨주세요!'
+      this.selectedMarketNo = marketNo
+      this.isSeller = isSeller
+    },
     changeMarketStatus: function (status,marketNo) {
       const config = this.setToken()
       if (this.userNo === this.loginedUserNo) {
         if (status===0) {
-          const result = confirm('모집을 마감하시겠습니까?')
-          if (result) {
-            axios.put(`${SERVER_URL}/market/complete/${marketNo}`, {}, config)
-              .then(() => {
-                this.getMarketList()
-                this.userPostings = this.userMarketPostings
-              })
-          }
+          axios.get(`${SERVER_URL}/market/join/${marketNo}`, config)
+            .then((res) => {
+              console.log(res.data)
+              this.selectedMarketNo = marketNo
+              this.formIsOpen = !this.formIsOpen
+              this.formTitle = '거래에 참여한 유저를 선택해주세요'
+              this.userJoinList = res.data.data
+              
+            })
+          // axios.put(`${SERVER_URL}/market/complete/${marketNo}`, {}, config)
+          //   .then(() => {
+          //     this.getMarketList()
+          //     this.userPostings = this.userMarketPostings
+          //   })
+          
         } else {
           const result = confirm('다시 모집하시겠습니까?')
           if (result) {
@@ -278,7 +302,7 @@ export default {
     this.loginedUserNo = decode.user.userNo
     // 새로고침하면 userNo가 스트링으로 받아와짐.. 도대체 왜지?!
     this.userNo = Number(this.$route.params.userNo)
-    this.getUserNick()
+    this.getUserInfo()
     this.getBoardList()
     this.getMarketList()
     this.getCommentList()
@@ -305,7 +329,7 @@ hr {
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 15%;
+  height: 70%;
   top: 20%;
 }
 .profile-box {
@@ -383,6 +407,16 @@ hr {
   top: 20px; 
   font-size: 30px;
 }
+.mobile-usernick {
+  height: 0;
+  display: none;
+  text-align: left;
+}
+.mobile-profile-settings {
+  height: 0;
+  display: none;
+  border: 2px lightgray solid;
+}
 .profile-cards-container {
   /* margin-left: 80px; */
   /* margin-top: 20px; */
@@ -411,6 +445,7 @@ hr {
   justify-content: center;
 }
 .profile-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -421,9 +456,7 @@ hr {
   cursor: pointer;
 }
 .profile-card:hover {
-  width: 195px;
-  height: 300px;
-  transition-duration: 0.3s;
+  opacity: 0.5;
 }
 .posting-img {
   height: 38%;
@@ -477,10 +510,13 @@ hr {
   width: 100%; 
   text-align: center;
   /* background:#DB4455; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color:#fff;
   border:none;
   position:relative;
-  height: 40px;
+  height: 14%;
   font-size:1.3em;
   padding:0;
   cursor:pointer;
@@ -551,10 +587,27 @@ hr {
   cursor: pointer;
 }
 .carousel-move-btn:hover {
-  font-size: 250%;
+  font-size: 240%;
   transition-duration: 0.3s;
 }
-
+.eval-btn {
+  position: absolute;
+  width: 50%;
+  height: 16%;
+  z-index: 3;
+  top: 10%;
+  left: 50%;
+  color:white;
+  background-color: rgb(102, 102, 245);
+  border-radius: 10px;
+  border: none;
+  transform:translateX(-50%);
+} 
+.eval-btn:hover {
+  width: 60%;
+  height: 20%;
+  transition-duration: 0.3s;
+}
 
 @media screen and (max-width: 501px) {
   #profile {
@@ -563,21 +616,96 @@ hr {
   }
   .profile {
     top: 13%;
+    height: 75%;
   }
   .profile-box {
-    width: 90%;
-    justify-content: left;
+    width: 80%;
+    justify-content: inherit;
+    height: 15%;
   }
   .profile-img-container {
     margin: 0 20px;
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
+    font-size: 10px;
   }
   .profile-info {
-    width: 200px;
+    width: 230px;
+    margin-left: 10px;
+    height: 100px;
   }
-  .username {
-    margin-left: 35px;
+  .activities {
+    font-size: 14px;
+    top: 26px;
+  }
+  .username-settings {
+    display: none;
+  }
+  .mobile-usernick {
+    display: block;
+    height: 20px;
+    width: 70%;
+  }
+  .mobile-profile-settings {
+    display: block;
+    margin-top: 15px;
+    height: 30px;
+    width: 70%;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  hr {
+    width: 72%;
+  }
+  .profile-cards-container {
+    position: relative;
+    /* margin-top: 5px; */
+    width: 80%;
+    height: 70%;
+    overflow: auto;
+  }
+  .profile-cards-container::-webkit-scrollbar {
+    display: none;
+  }
+  .carousel-move-btn {
+    display: none;
+  }
+  .profile-cards {
+    display: block;
+    position: relative;
+    width: 100%;
+    opacity: 1;
+    z-index: 1;
+    transform: none;
+  }
+  .profile-card-container {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .profile-card {
+    height: 190px;
+    width: 112px;
+    margin: 0;
+    font-size: 7.5px;
+    margin: 1px;
+  }
+  .profile-card:hover {
+    height: 190px;
+    width: 112px;
+    opacity: 0.5;
+  }
+  .card-title {
+    height: 14px;
+    margin-bottom: 12px;
+  }
+  .card-content {
+    height: 22px;
+  }
+  .card-category {
+    font-size: 7px;
+  }
+  .profile-card-button {
+    font-size: 13px;
   }
 }
 </style>

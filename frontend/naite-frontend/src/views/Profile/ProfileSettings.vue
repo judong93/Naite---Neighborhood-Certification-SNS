@@ -197,7 +197,7 @@ export default {
     width: 80%;
   }
   #settingform {
-    width: 80%;
+    width: 70%;
   }
 }
 </style>

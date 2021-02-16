@@ -4,27 +4,37 @@
     <div class="form-title">{{formTitle}}</div>
     <PwChangingForm v-if="formTitle==='비밀번호 재설정'" @pwChangingCompleted="changingCompleted" />
     <LocationChangingForm v-if="formTitle==='동네 재설정'" @changingAddressCompleted="changingCompleted" />
+    <SelectUserForm v-if="formTitle==='거래에 참여한 유저를 선택해주세요'" :userJoinList='userJoinList' @selectJoinUser="selectJoinUser" />
+    <UserEvaluatingForm v-if="formTitle==='평가를 남겨주세요!'" :selectedUserNick='selectedUserNick' :MarketNo='MarketNo' :isSeller="isSeller" />
   </div>
 </template>
 
 <script>
 import PwChangingForm from '@/components/Profile/PwChangingForm'
 import LocationChangingForm from '@/components/Profile/LocationChangingForm'
+import SelectUserForm from '@/components/Profile/SelectUserForm'
+import UserEvaluatingForm from '@/components/Profile/UserEvaluatingForm'
 
 export default {
-  name: 'SettingForm',
+  name: 'SettingBox',
   data: function () {
     return {
-      
+      selectedUserNick: '',
+      MarketNo: 0,
     }
   },
   components: {
     PwChangingForm,
-    LocationChangingForm
+    LocationChangingForm,
+    SelectUserForm,
+    UserEvaluatingForm
   },
   props: {
     formIsOpen: Boolean,
     formTitle: String,
+    userJoinList: Array,
+    selectedMarketNo: Number,
+    isSeller: Number,
   },
   methods: {
     closeForm: function () {
@@ -34,14 +44,22 @@ export default {
     changingCompleted: function () {
       const settingForm = document.getElementById('settingform')
       settingForm.style.display = 'none'
-    }
+    },
+    selectJoinUser: function (userNick) {
+      this.formTitle = '평가를 남겨주세요!'
+      this.selectedUserNick = userNick
+      console.log(userNick)
+    },
   },
   watch: {
     formIsOpen: function () {
       const settingForm = document.getElementById('settingform')
       settingForm.style.display = 'block'
+    },
+    selectedMarketNo: function () {
+      this.MarketNo = this.selectedMarketNo
     }
-  }
+  },
 }
 </script>
 
@@ -53,9 +71,11 @@ export default {
   width: 20%;
   height: 70%;
   /* border: 3px solid red; */
-  z-index: 1;
+  z-index: 2;
   background-color: white;
   border-radius: 10px;
+  left: 40%;
+  right: 40%;
 }
 #settingform input {
   border-style: dotted;
@@ -69,8 +89,8 @@ export default {
   cursor: pointer;
 }
 .form-title {
-  font-size: 30px;
-  margin: 50px 0;
+  font-size: 25px;
+  margin: 10% 0;
 }
 .setting-btn {
     position: absolute;
@@ -83,5 +103,15 @@ export default {
     border-radius: 10px;
     border: none;
     transform:translateX(-50%)
+}
+@media screen and (max-width: 501px) {
+  #settingform {
+    width: 70%;
+    left: 15%;
+    right: 15%;
+  }
+  .setting-btn {
+    top: 77%;
+  }
 }
 </style>
