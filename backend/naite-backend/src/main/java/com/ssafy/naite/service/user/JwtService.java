@@ -28,7 +28,7 @@ public class JwtService {
         // Payload
         jwtBuilder.setSubject("auth-token")
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expireMin))
-                .claim("user",user).claim("greeting", user.getUserNick() +"님 환영합니다.");
+                .claim("user",user).claim("greeting", user.getUserNick() +"님 환영합니다.").claim("userPic",user.getUserPic());
 
         // Signature : 암호화
         jwtBuilder.signWith(SignatureAlgorithm.HS256,salt.getBytes());
