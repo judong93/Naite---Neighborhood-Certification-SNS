@@ -98,6 +98,7 @@ public class BoardDto {
         private String userNick;
         private int boardCommentCnt;
         private List<String> files = new ArrayList<String>();
+        private String userPic;
 
         public BoardResponseDto(Board board) {
             this.boardNo = board.getBoardNo();

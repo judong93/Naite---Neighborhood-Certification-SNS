@@ -8,6 +8,7 @@ import com.ssafy.naite.domain.picture.Picture;
 import com.ssafy.naite.domain.picture.PictureRepository;
 import com.ssafy.naite.domain.review.Review;
 import com.ssafy.naite.domain.review.ReviewRepository;
+import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
 import com.ssafy.naite.domain.village.Village;
 import com.ssafy.naite.domain.village.VillageRepository;
@@ -54,7 +55,9 @@ public class ReviewService {
                 .sorted(comp)
                 .map(ReviewDto.ReviewResponseDto::new)
                 .map(reviewResponseDto->{
-                    reviewResponseDto.setUserNick(userRepository.findById(reviewResponseDto.getBoard().getUserNo()).get().getUserNick());
+                    User user = userRepository.findById(reviewResponseDto.getBoard().getUserNo()).get();
+                    reviewResponseDto.setUserNick(user.getUserNick());
+                    reviewResponseDto.setUserPic(user.getUserPic());
                     reviewResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == reviewResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     reviewResponseDto.setFiles(pictureRepository.findPicByBoardNo(reviewResponseDto.getBoard().getBoardNo()));
                     return reviewResponseDto;
@@ -76,7 +79,9 @@ public class ReviewService {
                 .sorted(comp)
                 .map(ReviewDto.ReviewResponseDto::new)
                 .map(reviewResponseDto->{
-                    reviewResponseDto.setUserNick(userRepository.findById(reviewResponseDto.getBoard().getUserNo()).get().getUserNick());
+                    User user = userRepository.findById(reviewResponseDto.getBoard().getUserNo()).get();
+                    reviewResponseDto.setUserNick(user.getUserNick());
+                    reviewResponseDto.setUserPic(user.getUserPic());
                     reviewResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == reviewResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     reviewResponseDto.setFiles(pictureRepository.findPicByBoardNo(reviewResponseDto.getBoard().getBoardNo()));
                     return reviewResponseDto;
@@ -91,7 +96,9 @@ public class ReviewService {
     public ReviewDto.ReviewResponseDto findReviewById(int reviewNo) {
         Review review = reviewRepository.findById(reviewNo).orElseThrow(() -> new IllegalAccessError("[review_no=" + reviewNo + "] 해당 게시글이 존재하지 않습니다."));
         ReviewDto.ReviewResponseDto reviewResponseDto = new ReviewDto.ReviewResponseDto(review);
-        reviewResponseDto.setUserNick(userRepository.findById(reviewResponseDto.getBoard().getUserNo()).get().getUserNick());
+        User user = userRepository.findById(reviewResponseDto.getBoard().getUserNo()).get();
+        reviewResponseDto.setUserNick(user.getUserNick());
+        reviewResponseDto.setUserPic(user.getUserPic());
 
         List<BoardDto.LikeResponseDto> likeResponseDtoList = likeRepository.findAll().stream().filter(boardLike -> boardLike.getBoardNo() == reviewResponseDto.getBoard().getBoardNo()).map(BoardDto.LikeResponseDto::new).collect(Collectors.toList());
         List<String> likeUserList = new ArrayList<String>();
@@ -167,7 +174,9 @@ public class ReviewService {
                 .sorted(comp)
                 .map(ReviewDto.ReviewResponseDto::new)
                 .map(reviewResponseDto -> {
-                    reviewResponseDto.setUserNick(userRepository.findById(userNo).get().getUserNick());
+                    User user = userRepository.findById(reviewResponseDto.getBoard().getUserNo()).get();
+                    reviewResponseDto.setUserNick(user.getUserNick());
+                    reviewResponseDto.setUserPic(user.getUserPic());
                     reviewResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == reviewResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     reviewResponseDto.setFiles(pictureRepository.findPicByBoardNo(reviewResponseDto.getBoard().getBoardNo()));
                     return reviewResponseDto;

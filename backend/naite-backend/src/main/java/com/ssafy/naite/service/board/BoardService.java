@@ -7,6 +7,7 @@ import com.ssafy.naite.domain.like.LikePK;
 import com.ssafy.naite.domain.like.LikeRepository;
 import com.ssafy.naite.domain.picture.Picture;
 import com.ssafy.naite.domain.picture.PictureRepository;
+import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
 import com.ssafy.naite.domain.village.Village;
 import com.ssafy.naite.domain.village.VillageRepository;
@@ -49,7 +50,9 @@ public class BoardService {
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
-                    boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    User user = userRepository.findById(boardResponseDto.getUserNo()).get();
+                    boardResponseDto.setUserNick(user.getUserNick());
+                    boardResponseDto.setUserPic(user.getUserPic());
                     boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                     boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                     return boardResponseDto;
@@ -71,7 +74,9 @@ public class BoardService {
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
-                    boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    User user = userRepository.findById(boardResponseDto.getUserNo()).get();
+                    boardResponseDto.setUserNick(user.getUserNick());
+                    boardResponseDto.setUserPic(user.getUserPic());
                     boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                     boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                     return boardResponseDto;
@@ -93,7 +98,9 @@ public class BoardService {
                                                                             .sorted(Comparator.comparingInt(Board::getBoardLikeCnt).reversed())
                                                                             .map(BoardDto.BoardResponseDto::new)
                                                                             .map(boardResponseDto -> {
-                                                                                boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                                                                                User user = userRepository.findById(boardResponseDto.getUserNo()).get();
+                                                                                boardResponseDto.setUserNick(user.getUserNick());
+                                                                                boardResponseDto.setUserPic(user.getUserPic());
                                                                                 boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                                                                                 boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                                                                                 return boardResponseDto;
@@ -119,7 +126,9 @@ public class BoardService {
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
-                    boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    User user = userRepository.findById(boardResponseDto.getUserNo()).get();
+                    boardResponseDto.setUserNick(user.getUserNick());
+                    boardResponseDto.setUserPic(user.getUserPic());
                     boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                     boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                     return boardResponseDto;
@@ -141,7 +150,9 @@ public class BoardService {
                 .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                 .map(BoardDto.BoardResponseDto::new)
                 .map(boardResponseDto -> {
-                    boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                    User user = userRepository.findById(boardResponseDto.getUserNo()).get();
+                    boardResponseDto.setUserNick(user.getUserNick());
+                    boardResponseDto.setUserPic(user.getUserPic());
                     boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                     boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                     return boardResponseDto;
@@ -156,7 +167,9 @@ public class BoardService {
     public BoardDto.BoardResponseDto findBoardById(int boardNo) {
         Board board = boardRepository.findById(boardNo).orElseThrow(() -> new IllegalAccessError("[board_no=" + boardNo + "] 해당 게시글이 존재하지 않습니다."));
         BoardDto.BoardResponseDto boardResponseDto = new BoardDto.BoardResponseDto(board);
-        boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+        User user = userRepository.findById(boardResponseDto.getUserNo()).get();
+        boardResponseDto.setUserNick(user.getUserNick());
+        boardResponseDto.setUserPic(user.getUserPic());
         boardResponseDto.setUsersWithLike(findAllLikesByBoardNo(boardNo));
         boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
         boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
@@ -282,7 +295,9 @@ public class BoardService {
                                                                             .sorted(Comparator.comparing(Board::getBoardCreatedAt).reversed())
                                                                             .map(BoardDto.BoardResponseDto::new)
                                                                             .map(boardResponseDto -> {
-                                                                                boardResponseDto.setUserNick(userRepository.findById(boardResponseDto.getUserNo()).get().getUserNick());
+                                                                                User user = userRepository.findById(boardResponseDto.getUserNo()).get();
+                                                                                boardResponseDto.setUserNick(user.getUserNick());
+                                                                                boardResponseDto.setUserPic(user.getUserPic());
                                                                                 boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                                                                                 boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
                                                                                 return boardResponseDto;

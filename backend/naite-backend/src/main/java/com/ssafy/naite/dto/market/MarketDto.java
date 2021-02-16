@@ -93,6 +93,7 @@ public class MarketDto {
         private String boardCreatedAtSimple;
         private int boardCommentCnt;
         private List<String> files = new ArrayList<String>();
+        private String userPic;
 
         public MarketResponseDto(Market market) {
             this.marketNo = market.getMarketNo();
