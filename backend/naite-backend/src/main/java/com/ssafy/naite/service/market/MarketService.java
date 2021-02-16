@@ -202,6 +202,7 @@ public class MarketService {
                         .marketIsCompleted(marketRepository.findByBoard(board).get().getMarketIsCompleted())
                         .isSeller(1)
                         .evalIsCompleted(evalIsCompleted)
+                        .files(pictureRepository.findPicByBoardNo(board.getBoardNo()))
                     .build()
             );
         }
@@ -221,6 +222,7 @@ public class MarketService {
                     .marketIsCompleted(marketRepository.findByBoard(board).get().getMarketIsCompleted())
                     .isSeller(0)
                     .evalIsCompleted(evalIsCompleted)
+                    .files(pictureRepository.findPicByBoardNo(board.getBoardNo()))
                     .build()
             );
         }
