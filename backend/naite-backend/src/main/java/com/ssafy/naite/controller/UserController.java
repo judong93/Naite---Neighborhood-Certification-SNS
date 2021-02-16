@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -309,6 +310,18 @@ public class UserController {
             return new Response("error", e.getMessage(), null);
         }
         return new Response("success", "닉네임이 성공적으로 변경되었습니다.", null);
+    }
+
+    @PutMapping("/profile/pic")
+    @ApiOperation(value = "프로필 변경")
+    public Response updateUserPic(@ApiParam(value = "변경할 새로운 유저 프로필 파일")@RequestParam(required = false) MultipartFile files, HttpServletRequest req) {
+        int userNo = getUserNo(req);
+        try {
+            userService.updateUserPic(files, userNo);
+        } catch (Exception e) {
+            return new Response("error", e.getMessage(), null);
+        }
+        return new Response("success", "프로필이 성공적으로 변경되었습니다.", null);
     }
 
 
