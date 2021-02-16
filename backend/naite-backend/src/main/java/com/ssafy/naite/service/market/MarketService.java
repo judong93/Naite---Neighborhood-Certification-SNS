@@ -192,8 +192,8 @@ public class MarketService {
             Evaluation eval = evaluationRepository.findByMarketAndEvalIsSeller(marketRepository.findByBoard(board).get(), 0);
             int evalIsCompleted = 0;
             if (eval != null) evalIsCompleted = 1;
-
-            result.add(MarketDto.MarketByUserResponseDto.builder()
+            if(board.getBoardIsDeleted() == 0) {
+                result.add(MarketDto.MarketByUserResponseDto.builder()
                         .marketNo(marketRepository.findByBoard(board).get().getMarketNo())
                         .boardNo(board.getBoardNo())
                         .boardTitle(board.getBoardTitle())
@@ -203,8 +203,9 @@ public class MarketService {
                         .isSeller(1)
                         .evalIsCompleted(evalIsCompleted)
                         .files(pictureRepository.findPicByBoardNo(board.getBoardNo()))
-                    .build()
-            );
+                        .build()
+                );
+            }
         }
 
         for (int i = 0; i < boardOfBuyer.size(); i++) {
@@ -213,18 +214,20 @@ public class MarketService {
             int evalIsCompleted = 0;
             if (eval != null) evalIsCompleted = 1;
 
-            result.add(MarketDto.MarketByUserResponseDto.builder()
-                    .marketNo(marketRepository.findByBoard(board).get().getMarketNo())
-                    .boardNo(board.getBoardNo())
-                    .boardTitle(board.getBoardTitle())
-                    .boardContent(board.getBoardContent())
-                    .bigCategoryNo(board.getBigCategoryNo())
-                    .marketIsCompleted(marketRepository.findByBoard(board).get().getMarketIsCompleted())
-                    .isSeller(0)
-                    .evalIsCompleted(evalIsCompleted)
-                    .files(pictureRepository.findPicByBoardNo(board.getBoardNo()))
-                    .build()
-            );
+            if(board.getBoardIsDeleted() == 0) {
+                result.add(MarketDto.MarketByUserResponseDto.builder()
+                        .marketNo(marketRepository.findByBoard(board).get().getMarketNo())
+                        .boardNo(board.getBoardNo())
+                        .boardTitle(board.getBoardTitle())
+                        .boardContent(board.getBoardContent())
+                        .bigCategoryNo(board.getBigCategoryNo())
+                        .marketIsCompleted(marketRepository.findByBoard(board).get().getMarketIsCompleted())
+                        .isSeller(0)
+                        .evalIsCompleted(evalIsCompleted)
+                        .files(pictureRepository.findPicByBoardNo(board.getBoardNo()))
+                        .build()
+                );
+            }
         }
         return result;
     }
