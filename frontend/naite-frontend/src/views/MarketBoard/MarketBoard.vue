@@ -60,9 +60,19 @@ export default {
     toMarketDetail: function (marketNo) {
       this.$router.push({name:'MarketBoardDetail',params:{marketNo:marketNo}})
     },
+    setToken:function(){
+      const token=localStorage.getItem('jwt')
+      const config = {
+          headers: {
+          'auth-token':`${token}`
+          }
+      }
+      console.log(config)
+      return config
+    },
   },
   created: function () {
-    axios.get(`${SERVER_URL}/market/list/6/`)
+    axios.get(`${SERVER_URL}/market/list/6/`, this.setToken())
       .then((res) => {
         this.marketPostings = res.data
         console.log(this.marketPostings)
@@ -74,7 +84,7 @@ export default {
   watch: {
     smallCategoryNo: function () {
       const smallCategoryNo = this.smallCategoryNo
-      axios.get(`${SERVER_URL}/market/list/${smallCategoryNo}/`)
+      axios.get(`${SERVER_URL}/market/list/${smallCategoryNo}/`, this.setToken())
         .then((res) => {
           this.marketPostings = res.data
           console.log(this.marketPostings)
@@ -141,6 +151,7 @@ export default {
   margin-bottom: 10px;
   border-bottom: 2px solid lightgray;
   left: 0;
+  cursor: pointer;
 }
 .posting-card {
   display: inline-block;
@@ -163,7 +174,7 @@ export default {
   width: 60%;
   top: 3px;
   font-size: 25px;
-  left: 180px;
+  left: 160px;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: left;
@@ -173,7 +184,7 @@ export default {
   display: flex;
   justify-content: space-between;
   bottom: 7px;
-  left: 180px;
+  left: 160px;
   width: 60%;
 }
 .created {
@@ -185,5 +196,49 @@ export default {
 }
 .market-comments {
   margin-left: 17px;
+}
+@media screen and (max-width: 501px) {
+  #market-board {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .group-buying {
+    position: inherit;
+    width: 80%;
+    right: 0;
+    left: 0;
+    top: 27%;
+  }
+  .group-buying::-webkit-scrollbar {
+    display: none;
+  }
+  .posting-img {
+    height: 95px;
+    width: 95px;
+  }
+  .posting-title {
+    left: 30%;
+  }
+  .posting-box {
+    width: 100%;
+  }
+  .posting-box:hover {
+    opacity: 0.5;
+  }
+  .area-created {
+    left: 30%;
+  }
+  .button-list {
+    position: inherit;
+    width: 80%;
+    text-align: right;
+    left: 0;
+  }
+  .write-button {
+    display: none;
+  }
 }
 </style>

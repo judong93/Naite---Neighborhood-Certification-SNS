@@ -22,7 +22,7 @@
           <div class="subs-content">
             <div class="market-detail-writer">
               <p @click="toWriterProfile">{{marketDetailContent.userNick}}</p>
-              <i class="far fa-comment-dots fa-2x"><span>작성자와 채팅하기</span></i>
+              <i @click="chatWithPoster" class="far fa-comment-dots fa-2x"><span>작성자와 채팅하기</span></i>
             </div>
             <p>{{marketDetailContent.boardCreatedAt}}</p>
             <p>{{marketDetailContent.marketCost}}원</p>
@@ -64,8 +64,27 @@ export default {
     BoardImg,
   },
   methods: {
+    setToken:function(){
+      const token=localStorage.getItem('jwt')
+      const config = {
+          headers: {
+          'auth-token':`${token}`
+          }
+      }
+      console.log(config)
+      return config
+    },
     toWriterProfile: function () {
       this.$router.push({name: 'Profile', params:{userNo: this.marketDetailContent.board.userNo}})
+    },
+    chatWithPoster: function () {
+      axios.post(`${SERVER_URL}/market/join/${this.marketNo}/`, {}, this.setToken())
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   },
   created: function () {
@@ -197,5 +216,38 @@ export default {
   display: none;
   font-size: 15px;
   font-family: font1;
+}
+@media screen and (max-width: 501px) {
+  #marketboarddetail {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+  .market-detail-box {
+    flex-direction: column;
+    align-items: center;
+    position: inherit;
+    width: 90%;
+    left: 0;
+  }
+  .market-detail-img {
+    width: 90%;
+    height: 50%;
+  }
+  .market-detail-lg-img-container {
+    height: 80%;
+  }
+  .market-detail-content-container {
+    width: 90%;
+    padding-left: 0;
+  }
+  .market-detail-sm-img-container {
+    margin-top: 0;
+    height: 10%;
+  }
+  .market-detail-sm-img {
+    margin-top: 15px;
+  }
 }
 </style>

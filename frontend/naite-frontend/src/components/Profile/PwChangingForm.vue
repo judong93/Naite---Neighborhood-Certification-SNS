@@ -46,8 +46,9 @@ export default {
         alert('비밀번호가 일치하지 않습니다!')
       } else {
         const config = this.setToken()
-        axios.put(`${SERVER_URL}/user/profile/password`, {userPw: this.newPw}, config)
-        .then(() => {
+        axios.put(`${SERVER_URL}/user/profile/password`, {currentPw:this.nowPw, newPw: this.newPw}, config)
+        .then((res) => {
+          console.log(res)
           alert('비밀번호가 변경되었습니다!')
           this.$emit('pwChangingCompleted')
         })
