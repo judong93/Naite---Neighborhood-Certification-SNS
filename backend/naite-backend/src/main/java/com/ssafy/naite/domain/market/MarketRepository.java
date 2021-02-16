@@ -18,4 +18,7 @@ public interface MarketRepository extends JpaRepository<Market, Integer> {
     List<Board> getBoardsByMarketPerson(User user);
 
     Optional<Market> findByBoard(Board board);
+
+    @Query("SELECT m FROM Market m WHERE m.board = :board")
+    public Optional<Market> findMarketByBoard(Board board);
 }
