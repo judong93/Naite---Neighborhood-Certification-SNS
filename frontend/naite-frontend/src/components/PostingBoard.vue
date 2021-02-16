@@ -49,12 +49,13 @@
             <label for='postingImgInput'>
                 <div class="postingImg">&#xf302;</div>
             </label>
-            <input type="file" id='postingImgInput'>
+            <input type="file" id='postingImgInput' multiple @change="saveFile">
             <div style='color:white'>
                 <span v-if='params.bigCategoryNo === "1"'>익명으로 게시하기</span>
                 <input v-if='params.bigCategoryNo === "1"' type="checkbox" style='margin-left:5px'>
                 <button class='postingBtn' @click='createForm'>게시하기</button>
             </div>
+            <div v-if = 'formImages' class='postImageName'>{{formImagesName}}</div>
 
         </footer>
 
@@ -69,7 +70,7 @@ export default {
             params:{
                 "bigCategoryNo": "",
                 "boardContent": "",
-                "boardPic": "test",
+                "boardPic": "",
                 "boardTitle": "",
                 "openFlag": 0,
                 "unknownFlag": 0,
@@ -78,9 +79,29 @@ export default {
             reviewStar:0,
             contentExplain:'',
             marketCost:'',
+            formImages:[],
+            formImagesName:'',
         }
     },
     methods:{
+        saveFile:function(e){
+            var files = e.target.files || e.dataTransfer.files;
+            this.formImagesName = ''
+            if (!files.length) {
+                this.formImages = ''
+                
+                return;
+            }
+            this.formImages = files
+            this.formImagesName += '선택된 사진:'
+            for (let i=0;i<files.length;i++){
+                this.formImagesName += files[i].name
+                this.formImagesName += ', '
+            }
+            console.log(this.formImages,this.formImagesName)
+            
+            
+        },
         createForm:function(){
             const unKnown = document.querySelector('.postingFooter input')
 
@@ -104,8 +125,9 @@ export default {
                 alert('평점을 선택해주세요!')
             } else if (this.params.bigCategoryNo==='5' && this.smallCategoryNo && !this.marketCost){
                 alert('가격을 입력해주세요')
-            } else {
-                this.$emit('createForm',this.params,this.smallCategoryNo,this.reviewStar,this.marketCost)
+            } 
+            else {
+                this.$emit('createForm',this.params,this.smallCategoryNo,this.reviewStar,this.marketCost,this.formImages)
             }
         },
         uploadImg:function(){
@@ -242,5 +264,87 @@ export default {
 #postingImgInput{
     visibility: hidden;
 }
+
+.postImageName {
+    font-family: font1;
+    color:white;
+    position: absolute;
+    left: 10%;
+    bottom:5%;
+}
+
+
+
+
+@media screen and (max-width:501px) {
+    #postingBoard {        
+        top: 10%;
+        left: 0%;
+        width: 100%;
+        height: 80%;
+        border-radius: 0px;
+        padding: 10px;
+        border: 5px solid #f8f8f875;
+        overflow:auto;
+    }
+
+    #postingBoard label {
+        font-size: 10px;
+        margin-right: 1px;
+    }
+
+    #postingBoard input {
+        padding: 1px;
+    }
+
+    #postingTitle {
+        width: 100%;
+        height: 5%;
+        margin-right: 0px;
+        font-size: 20px;     
+    }
+
+    .postingHead > select {
+        margin-top: 10px;       
+        margin-right: 10px;        
+    }
+    #postingContent {
+        font-size: 15px;
+        border-radius: 0px;
+        margin-top:10px;
+        padding:5px;   
+        width:100%;
+    }
+
+    .postingImg {        
+        font-size: 30px;
+    }
+    .postingImg + div{
+        margin-top: 10px;
+    }
+    .postingImg + div > input {
+        margin-right: 20px;
+    }
+
+
+    .postingBtn {       
+        border-radius: 0px;
+        height:30px;
+        margin-top: 10px;
+        width: 200%;
+        margin-left: -100%;
+
+    }
+    .postingFooter > div > span,.postingFooter > div >input {
+        position:absolute;
+        bottom: 13%;
+        font-size: 10px;
+        right: 30%;        
+    }
+    .postingFooter > div >span {
+        right: 35%;
+    }
+}
+
 
 </style>

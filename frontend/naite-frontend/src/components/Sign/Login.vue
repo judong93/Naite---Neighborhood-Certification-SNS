@@ -19,15 +19,14 @@
         </form>
         <div id='login-checkbox'>
             <label for="id-save">아이디 저장</label>
-            <input type="checkbox" id='id-save'>
+            <input type="checkbox" id='id-save' :checked='saveId'>
             <label for="auto-login" style='margin-left:3%;'>자동 로그인</label>
-            <input type="checkbox" id='auto-login'>
+            <input type="checkbox" id='auto-login' :checked='autoLogin'>
             <span id='webSingup' @click='look_signup'>Don't have an account? Signup</span>
             
         </div>
         
         <button class="login-btn" @click='loginById'>로그인</button><br>
-        <button class="login-btn-sns">네이버로 로그인 하기</button><br>
         <span class='find-pw' @click='switchFindLogin'>아이디/비밀번호 찾기</span><br>
         <span id='mobiSignup' @click='look_signup'>회원가입</span>
     </div>
@@ -58,7 +57,9 @@ export default {
             params: {
                 'userId':'',
                 'userPw':'',
-            }
+            },
+            'saveId':false,
+            'autoLogin':false,
         }
     },
     methods:{
@@ -74,6 +75,9 @@ export default {
             event.returnValue=false;
         },
         loginById:function(){
+            const saveId = document.querySelector('#id-save')
+            const autoLogin = document.querySelector('#auto-login')
+            
             if (this.params.userId && this.params.userPw) {
                 axios.post(`${SERVER_URL}/user/sign/signin`,this.params)
                     .then(res=>{
@@ -82,6 +86,29 @@ export default {
                         this.$router.push({name:'Main'})
                         this.$store.dispatch('saveuserinfo',decoded)                        
                         localStorage.setItem('jwt',res.data['auth-token'])
+                        
+                        if (saveId.checked) {
+                            this.$store.dispatch('saveId',this.params.userId)
+                        } else {
+                            this.$store.dispatch('saveId','')
+                        }
+
+                        if (autoLogin.checked) {
+                            const param = {
+                                'userId':this.params.userId,
+                                'userPw':this.params.userPw
+                            }
+                            this.$store.dispatch('autologin',param)
+                        } else {
+                            this.$store.dispatch('autologin','')
+                        }
+                        const params = {
+                            'saveId': saveId.checked,
+                            'autologin':autoLogin.checked,
+                        }
+                        this.$store.dispatch('saveloginstate',params)
+
+
                     })
                     .catch(err=>{
                         console.log(err)
@@ -128,6 +155,20 @@ export default {
         }
 
     },
+    created(){
+        if (this.$store.state.loginState){
+            this.saveId = this.$store.state.loginState.saveId
+            this.autoLogin = this.$store.state.loginState.autologin
+        }
+        if (this.saveId) {
+            this.params.userId = this.$store.state.savedId
+        }
+        if (this.autoLogin) {
+            this.params.userId= this.$store.state.autoLogin.userId
+            this.params.userPw= this.$store.state.autoLogin.userPw
+            this.loginById()
+        }     
+    }
 }
 </script>
 
@@ -266,7 +307,7 @@ export default {
 
 .find-pw{
     position:absolute;
-    bottom: 20%;
+    bottom: 30%;
     left: 50%;
     transform: translateX(-50%);
     cursor:pointer;
@@ -281,7 +322,7 @@ export default {
     #login {
         width: 100vw;
         height: 100vh;
-        color:black;
+        color:white;
     }
 
     .loginBox{
@@ -365,27 +406,9 @@ export default {
 
     }
 
-    .login-btn-sns {
-        position: relative;
-        width: 50%;
-        height: 5%;
-        top: 0;
-        left: 0;
-        color:white;
-        background-color: rgba(21, 255, 0);
-        border-radius: 10px;
-        border: none;
-        right:0%;
-        transform:none;
-        margin-top: 5%;
-        margin-bottom: 5%;
-        font-size: 15px;
-
-    }
-
     .find-pw{
         position:relative;
-        bottom: 0%;
+        top: 5%;
         left: 0%;
         transform:none;
         cursor:pointer;
@@ -394,16 +417,19 @@ export default {
         background-color: rgba(0,0,0,0.3);
         border-radius: 5px;
         padding:5px;
-        font-size: 10px;
+        font-size: 10px;        
     }
     
     #mobiSignup {
+        position:relative;
+        top:5%;
         font-size: 15px;
         display: block;
         color:white;
         background-color: rgba(0,0,0,0.3);
         width:20%;
-        margin: 5% auto
+        margin: 5% auto;
+        border-radius: 5px;
 
     }
 

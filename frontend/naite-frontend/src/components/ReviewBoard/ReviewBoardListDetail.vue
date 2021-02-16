@@ -1,17 +1,22 @@
 <template>
-    <div id='boardlistdetail'>        
-        <div class='detailInfo'>
-            <div class="detailHead">
-                <div class="detailUser">
-                    <img src="../../assets/cha2.png">
+    <div id='reviewboardlistdetail'>        
+        <div class='reviewdetailInfo'>
+            <div class="reviewdetailHead">
+                <div class="reviewdetailUser">
+                    <img :src="apiData.userPic">
                 </div>
+                
                 <div>
-                    <div class="detailTitle">{{apiData['board'].boardTitle}}</div>
-                    <div class="detailBar">
-                        <i class="far fa-comments" @click='sendMessage'  v-if='thisBoardUserNo !== apiData.board.userNo'></i>
-                        <span @click='sendMessage'  v-if='thisBoardUserNo !== apiData.board.userNo'>메세지</span>
-                        <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.board.userNo'></i>
-                        <span v-if='thisBoardUserNo !== apiData.board.userNo'>신고</span>
+                    <div class="reviewdetailTitle">{{apiData['board'].boardTitle}}</div>
+                    <div class="reviewdetailBar">
+                        <div @click='sendMessage'>
+                            <i class="far fa-comments" v-if='thisBoardUserNo !== apiData.userNo'></i>
+                            <span   v-if='thisBoardUserNo !== apiData.userNo'>메세지</span>
+                        </div>
+                        <div @click='reportBoard()'>
+                            <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.userNo'></i>
+                            <span v-if='thisBoardUserNo !== apiData.userNo'>신고</span>
+                        </div>
                         <div v-if='thisBoardUserNo === apiData.board.userNo' style='display:flex'>
                             <div  @click='updateBoard' style='margin-right:10px'>
                                 <i class="far fa-edit"  ></i>
@@ -25,21 +30,21 @@
                         </div>
 
                     </div>
-                    <div class='detailHeadInfo'>                        
-                        <div class='detailUserNick'>{{apiData.userNick}}님의 {{smallCategoryNmae[apiData.smallCategoryNo]}}시설에 대한 글 
-                             <span v-if='apiData.smallCategoryNo===1'>&#xf2e7;</span>
+                    <div class='reviewdetailHeadInfo'>                        
+                        <div class='reviewdetailUserNick'>{{apiData.userNick}}님의 {{smallCategoryNmae[apiData.smallCategoryNo]}}시설에 대한 글 
+                            <span v-if='apiData.smallCategoryNo===1'>&#xf2e7;</span>
                             <span v-if='apiData.smallCategoryNo===2'>&#xf0f9;</span>
                             <span v-if='apiData.smallCategoryNo===3'>&#xf70c;</span>
                             <span v-if='apiData.smallCategoryNo===4'>&#xf0c4;</span>
                             <span v-if='apiData.smallCategoryNo===5'>&#xf563;</span>
                         </div>
-                        <div class='detailMes'>
+                        <div class='reviewdetailMes'>
                             <i class="far fa-thumbs-up" @click='likeBoard' v-if='!liked'></i>
                             <i class="fas fa-thumbs-up" @click='likeBoard' v-else></i>
                             <span>{{apiData.board.boardLikeCnt}}</span>
                             <i class="far fa-comment-dots"></i>
                             <span>{{apiData.boardCommentCnt}}</span>
-                             <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
                             <span>{{apiData.reviewStar}}점</span>    
                             <i class="far fa-clock"></i>
                             <span>{{apiData.board.boardCreatedAt}}</span>
@@ -50,7 +55,7 @@
                 </div>
             </div>
             <hr style='background-color:white;margin:10px;'>            
-            <div class="detailBody" v-if='!update' v-html='apiData.board.boardContent'>
+            <div class="reviewdetailBody" v-if='!update' v-html='apiData.board.boardContent'>
                 <!-- 보드의 내용물보이는 부분 -->
             </div>
             <div class="detailBody" v-else>
@@ -62,10 +67,11 @@
                 <button v-if='update' @click = 'completeUpdate'>수정하기</button>
             </div>
         </div>
-        <div class='detailImg' v-if='apiData.board.boardPic'>
-        <!-- <div class='detailImg'> -->
-            <img src="https://i4a402.p.ssafy.io/img/signpast.fbb26c75.jpg" alt="" width='100%'>
+        <div class='reviewdetailImg' v-if='apiData.board.boardPic'>
+            <!-- <img src="https://i4a402.p.ssafy.io/images/board/254_202102150613499_2.jpg" alt="" width='100%'> -->
+        
         </div>
+        <BoardDetailImg :boardImg = 'apiData.files' v-if='apiData.files' />
 
     </div>
 </template>
@@ -73,8 +79,8 @@
 <script>
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
-const today = new Date()
-console.log(today)
+import BoardDetailImg from '@/components/Board/BoardDetailImg'
+
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 // const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
@@ -88,6 +94,9 @@ export default {
         boardNo:[String,Number],
         updateCommentCntCheck:Number,
     },
+    components:{
+        BoardDetailImg,
+    },
     data:function(){
         return {
             categoryName:['','번화가','동사무소','수군수군','소리소문','장터'],
@@ -99,8 +108,35 @@ export default {
         }
     },
     methods:{
+         reportBoard:function(){
+            const params = {
+                "boardNo": this.boardNo,
+                "commentNo": 0,
+                "reportTargetNo": this.apiData.userNo,
+                "reportType": 0,
+            }
+            axios.post(`${SERVER_URL}/report/insert`,params,this.setToken())
+                .then(res=>{
+                    if (res.data.response ==='error'){
+                        alert(res.data.message)
+                    } else {
+                        alert(`${this.apiData.boardTitle} 글에 대한 신고가 접수되었습니다`)
+                    }
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
+        },
         sendMessage:function(){
-            alert('메세지 기능은 추후 업데이트 됩니다. 빠른 시일내에 구현하겠습니다!')
+            const userNick = this.apiData.userNick
+            
+            axios.post(`${SERVER_URL}/chat/room?otherNick=${userNick}`,{},this.setToken())
+                .then(res=>{
+                    this.$emit('sendMessageDirect',res.data,userNick)
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
         },
         likeBoard:function(){
             const params = {
@@ -185,23 +221,8 @@ export default {
                 if (this.apiData.usersWithLike[i] === decode.user.userNick) {
                     this.liked = true                
                 }
-            }
-         
-
-            const img = this.apiData.board.boardPic
-            const headBottom = document.querySelector('.detailHeadInfo')
-            const detailBar = document.querySelector('.detailBar')
-                        
-            this.apiData.board.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')
-            this.apiData.board.boardContent.split('\n').join('<br />')
-            
-            if (!img) {
-                headBottom.style.width = '1038px'
-                detailBar.style.right ='1%'
-            } else {
-                headBottom.style.width = '740px'
-                detailBar.style.right ='28%'
-            }
+            }       
+            this.apiData.board.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')          
         },
         updateCommentCntCheck:function(){            
             this.apiData.boardCommentCnt += 1
@@ -213,41 +234,42 @@ export default {
 
 <style>
 
-#boardlistdetail{
-    position:absolute;
-    width: 60%;
-    height: 40%;
+#reviewboardlistdetail{
+    position:relative;
+    width: 60%;    
     background-color: #A87A4F;
     top: 13%;
     left: 20%;  
     display:flex;  
     padding:10px;
     color:white;
+    flex-wrap: wrap;
 }
 
-.detailInfo {
+.reviewdetailInfo {
     width: 100%;
     height: 100%;
     background-color: teal;
     font-family: font1;
     text-align: left;
+    padding-bottom: 5%;
 }
 
 
-.detailImg {
+.reviewdetailImg {
     width:400px;
     /* height: 100%; */
     background-color: white;
 }
 
-.detailHead {
+.reviewdetailHead {
     width: 100%;
     height: 20%;
     display:flex;
 }
-.detailTitle {
+.reviewdetailTitle {
     width: 80%;
-    height:48px;
+    height:37px;
     text-align: left;
     font-size: 30px;
     overflow: hidden;
@@ -255,25 +277,25 @@ export default {
     text-overflow: ellipsis;
     margin-left: 12px;
 }
-.detailUserNick {
-    text-align: left;
-}
-
-.detailUserNick span {
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;    
-}
-
-
-.detailUser > img {
+.reviewdetailUser > img {
     height: 80px;
     border: 1px solid rgb(172, 172, 172);
     border-radius: 20%;
     background-color: white;
 }
+.reviewdetailUserNick {
+    text-align: left;
+}
 
-.detailHeadInfo{
-    width: 740px;    
+.reviewdetailUserNick span {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;    
+}
+
+
+
+.reviewdetailHeadInfo{
+    width: 1038px;    
     margin-left: 12px;
     display: flex;
     justify-content: space-between;
@@ -285,15 +307,15 @@ export default {
 
 
 
-.detailHeadInfo i {
+.reviewdetailHeadInfo i {
     margin: 0 5px;
     margin-right: 10px;
 }
-.detailHeadInfo span{
+.reviewdetailHeadInfo span{
     margin-right: 10px;
 }
 
-.detailBody {
+.reviewdetailBody {
     padding:0 10px;
     max-height: 190px;
     overflow: auto;
@@ -302,30 +324,136 @@ export default {
     transition:0.3s
 }
 
-.detailBody::-webkit-scrollbar {
+.reviewdetailBody::-webkit-scrollbar {
     display:none
 }
 
-.detailBody:hover::-webkit-scrollbar{
+.reviewdetailBody:hover::-webkit-scrollbar{
     display:contents;
 }
 
-.detailBar {
+.reviewdetailBar {
     position: absolute;
     top:4%;    
-    right:28%;
+    right:1%;
     cursor: pointer;
+    display:flex;
     
 }
-.detailBar > span {
+.reviewdetailBar > div > span {
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
+.reviewdetailBar > span {
     margin-right: 10px;
     margin-left: 5px;
 }
 
 
-.detailMes{
+.reviewdetailMes{
     cursor:pointer;
     font-size: 14px;
 }
 
+
+@media screen and (max-width:501px) {
+    #reviewboardlistdetail{
+        position:relative;
+        width: 100%;        
+        background-color: #A87A4F;
+        top: 8%;
+        left: 0%;          
+    }
+    .reviewdetailImg {
+        width:400px;
+        background-color: white;
+    }
+
+    .reviewdetailHead {
+        width: 100%;
+        height: 20%;
+        display:flex;
+    }
+    .reviewdetailTitle {
+        width: 200px;
+        height:37px;
+        text-align: left;
+        font-size: 14px;
+        overflow: hidden;
+        white-space:pre-wrap;        
+        margin-left: 12px;        
+    }
+    .reviewdetailUserNick {
+        text-align: left;
+    }
+
+
+    .reviewdetailUser > img {
+        height: 60px;
+        border: 1px solid rgb(172, 172, 172);
+        border-radius: 20%;
+        background-color: white;
+    }
+
+    .reviewdetailHeadInfo{
+        width: 100%;    
+        margin-left: 10px;
+        display: flex;
+        justify-content: space-between;
+        color:white;
+        font-size: 10px;
+        margin-top: 10px;
+    }
+
+
+
+
+    .reviewdetailHeadInfo i {        
+        margin-right:1px;
+    }
+    .reviewdetailHeadInfo span{
+        margin-right: 1px;
+    }
+
+    .reviewdetailBody {
+        padding:0 10px;        
+        overflow: auto;
+        overflow-x: hidden;
+        white-space: pre-wrap;
+        transition:0.3s;
+        font-size: 13px;
+    }
+
+    .reviewdetailBody::-webkit-scrollbar {
+        display:none
+    }
+
+    .reviewdetailBody:hover::-webkit-scrollbar{
+        display:contents;
+    }
+
+    .reviewdetailBar {
+        position: absolute;
+        top:4%;    
+        right:4%;
+        cursor: pointer;
+        font-size: 12px;
+        
+    }
+    .reviewdetailBar > span {
+        margin-right: 10px;
+        margin-left: 5px;
+    }
+
+
+    .reviewdetailMes{
+        cursor:pointer;
+        font-size: 10px;
+    }
+
+    
+}
+
+    
 </style>

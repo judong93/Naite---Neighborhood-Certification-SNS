@@ -53,5 +53,11 @@ export default {
     background-position: 50% 35%;
 }
 
+@media screen and (max-width:501px) {
+    #boardimg{
+        display:none;
+    }
+    
+}
 
 </style>

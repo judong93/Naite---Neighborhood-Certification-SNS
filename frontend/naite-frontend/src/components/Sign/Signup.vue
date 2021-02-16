@@ -229,8 +229,7 @@ export default {
                 let signupFormData = new FormData()
                 const paramsKey =["userBasicAddress","userDetailAddress",'userDong',"userEmail","userId","userName","userNick","userPw"]
                 for (let i=0;i<8;i++){
-                    signupFormData.append(`${paramsKey[i]}`,this.params[`${paramsKey[i]}`])
-                    console.log(this.params[`${paramsKey[i]}`])
+                    signupFormData.append(`${paramsKey[i]}`,this.params[`${paramsKey[i]}`])                    
                 }
 
                 if(this.userPic){
@@ -354,7 +353,7 @@ export default {
     position: absolute;
     left: 50%;
     top: 5%;
-    font-size: 60px;
+    font-size: 40px;
     color:white;
     transform: translate(-50%,-50%);
 
@@ -404,7 +403,8 @@ export default {
     border-right: none;
     outline: none;
     background-color: transparent;
-    color:white
+    color:white;
+    font-size: 16px;
 }
 .signuprightdiv > .emailInput{
     width: 70%;
@@ -413,6 +413,7 @@ export default {
 
 
 .signupform label {
+    font-size: 18px;
     margin-top:5%;
 }
 
@@ -423,6 +424,7 @@ export default {
     border:none;
     border-radius: 10px;
     cursor:pointer;
+    font-size: 18px;
 }
 
 .backBtn {
@@ -432,7 +434,12 @@ export default {
     border: none;
     color:white;
     border-radius: 10px;
-    cursor:pointer; 
+    cursor:pointer;
+    font-size: 20px;
+    transition:0.3s; 
+}
+.backBtn:hover{
+    color:greenyellow
 }
 .backBtn > i > span {
     font-family: font1;
@@ -440,7 +447,7 @@ export default {
 }
 
 .emailSend, .idConfirm, .nickConfirm, .emailConfirmSend {    
-    font-size: 15px;
+    font-size: 12px;
     border:none;
     border-radius: 10px;
     height:5%; 
@@ -500,15 +507,15 @@ export default {
         transform:none;
         display:block;
         font-size:15px;
-        color:black;
+        color:white;
         
     }
     .signuphead {
         position: relative;
         left: 0;
         top: 0;
-        font-size: 20px;
-        color:black;
+        font-size: 25px;
+        color:white;
         transform: none;
         margin: 10% auto;       
     }
@@ -556,13 +563,17 @@ export default {
     }
 
     .signupComplete{
+        position:relative;
         margin-top: 10%;
-        margin-left:80%;
-        background-color: cornflowerblue;
-        color:white;
+        margin-left:0%;
+        background-color: rgb(247, 247, 247);
+        color:black;
+        width:100%;
+        height:7%;
         border:none;
         border-radius: 10px;
         cursor:pointer;
+        font-size: 15px;
     }
 
     .backBtn {
@@ -572,7 +583,8 @@ export default {
         left:10%;
         background-color: transparent;
         border: none;
-        color:black;
+        font-size: 14px;
+        color:white;
         border-radius: 10px;
         cursor:pointer; 
     }
@@ -591,8 +603,8 @@ export default {
         border:none;
         border-radius: 10px;
         height:5%; 
-        background-color: rgb(114, 114, 114);   
-        color:white;
+        background-color: rgba(255, 255, 255, 0.678);   
+        color:black;
     }   
 
     #idInput {
@@ -616,12 +628,15 @@ export default {
         cursor:pointer;
         margin:0;
         margin-top: 0;
-        background-color: rgb(17, 235, 35);
+        background-color: rgb(255, 255, 255);
+        color:black;
         padding:5px;
         border-radius: 10px;
         font-size: 15px;
         transition:0.3s;
         top: 0%;
+        width:100%;
+        text-align: center;
     }
     .signupPicForm:hover{
         background-color: rgb(1, 101, 250);

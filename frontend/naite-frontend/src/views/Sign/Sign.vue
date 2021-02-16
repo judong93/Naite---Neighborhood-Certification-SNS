@@ -118,7 +118,7 @@ export default {
 
 @media screen and (max-width: 501px) {
   #sign {    
-    background: url('../../assets/m_sign.png') no-repeat center center;
+    background: url('../../assets/m_sign.jpg') no-repeat center center;
     overflow: hidden;
   }
 

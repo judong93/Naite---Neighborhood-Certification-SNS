@@ -69,7 +69,7 @@ export default {
 <style>
 #reviewcategory {
     position: absolute;
-    left:2%;    
+    left:1%;    
     color:white;
     text-align: center;
     display: flex;
@@ -107,6 +107,11 @@ export default {
 
 
 
-
+@media screen and (max-width:501px) {
+    #reviewcategory{
+        display:none
+    }
+    
+}
 
 </style>

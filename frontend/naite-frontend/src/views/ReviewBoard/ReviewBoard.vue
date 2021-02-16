@@ -1,5 +1,5 @@
 <template>
-    <div id="maincategory">
+    <div id="reviewmaincategory">
         <ReviewBoardImg :imgsrc='imgsrc'/>
         <ReviewBoardList :bigCategoryNo='bigCategoryNo'/>
     </div>
@@ -37,12 +37,21 @@ export default {
 </script>
 
 <style>
-#maincategory {
+#reviewmaincategory {
     position:relative;
     width: 1920px;
     height:969px;
     overflow:hidden;
     background-color: rgb(250, 246, 240);
+}
+
+
+@media screen and (max-width: 501px){
+    #reviewmaincategory{
+        width: 100vw;
+        height: 100vh;
+    }
+    
 }
 
 </style>

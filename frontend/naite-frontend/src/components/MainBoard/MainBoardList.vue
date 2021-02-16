@@ -1,6 +1,9 @@
 <template>
     <div id="mainboardlist">
-        
+        <div class='mobileBoardTitle'>
+            <h3 >골목길</h3>
+            <span>우리동네 소식모아보기</span>
+        </div >
         <div class='mainboardBack' >
             <div class="mainBoardFree" v-for='(no,idx) in boardNo' :key="idx">
                 <div class="mainBoardHead">
@@ -10,9 +13,13 @@
                 </div>
                 <hr>
                 <div class="mainBoardBody" v-for='(data,idx2) in apiData[`${idx}`]' :key='idx2'>
-                    <img src="../../assets/cha2.png" alt="" width='30px' height="30px">                    
+                    <img :src="data.userPic" alt="" width='30px' height="30px">                    
                     <p @click='toDetail(data.boardNo)' style='cursor:pointer'>{{data.boardTitle}}</p>
                     <div @click='toDetail(data.boardNo)' style='cursor:pointer' class='mainBoardStatus'>
+                        <i class="fas fa-user-alt" ></i>
+                        {{data.userNick}}
+                        <i class="far fa-images" style='margin-left:5px'></i>
+                        {{data.files.length}}
                         <i class="far fa-thumbs-up"></i>
                         {{data.boardLikeCnt}}
                         <i class="far fa-comment-dots"></i>
@@ -53,21 +60,29 @@ export default {
         toDetail:function(num){
             this.$router.push({name:'BoardDetail',params:{boardNo:num}})
         },
+        setToken:function(){
+            const token=localStorage.getItem('jwt')
+            const config = {
+                headers: {
+                'auth-token':`${token}`
+                }
+            }
+    
+            return config 
+        },
     },
     computed:{
-        
     },
     created(){
-        for (let i=0;i<3;i++){
-            axios.get(`${SERVER_URL}/board/list/top/${this.boardNo[i]}`)
+        for (let i=0;i<3;i++){            
+            axios.get(`${SERVER_URL}/board/list/top/${this.boardNo[i]}`,this.setToken())
                 .then(res => {
                     this.apiData[`${i}`] = res.data               
-                })
+                })  
                 .catch(err=>{
                     console.log(err)
                 })
             }       
-
     }
     
 
@@ -153,5 +168,39 @@ export default {
     width:170px;
 }
 
+@media screen and (max-width:501px) {
+    #mainboardlist {
+        position:absolute;
+        top: 8%;
+        left: 0%;
+        width: 100%;
+        height:83%;    
+    
+    }
+
+
+    .mainboardBack {        
+        display:block;
+        height:100%;
+        overflow: auto;
+        border-top: 10px solid  #d69960;
+        border-bottom: 10px solid #d69960;
+        border-left: 10px solid #A87A4F;
+        border-right: 10px solid  #A87A4F;
+    }
+
+    .mainboardBack > div {
+        position:relative;
+        border-radius: 10px;
+        width: 95%;        
+        max-height: 100%;    
+        margin: auto;
+        margin-top: 5%;
+        
+        
+    }
+   
+    
+}
 
 </style>

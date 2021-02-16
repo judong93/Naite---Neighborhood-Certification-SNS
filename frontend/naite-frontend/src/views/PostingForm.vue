@@ -229,8 +229,8 @@ export default {
   overflow: auto;
   /* background-color: lightgray; */
   top: 285px;
-  height: 600px;
-  width: 1530px;
+  height: 100vh;
+  width: 100vw;
 }
 .category {
   position: absolute;

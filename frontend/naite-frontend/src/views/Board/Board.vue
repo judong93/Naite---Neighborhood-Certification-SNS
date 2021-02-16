@@ -65,4 +65,17 @@ export default {
     background-color: rgb(250, 246, 240);
 }
 
+
+@media screen and (max-width: 501px){
+    #maincategory{
+        width: 100vw;
+        height: 100vh;
+    }
+    
+}
+
+
+
+
+
 </style>
