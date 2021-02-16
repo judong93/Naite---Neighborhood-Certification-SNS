@@ -11,7 +11,7 @@
                 <header>
                     <div>
                         <div>
-                            <img :src="!comment.userPic ? basicImg :comment.userPic" alt="" width='40px'>
+                            <img :src="!comment.userPic ? basicImg :comment.userPic" alt="" width='40px' height='40px'>
                         </div>
 
                         <span v-if='!comment.isDeleted'>{{comment.isUnknown ? '익명':comment.userNick}}</span>
@@ -38,6 +38,10 @@
                             <i class="far fa-comment-dots"></i>
                             <span>메세지 보내기</span>
                         </div>
+                        <div @click='otherProfile(comment.userNo)' v-if='!comment.userOwn && !comment.isDeleted'>
+                            <i class="fas fa-user-alt"></i>
+                            <span>프로필</span>
+                        </div>
                     </div>
                 </header>
                 <body v-if='idx!==updatedIdx'>
@@ -61,7 +65,7 @@
                     <div>
                         <i class="fas fa-share"></i>
                         <div>
-                            <img :src="!comment.userPic ? basicImg :comment.userPic" alt="" width='40px'>
+                            <img :src="!comment.userPic ? basicImg :comment.userPic" alt="" width='40px' height='40px'>
                         </div>
 
                         <span v-if='!comment.isDeleted'>{{comment.isUnknown ? '익명':comment.userNick}}</span>
@@ -83,6 +87,10 @@
                         <div v-if='!comment.userOwn && !comment.isDeleted' @click='sendMessage(comment.userNick)'>
                             <i class="far fa-comment-dots"></i>
                             <span>메세지 보내기</span>
+                        </div>
+                        <div @click='otherProfile(comment.userNo)' v-if='!comment.userOwn && !comment.isDeleted'>
+                            <i class="fas fa-user-alt"></i>
+                            <span>프로필</span>
                         </div>
                     </div>
                 </header>
@@ -168,6 +176,10 @@ export default {
     },
 
     methods:{ 
+        otherProfile:function(userNo){
+            this.$router.push({name:'Profile',params:{userNo:userNo}})
+
+        },
         commentUpdateComplete:function(){
             axios.put(`${SERVER_URL}/comment/${this.updateCommentNo}`,{'commentContent':this.updatedContent},this.setToken())
                 .then(() => {
@@ -245,7 +257,8 @@ export default {
                         alert('오류발생/로그아웃 후 재진행')
                         localStorage.removeItem('jwt')
                         this.$router.push({name:'Sign'})
-                    } else if (this.params.content) {                        
+                    } else if (this.params.content) {   
+                         console.log(res)                     
                         const decode = jwt_decode(localStorage.getItem('jwt'))
                         const param = {
                             'content':this.params.content,
@@ -255,6 +268,7 @@ export default {
                             'userOwn':1,
                             'createdAt':'현재',
                             'commentNo':res.data.data.commentNo,
+                            'userPic':res.data.data.userPic
                         }                        
                         this.updateCommentCnt()
                         this.apiData.push(param)
@@ -298,7 +312,8 @@ export default {
                             'parentId':this.recommentParams.parentId,
                             'userOwn':1,
                             'createdAt':'현재',
-                            'commentNo':res.data.data.commentNo
+                            'commentNo':res.data.data.commentNo,                            
+                            'userPic':res.data.data.userPic
                         }
                         this.updateCommentCnt()
                         this.recommentParams.userNick = decode.user.userNick 
@@ -326,8 +341,7 @@ export default {
                 .then(res => {
                     if (res.data.response === 'error') {
                         alert(res.data.message)
-                    } else {
-                        // this.apiData.splice(idx,1)
+                    } else {                        
                         this.apiData[idx].content = '삭제된 댓글입니다'
                         this.apiData[idx].isDeleted = 1
                     }
@@ -513,7 +527,8 @@ export default {
 .recomment > header > div:nth-child(1) > div {
     border-radius: 10px;
     background-color: grey;
-    border:1px solid rgb(172, 170, 170)
+    /* overflow: hidden; */
+    /* border:1px solid rgba(202, 198, 198, 0) */
 }
 .recomment > header > div:nth-child(1) >span {
     margin-left: 10%;
@@ -556,9 +571,6 @@ export default {
     font-style: italic;
     text-decoration:line-through ;
 }
-
-
-
 
 .recommentUnknownCheck{
     margin-right: 10px;
@@ -623,6 +635,11 @@ export default {
     position:absolute;
     bottom:-20%;
 } */
+
+#boardComment img {
+    border-radius: 10px;
+    border:0.5px solid rgb(182, 182, 182);
+}
 
 
 @media screen and (max-width:501px) {

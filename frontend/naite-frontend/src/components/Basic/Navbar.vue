@@ -51,7 +51,7 @@
                     <i class="fas fa-pen-alt"></i><br>
                     <span>Write</span>
                 </div>
-                <div>
+                <div @click='profile'>
                     <i class="fas fa-user-alt"></i><br>
                     <span>My profile</span>
                 </div>
@@ -69,21 +69,21 @@
                 
             </div>
             <div @click='showCategory(2)'>
-                 <div class='menu2'>
+                <div class='menu2'>
                     <img src="../../assets/동사무소.png" alt="" width='100%'>
                 </div>
                 <span>동사무소</span>
                 
             </div>
             <div @click='showCategory(3)'>
-                 <div class='menu3'>
+                <div class='menu3'>
                     <img src="../../assets/수군수군2.png" alt="" width='100%'>
                 </div>
                 <span>수군수군</span>
                 
             </div>
             <div @click='showCategory(4)'>
-                 <div class='menu4'>
+                <div class='menu4'>
                     <img src="../../assets/소리소문1.png" alt="" width='100%'>
                 </div>
                 <span>소리소문</span>
@@ -101,7 +101,7 @@
                 </div>
                 <span>확성기</span>
             </div>
-            <div>
+            <div @click='searchTitle'>
                 <div class='menu7'>
 
                     <i class="fab fa-sistrix"></i>
@@ -135,6 +135,11 @@ export default {
         }
     },
     methods:{
+        searchTitle:function(){
+            this.$router.push({name:'Search'})
+            this.mobileMenu()            
+            
+        },
         realSearch:function(){
             const searchInput = document.querySelector('.fa-search+input')
             searchInput.style.width = '700px'
@@ -177,8 +182,7 @@ export default {
         },
         showCategory:function(num){
             this.mobileMenuBoo = true
-            this.mobileMenu()
-
+            this.mobileMenu()            
             if (num===0) {
                 this.$router.push({name:'MainBoard'})
             } else if (num===5){
@@ -520,13 +524,13 @@ export default {
         padding-top: 10px;
         border-radius: 100%;
         font-size: 20px;
-        color:white;
+        color:black;
         
     }
     .menu > div > span {
         color:black;
         white-space: nowrap;
-        font-size: 15px;
+        font-size: 12px;
     }
 
 }

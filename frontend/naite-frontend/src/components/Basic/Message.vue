@@ -114,7 +114,7 @@ export default {
     height: 100px;
     
     /* background-color: red; */
-    border: black solid 1px;
+    /* border: black solid 1px; */
     border-radius: 100%;
     background-color: transparent;
     /* background-color: #9B8281; */
@@ -124,8 +124,15 @@ export default {
     
 }
 #message > div > i{
-    font-size: 60px;
+    font-size: 50px;
     margin-top: 20px;
+    color:lightcoral;
+    transition:0.3s;
+}
+
+#message > div >i:hover {
+    font-size: 60px;
+    color:lightgreen;
 }
 
 

@@ -20,7 +20,7 @@
             <p>상세내용</p>
           </div>
           <div class="subs-content">
-            <div class="market-detail-writer">
+            <div class="market-detail-writer">              
               <p @click="toWriterProfile">{{marketDetailContent.userNick}}</p>
               <i @click="chatWithPoster" class="far fa-comment-dots fa-2x"><span>작성자와 채팅하기</span></i>
             </div>
@@ -78,9 +78,16 @@ export default {
       this.$router.push({name: 'Profile', params:{userNo: this.marketDetailContent.board.userNo}})
     },
     chatWithPoster: function () {
+      const userNick = this.marketDetailContent.userNick
       axios.post(`${SERVER_URL}/market/join/${this.marketNo}/`, {}, this.setToken())
-        .then((res) => {
-          console.log(res)
+        .then(() => {
+            axios.post(`${SERVER_URL}/chat/room?otherNick=${userNick}`,{},this.setToken())
+                  .then(res=>{
+                      this.$emit('sendMessageDirect',res.data,userNick)                    
+                  })
+                  .catch(err=>{
+                      console.log(err)
+                  })
         })
         .catch((err) => {
           console.log(err)

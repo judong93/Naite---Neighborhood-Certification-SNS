@@ -222,7 +222,7 @@ export default {
             if (this.params.userPw === this.pwConfirm) {
                 pwCheck = true
             }
-
+        
             if(!this.idConfirm || !this.nickConfirm){
                 alert('아이디 및 닉네임 중복확인을 진행해주세요')
             } else if (pwCheck&&nullCheck&&this.emailConfirm&&this.addressConfirm) {

@@ -1,14 +1,20 @@
 <template>
     <div id='boardlistdetail'>        
         <div class='detailInfo'>
-            <div class="detailHead">
-                <div class="detailUser">
-                    <img :src="apiData.userPic">
+            <div>
+                <div class="detailHead">
+                    <div class="detailUser">
+                        <img :src="apiData.userPic">
+                    </div>
+                    <div>
+                        <h2 class="detailTitle">{{apiData.boardTitle}}</h2>
+                        <div class='detailUserNick' v-if='apiData.unknownFlag'>익명님 {{categoryName[apiData.bigCategoryNo]}}에 남긴 글</div>
+                        <div class='detailUserNick' v-else>{{apiData.userNick}}님이 {{categoryName[apiData.bigCategoryNo]}}에 남긴 글 </div>
+                    </div>
                 </div>
                 <div>
-                    <div class="detailTitle">{{apiData.boardTitle}}</div>
-                    <div class="detailBar">
-                        <div @click='sendMessage'>
+                    <div>
+                        <div @click='sendMessage()'>
                             <i class="far fa-comments" v-if='thisBoardUserNo !== apiData.userNo'></i>
                             <span   v-if='thisBoardUserNo !== apiData.userNo'>메세지</span>
                         </div>
@@ -16,36 +22,43 @@
                             <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.userNo'></i>
                             <span v-if='thisBoardUserNo !== apiData.userNo'>신고</span>
                         </div>
-                        <div v-if='thisBoardUserNo === apiData.userNo' style='display:flex'>
-                            <div  @click='updateBoard' style='margin-right:10px'>
-                                <i class="far fa-edit"  ></i>
-                                <span>수정</span>
-                            </div>
-                            <div @click='deleteBoard'>
-                                <i class="far fa-trash-alt"></i>
-                                <span >삭제</span>
-                            </div>
-                            
+                        <div @click='otherProfile(apiData.userNo)'>
+                            <i class="fas fa-user-alt"  v-if='thisBoardUserNo !== apiData.userNo'></i>
+                            <span   v-if='thisBoardUserNo !== apiData.userNo'>프로필</span>
                         </div>
-
-                    </div>
-                    <div class='detailHeadInfo'>                        
-                        <div class='detailUserNick' v-if='apiData.unknownFlag'>익명님 {{categoryName[apiData.bigCategoryNo]}}에 남긴 글</div>
-                        <div class='detailUserNick' v-else>{{apiData.userNick}}님이 {{categoryName[apiData.bigCategoryNo]}}에 남긴 글 </div>
-                        <div class='detailMes'>
-                            <i class="far fa-thumbs-up" @click='likeBoard' v-if='!liked'></i>
-                            <i class="fas fa-thumbs-up" @click='likeBoard' v-else></i>
-                            <span>{{apiData.boardLikeCnt}}</span>
-                            <i class="far fa-comment-dots"></i>
-                            <span>{{apiData.boardCommentCnt}}</span>
-                            <i class="far fa-clock"></i>
-                            <span>{{apiData.boardCreatedAt}}</span>
+                        
+                        <div @click='updateBoard()' v-if='thisBoardUserNo === apiData.userNo'>
+                            <i class="far fa-edit"  ></i>
+                            <span>수정</span>
                         </div>
-
-
+                        <div @click='deleteBoard()' v-if='thisBoardUserNo === apiData.userNo'>
+                            <i class="far fa-trash-alt"></i>
+                            <span >삭제</span>
+                        </div>
                     </div>
+                    
+                    <div>
+                        <i class="far fa-clock"></i>
+                        <span>{{apiData.boardCreatedAt}}</span>
+                        <i class="far fa-thumbs-up" @click='likeBoard' v-if='!liked'></i>
+                        <i class="fas fa-thumbs-up" @click='likeBoard' v-else></i>
+                        <span>{{apiData.boardLikeCnt}}</span>
+                        <i class="far fa-comment-dots"></i>
+                        <span>{{apiData.boardCommentCnt}}</span>
+               
+                    </div>
+
+
+
                 </div>
+
+
             </div>
+
+            
+
+
+
             <hr style='background-color:white;margin:10px;'>
             
             <div class="detailBody" v-if='!update' v-html='apiData.boardContent'>
@@ -92,10 +105,14 @@ export default {
             liked:false,
             thisBoardUserNo:0,
             update:false,
-            updateContent: ''
+            updateContent: '',    
         }
     },
     methods:{
+        otherProfile:function(userNo){
+            this.$router.push({name:'Profile',params:{userNo:userNo}})
+
+        },
         reportBoard:function(){
             const params = {
                 "boardNo": this.boardNo,
@@ -247,60 +264,63 @@ export default {
     text-align: left;
     padding-bottom: 5%;
 }
+.detailInfo > div:nth-child(1){
+    display: flex;
+    justify-content: space-between;
 
-
-.detailImg {
-    width:400px;
-    /* height: 100%; */
-    background-color: white;
 }
-
 .detailHead {
     width: 100%;
     height: 20%;
     display:flex;
+    padding: 10px;
 }
-.detailTitle {
-    width: 80%;
-    height:48px;
-    text-align: left;
-    font-size: 30px;
-    overflow: hidden;
+
+.detailHead+div{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;    
+    padding: 10px;
+    
+}
+.detailHead+div>div:nth-child(1){
+    display:flex;
+    flex-direction: row-reverse;    
+}
+.detailHead+div>div:nth-child(1)>div {
+    margin-left: 15px;
     white-space: nowrap;
-    text-overflow: ellipsis;
-    margin-left: 12px;
+    font-size: 14px;
 }
-.detailUserNick {
-    text-align: left;
+.detailHead+div>div:nth-child(1)>div{
+    cursor: pointer;
+}
+.detailHead+div>div:nth-child(2){
+    white-space: nowrap;
+    text-align: right;
+    font-size: 14px;
+}
+.detailHead+div>div:nth-child(2)>i{
+    margin-left: 15px;
+}
+.detailHead+div>div:nth-child(2)>span{
+    margin-left: 5px;
 }
 
 
 .detailUser > img {
     height: 80px;
+    width:80px;
     border: 1px solid rgb(172, 172, 172);
     border-radius: 20%;
     background-color: white;
 }
 
-.detailHeadInfo{
-    width: 1038px;    
-    margin-left: 12px;
-    display: flex;
+.detailUser + div {
+    margin-left: 10px;
+    display:flex;
+    flex-direction: column;
     justify-content: space-between;
-    color:white;
-    font-size: 12px;
-    margin-top: 10px;
-}
-
-
-
-
-.detailHeadInfo i {
-    margin: 0 5px;
-    margin-right: 10px;
-}
-.detailHeadInfo span{
-    margin-right: 10px;
 }
 
 .detailBody {
@@ -338,72 +358,102 @@ export default {
     font-size: 14px;
 }
 
+.reviewdetailUserNick > span {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+}
+
 @media screen and (max-width:501px) {
     #boardlistdetail{
-        position:relative;
-        width: 100%;        
+        width: 100%;
+        /* max-height: 40%; */
         background-color: #A87A4F;
         top: 8%;
-        left: 0%;          
-    }
-    .detailImg {
-        width:400px;
-        background-color: white;
+        left: 0%;  
+        padding:5px;        
     }
 
+    .detailInfo {
+        width: 100%;
+        height: 100%;
+        background-color: teal;
+        font-family: font1;
+        text-align: left;
+        padding-bottom: 5%;
+    }
+    .detailInfo > div:nth-child(1){
+        display: flex;
+        justify-content: space-between;
+
+    }
     .detailHead {
         width: 100%;
         height: 20%;
         display:flex;
+        padding: 10px 0 10px 10px;
     }
-    .detailTitle {
-        width: 200px;
-        height:37px;
-        text-align: left;
-        font-size: 14px;
-        overflow: hidden;
-        white-space:pre-wrap;        
-        margin-left: 12px;        
-    }
-    .detailUserNick {
-        text-align: left;
+    .detailHead>div:nth-child(2)>div {
+        font-size: 11px;
     }
 
-
-    .detailUser > img {
-        height: 60px;
-        border: 1px solid rgb(172, 172, 172);
-        border-radius: 20%;
-        background-color: white;
-    }
-
-    .detailHeadInfo{
-        width: 100%;    
-        margin-left: 12px;
+    .detailHead+div{
         display: flex;
-        justify-content: space-between;
-        color:white;
+        flex-direction: column;
+        justify-content: space-between;    
+        padding: 10px 10px 10px 0;
+        
+    }
+    .detailHead > div > h2 {
+        max-width: 280px;
+        font-size: 18px;
+        white-space:normal;
+    }
+    .detailHead+div>div:nth-child(1){
+        display:flex;
+        flex-direction: row-reverse;
+    }
+    .detailHead+div>div:nth-child(1)>div {
+        margin-left: 15px;
+        white-space: nowrap;
         font-size: 10px;
-        margin-top: 10px;
+    }
+    .detailHead+div>div:nth-child(2){
+        white-space: nowrap;
+        text-align: right;
+        font-size: 10px;
+        /* white-space: normal; */
+    }
+    .detailHead+div>div:nth-child(2)>i{
+        margin-left: 5px;
+    }
+    .detailHead+div>div:nth-child(2)>span{
+        margin-left: 5px;
+    }
+    
+    .detailUser > img {
+        height: 40px;
+        width:40px;
+    }
+
+    .detailUser + div {
+        font-size: 12px;
+        white-space: nowrap;
+        
+        
+        
     }
 
 
 
 
-    .detailHeadInfo i {        
-        margin-right:2px;
-    }
-    .detailHeadInfo span{
-        margin-right: 2px;
-    }
+
 
     .detailBody {
-        padding:0 10px;        
+        padding:0 10px;    
         overflow: auto;
         overflow-x: hidden;
         white-space: pre-wrap;
-        transition:0.3s;
-        font-size: 13px;
+        transition:0.3s; 
     }
 
     .detailBody::-webkit-scrollbar {
@@ -417,12 +467,12 @@ export default {
     .detailBar {
         position: absolute;
         top:4%;    
-        right:4%;
+        right:2%;
         cursor: pointer;
-        font-size: 12px;
+        display: flex;
         
     }
-    .detailBar > span {
+    .detailBar > div > span {
         margin-right: 10px;
         margin-left: 5px;
     }
@@ -430,15 +480,11 @@ export default {
 
     .detailMes{
         cursor:pointer;
-        font-size: 10px;
+        font-size: 14px;
     }
 
-    
+
 }
-
-
-
-
 
 
 

@@ -32,10 +32,10 @@ export default {
                     "reviewStar":reviewStar,
                     'smallCategoryNo':smallCategoryNo,
                     "unknownFlag": params.unknownFlag,                 
-                }  
+                }                 
                 let createFormData = new FormData()
                 const token = localStorage.getItem('jwt')
-                const paramKey = ["bigCategoryNo", "boardContent","boardPic","boardTitle",'files','marketCost',"openFlag",'smallCategoryNo',"unknownFlag"]
+                const paramKey = ["bigCategoryNo", "boardContent","boardPic","boardTitle",'files','openFlag',"reviewStar",'smallCategoryNo',"unknownFlag"]
                 for (let i=0; i<9;i++){
                     if (i!==4){
                         createFormData.append(`${paramKey[i]}`,param[`${paramKey[i]}`])

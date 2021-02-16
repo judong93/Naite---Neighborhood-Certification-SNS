@@ -1,7 +1,7 @@
 <template>
     <div id='messagestatesecond'>
         <div class='message2ndTitle'>
-            <h4>채팅</h4>
+            <h4>채팅목록</h4>
             <i class="fas fa-times-circle" @click='closeSecond'></i>
         </div>
         <div class='messageList' v-for='(message,idx) in myChatList' :key="idx">
@@ -104,6 +104,10 @@ export default {
     right:0;
     transform:none;
     color:white;
+    transition:0.3s;
+}
+.message2ndTitle > .fa-times-circle:hover{
+    color:red
 }
 .messageListBox {
     position:relative;

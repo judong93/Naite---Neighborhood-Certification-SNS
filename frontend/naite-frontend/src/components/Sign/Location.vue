@@ -102,14 +102,15 @@ export default {
             
         },
         result: function(result){
-            this.userBname = result.bname
+            console.log(result)
+            this.userBname = result.address
             this.geo()
             this.$emit('selectAddress',result)            
         },
         userLatitude:function(){
             const a = Math.pow(this.serverLatitude-this.userLatitude,2)
-            const b = Math.pow(this.serverLongitude-this.userLongitude,2)
-            // 0.01로줄이기
+            const b = Math.pow(this.serverLongitude-this.userLongitude,2) 
+            console.log(this.serverLatitude, this.serverLongitude, this.userLatitude, this.userLongitude)           
             if (Math.sqrt(a+b)<=0.02) {
                 this.$emit('checkAddress',true)
             } else {
