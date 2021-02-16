@@ -88,4 +88,8 @@ public class User {
     public void updateNick(String newNick) {
         this.userNick = newNick;
     }
+
+    public void updateUserPic(String userPic) {
+        this.userPic = userPic;
+    }
 }

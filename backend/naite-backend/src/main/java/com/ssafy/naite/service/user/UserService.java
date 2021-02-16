@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -251,5 +252,25 @@ public class UserService {
         } else {
             throw new Exception("존재하지 않는 사용자입니다.");
         }
+    }
+
+    /**
+     * 유저 프로필 변경
+     */
+    @Transactional
+    public int updateUserPic(MultipartFile files, int userNo) throws IOException {
+        User user = userRepository.findById(userNo).get();
+        String rootPath = "/home/ubuntu/images/";
+        String apiPath = "https://i4a402.p.ssafy.io/images/";
+        String changeName = "basic_profile.png";
+        if (files != null && !files.getOriginalFilename().equals("")) {
+            String originalName = files.getOriginalFilename();
+            changeName = user.getUserNick() + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmSSS")) + "_" + originalName;
+            String filePath = rootPath + changeName;
+            File dest = new File(filePath);
+            files.transferTo(dest);
+        }
+        user.updateUserPic(apiPath + changeName);
+        return userRepository.save(user).getUserNo();
     }
 }

@@ -5,8 +5,12 @@ import com.ssafy.naite.domain.board.BoardRepository;
 import com.ssafy.naite.domain.comment.CommentRepository;
 import com.ssafy.naite.domain.like.LikePK;
 import com.ssafy.naite.domain.like.LikeRepository;
+import com.ssafy.naite.domain.market.Market;
+import com.ssafy.naite.domain.market.MarketRepository;
 import com.ssafy.naite.domain.picture.Picture;
 import com.ssafy.naite.domain.picture.PictureRepository;
+import com.ssafy.naite.domain.review.Review;
+import com.ssafy.naite.domain.review.ReviewRepository;
 import com.ssafy.naite.domain.user.User;
 import com.ssafy.naite.domain.user.UserRepository;
 import com.ssafy.naite.domain.village.Village;
@@ -19,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -36,6 +41,8 @@ public class BoardService {
     private final CommentRepository commentRepository;
     private final PictureRepository pictureRepository;
     private final VillageRepository villageRepository;
+    private final ReviewRepository reviewRepository;
+    private final MarketRepository marketRepository;
 
     /**
      * 게시글 전체 조회
@@ -155,6 +162,21 @@ public class BoardService {
                     boardResponseDto.setUserPic(user.getUserPic());
                     boardResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == boardResponseDto.getBoardNo()).collect(Collectors.toList()).size());
                     boardResponseDto.setFiles(pictureRepository.findPicByBoardNo(boardResponseDto.getBoardNo()));
+                    if(boardResponseDto.getBigCategoryNo() == 3){
+                        Board board = boardRepository.findById(boardResponseDto.getBoardNo()).get();
+                        Review review = reviewRepository.findReviewByBoard(board).get();
+                        boardResponseDto.setReviewNo(review.getReviewNo());
+                        boardResponseDto.setReviewStar(review.getReviewStar());
+                        boardResponseDto.setSmallCategoryNo(review.getSmallCategoryNo());
+                    }
+                    if(boardResponseDto.getBigCategoryNo() == 5){
+                        Board board = boardRepository.findById(boardResponseDto.getBoardNo()).get();
+                        Market market = marketRepository.findMarketByBoard(board).get();
+                        boardResponseDto.setMarketNo(market.getMarketNo());
+                        boardResponseDto.setMarketCost(NumberFormat.getInstance().format(market.getMarketCost()));
+                        boardResponseDto.setMarketIsCompleted(market.getMarketIsCompleted());
+                        boardResponseDto.setSmallCategoryNo(market.getSmallCategoryNo());
+                    }
                     return boardResponseDto;
                 })
                 .collect(Collectors.toList());

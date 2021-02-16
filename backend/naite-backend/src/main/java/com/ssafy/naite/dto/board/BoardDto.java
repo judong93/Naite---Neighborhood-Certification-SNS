@@ -99,6 +99,12 @@ public class BoardDto {
         private int boardCommentCnt;
         private List<String> files = new ArrayList<String>();
         private String userPic;
+        private int marketNo;
+        private String marketCost;
+        private int marketIsCompleted;
+        private int reviewNo;
+        private int reviewStar;
+        private int smallCategoryNo;
 
         public BoardResponseDto(Board board) {
             this.boardNo = board.getBoardNo();
