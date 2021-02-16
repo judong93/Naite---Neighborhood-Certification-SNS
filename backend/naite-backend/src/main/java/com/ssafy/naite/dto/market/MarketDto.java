@@ -128,9 +128,11 @@ public class MarketDto {
         private int marketIsCompleted;
         private int isSeller;
         private int evalIsCompleted;
+        private List<String> files = new ArrayList<String>();
+
 
         @Builder
-        public MarketByUserResponseDto(int marketNo, int boardNo, String boardTitle, String boardContent, int bigCategoryNo, int marketIsCompleted, int isSeller, int evalIsCompleted) {
+        public MarketByUserResponseDto(int marketNo, int boardNo, String boardTitle, String boardContent, int bigCategoryNo, int marketIsCompleted, int isSeller, int evalIsCompleted, List<String> files) {
             this.marketNo = marketNo;
             this.boardNo = boardNo;
             this.boardTitle = boardTitle;
@@ -139,6 +141,7 @@ public class MarketDto {
             this.marketIsCompleted = marketIsCompleted;
             this.isSeller = isSeller;
             this.evalIsCompleted = evalIsCompleted;
+            this.files = files;
         }
     }
 
