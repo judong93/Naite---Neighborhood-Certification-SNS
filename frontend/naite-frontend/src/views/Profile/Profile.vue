@@ -1,7 +1,5 @@
 <template>
   <div id="profile">
-    <Navbar />
-    <Message />
     <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' />
     <div class="profile">
       <div class="profile-box">
@@ -57,8 +55,6 @@
 </template>
 
 <script>
-import Navbar from '@/components/Basic/Navbar'
-import Message from '@/components/Basic/Message'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import SettingBox from '@/components/Profile/SettingBox'
@@ -95,8 +91,6 @@ export default {
     }
   },
   components: {
-    Navbar,
-    Message,
     SettingBox
   },
   methods: {
