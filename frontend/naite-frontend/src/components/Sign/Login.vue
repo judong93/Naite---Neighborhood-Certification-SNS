@@ -31,7 +31,7 @@
         <button class="login-btn" @click='loginById'>로그인</button><br>
         <span class='find-pw' @click='switchFindLogin'>아이디/비밀번호 찾기</span><br>
         <span id='mobiSignup' @click='look_signup'>회원가입</span>
-        <!-- <div>
+        <!-- <div class='loginlogo'>
             <img src="../../assets/naitelogo.png" alt="">
         </div> -->
     </div>
@@ -321,11 +321,26 @@ export default {
     border-bottom: white solid 1px;
 }
 
+.loginlogo{
+    position:absolute;
+    bottom:15%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}
+
+.loginlogo>img{
+    width: 150px
+}
+
 #mobiSignup {
     display: none;
 }
 
-
+@media screen and (max-width: 1650px){
+    #login{
+        overflow: auto;
+    }
+}
 @media screen and (max-width: 501px) {
     #login {
         overflow: hidden;

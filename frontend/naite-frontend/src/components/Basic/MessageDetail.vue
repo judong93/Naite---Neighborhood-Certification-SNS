@@ -1,7 +1,7 @@
 <template>
     <div id="messagedetail">
         <header>
-            <i class="fas fa-arrow-left" @click='backtosecondstate'></i>
+            <i class="fas fa-arrow-left" @click='backtosecondstate()'></i>
             <h3>{{otherNick}}님과의 채팅방</h3>
         </header>
 
@@ -110,7 +110,7 @@ export default {
     },
     methods:{
         backtosecondstate:function(){
-            this.$emit('backtosecondstate')
+            this.$emit('backtosecondstate',this.otherNick)
         },
         scrolltobottom:function(){
             console.log(document.querySelector('.chatList'))

@@ -5,7 +5,8 @@
             <i class="fas fa-times-circle" @click='closeSecond'></i>
         </div>
         <div class='messageList' v-for='(message,idx) in myChatList' :key="idx">
-            <div class="messageListBox" @click='messageDetail(message.roomNo,message.otherNick)'>
+            
+            <div class="messageListBox" @click='messageDetail(message.roomNo,message.otherNick,idx)'>
                 <img :src='message.otherPic' alt="">
                 <div>
                     <span>{{message.otherNick}}</span><br>
@@ -19,8 +20,11 @@
                         </div>
                     </div>
                 </div>
+                
+                <span class='newAlert' v-if='message.new&&detailNick!==message.otherNick'>새로운 메시지</span>
             </div>
-
+            
+            
 
         </div>
     </div>
@@ -38,18 +42,23 @@ export default {
             myChatList:[],
         }
     },
+    props:{
+        finalMessage:[Array],
+        detailNick:String,
+    },
     methods:{
         renderChatList:function(){
             axios.get(`${SERVER_URL}/chat/room`,this.setToken())
                 .then(res => {
-                    this.myChatList = res.data                    
+                    this.myChatList = res.data                       
                 })
                 .catch(err => {
                     console.log(err)
                 })
         },
-        messageDetail:function(roomNo,otherNick){
+        messageDetail:function(roomNo,otherNick,idx){
             this.$emit('messageDetail',roomNo,otherNick)
+            this.myChatList[idx].new = false
 
         },
         closeSecond:function(){
@@ -66,8 +75,10 @@ export default {
         }
 
     },
-    created(){
-        this.renderChatList()
+    created(){     
+        this.renderChatList()   
+    },
+    watch:{
     }
 }
 </script>
@@ -157,7 +168,16 @@ export default {
     margin-top: auto;
 }
 
-
+.newAlert {
+    position: absolute;
+    right:5%;
+    top:10%;
+    font-size: 10px;
+    color:white;
+    border-radius: 10px;
+    background-color: red;
+    padding:2px 3px;
+}
 
 
 </style>

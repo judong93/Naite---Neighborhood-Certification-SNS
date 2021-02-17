@@ -13,11 +13,11 @@
                 </div>
                 <hr>
                 <div class="mainBoardBody" v-for='(data,idx2) in apiData[`${idx}`]' :key='idx2'>
-                    <img :src="data.userPic" alt="" width='30px' height="30px">                    
+                    <img :src="data.unknownFlag? basicImg:data.userPic" alt="" width='30px' height="30px" style='margin-right:0px;border-radius:100%;'>                    
                     <p @click='toDetail(data.boardNo)' style='cursor:pointer'>{{data.boardTitle}}</p>
                     <div @click='toDetail(data.boardNo)' style='cursor:pointer' class='mainBoardStatus'>
                         <i class="fas fa-user-alt" ></i>
-                        {{data.userNick}}
+                        {{data.unknownFlag? '익명':data.userNick}}
                         <i class="far fa-images" style='margin-left:5px'></i>
                         {{data.files.length}}
                         <i class="far fa-thumbs-up"></i>
@@ -53,6 +53,7 @@ export default {
                 '1': {},
                 '2': {},
             },
+            basicImg: "https://i4a402.p.ssafy.io/images/basic_profile.png",   
             // commentCnt:0,
         }
     },

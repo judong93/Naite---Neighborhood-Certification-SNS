@@ -55,7 +55,6 @@ export default {
       if (result) {
         axios.put(`${SERVER_URL}/board/delete/${this.boardNo}`, {}, config)
           .then(() => {
-            this.getBoardList()
           })
           .catch((err) => {
             console.log(err)

@@ -118,6 +118,15 @@ export default {
   margin:0;
 
 }
+/* #signlogo {
+  position: absolute;
+  top:2%;
+  left:2%;
+
+}
+#signlogo > img{
+  width:150px
+} */
 
 @media screen and (max-width: 501px) {
   #sign {    
