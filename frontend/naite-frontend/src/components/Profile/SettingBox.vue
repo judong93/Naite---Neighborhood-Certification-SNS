@@ -6,7 +6,7 @@
     <LocationChangingForm v-if="formTitle==='동네 재설정'" @changingAddressCompleted="changingCompleted" />
     <SelectUserForm v-if="formTitle==='거래에 참여한 유저를 선택해주세요'" :userJoinList='userJoinList' @selectJoinUser="selectJoinUser" />
     <UserEvaluatingForm v-if="formTitle==='평가를 남겨주세요!'" :selectedUserNick='selectedUserNick' :MarketNo='MarketNo' :isSeller="isSeller" />
-    <ProfileImgChangingForm v-if="formTitle==='프로필 이미지 변경'" />
+    <ProfileImgChangingForm v-if="formTitle==='프로필 이미지 변경'" @changingImgCompleted="changingCompleted" />
   </div>
 </template>
 

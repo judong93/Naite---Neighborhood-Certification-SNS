@@ -243,8 +243,7 @@ export default {
         const token = localStorage.getItem('jwt')
         const decode = jwt_decode(token)
         this.userNo = decode.user.userNo
-        this.greeting = decode.greeting  
-        console.log(decode)
+        this.greeting = decode.greeting          
         setTimeout(() => {
             const navImg = document.querySelector('.nav-status')   
             navImg.style.backgroundImage= `url(${decode.userPic})`
@@ -336,7 +335,7 @@ export default {
     border: solid 1px rgb(214, 213, 213);
     overflow: hidden;
     background-image: url('../../assets/cha2.png');
-    background-size: 60px;
+    background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;
     width:60px;
