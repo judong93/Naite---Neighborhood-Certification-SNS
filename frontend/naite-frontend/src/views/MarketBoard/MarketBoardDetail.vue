@@ -4,10 +4,11 @@
     <div class="market-detail-box">
       <div class="market-detail-img">
         <div class="market-detail-lg-img-container">
-          <img :src="imgData" class="market-detail-lg-img" alt="">
+          <img :src="marketDetailContent.files.length>0 ? marketDetailContent.files[this.selectedMarketImgNo]: require('../../assets/이미지없을시.jpg')" class="market-detail-lg-img" alt="이미지가 없습니다">
         </div>
         <div class="market-detail-sm-img-container">
-          <img :src="marketImg" v-for="(marketImg, idx) in imgs" :key="idx" alt="" class="market-detail-sm-img">
+
+          <img @click="changeMarketPic(idx)" :src="marketImg" v-for="(marketImg, idx) in marketDetailContent.files" :key="idx" alt="" class="market-detail-sm-img">
         </div>
       </div>
       <div class="market-detail-content-container">
@@ -51,12 +52,7 @@ export default {
       imgsrc: require(`../../assets/5.jpg`),
       imgData: require("../../assets/firstpage.jpg"),
       marketNo: 0,
-      imgs: [
-        require("../../assets/firstpage.jpg"),
-        require("../../assets/firstpage.jpg"),
-        require("../../assets/firstpage2.jpg"),
-        require("../../assets/firstpage3.jpg"),
-      ],
+      selectedMarketImgNo: 0,
       marketDetailContent: [],
     }
   },
@@ -92,6 +88,10 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    changeMarketPic: function (idx) {
+      console.log('잘 찎힘')
+      this.selectedMarketImgNo = idx
     }
   },
   created: function () {
@@ -143,13 +143,14 @@ export default {
 }
 .market-detail-lg-img-container {
   position: relative;
+  overflow: hidden;
   width: 100%;
   height: 70%;
   /* margin-top: 10%; */
 }
 .market-detail-lg-img {
   left: 0;
-  position: relative;
+  position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -158,15 +159,19 @@ export default {
   position: relative;
   height: 10%;
   width: 100%;
-  margin-top: 5%;
+  margin-top: 8%;
   text-align: left;
 }
 .market-detail-sm-img {
   position: relative;
   height: 100%;
   width: 15%;
-  margin-top: 5%;
-  margin-right: 4%;
+  /* margin-top: 5%; */
+  margin-right: 1.6%;
+  cursor: pointer;
+}
+.market-detail-sm-img:hover {
+  opacity: 0.5;
 }
 .market-detail-content-title {
   border-bottom: 1px solid rgb(201, 197, 197);
@@ -235,26 +240,49 @@ export default {
     flex-direction: column;
     align-items: center;
     position: inherit;
-    width: 90%;
+    top: 7%;
+    width: 100%;
     left: 0;
+    overflow: hidden;
   }
   .market-detail-img {
-    width: 90%;
-    height: 50%;
+    width: 100%;
+    height: 35%;
+    overflow: visible;
   }
   .market-detail-lg-img-container {
-    height: 80%;
+    height: 100%;
+    width: 100%;
+    background-color: gray;
   }
   .market-detail-content-container {
     width: 90%;
+    margin-top: 3%;
     padding-left: 0;
   }
   .market-detail-sm-img-container {
     margin-top: 0;
-    height: 10%;
+    height: 15%;
+    display: none;
   }
   .market-detail-sm-img {
     margin-top: 15px;
+    /* width: ; */
+  }
+  .market-detail-content-title {
+    padding-bottom: 5%;
+    margin-bottom: 3%;
+  }
+  .market-detail-boardcontent {
+    position: relative;
+    height: 30%;
+    margin-top: 0;
+  }
+  .subs-title p {
+    margin-bottom: 12px;
+  }
+  .subs-content p {
+    margin-bottom: 12px;
   }
 }
 </style>
