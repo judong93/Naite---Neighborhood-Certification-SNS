@@ -121,7 +121,7 @@ public class UserService {
     public UserGetProfileResponseDto getProfile(String userId) throws Exception{
         User user = userRepository.findByUserId(userId).get();
         int commentCnt = commentRepository.findByUser(new User(user.getUserNo())).size(); // 댓글 수
-        int boardCnt = boardService.findAllBoardsByUserNo(user.getUserNo()).size(); // 게시글 수
+        int boardCnt = boardService.findAllBoardsByUserNo(user.getUserNo(), user.getUserNo()).size(); // 게시글 수
         int dealCnt = marketService.getMarketByUser(user.getUserNo()); // 장터거래 수
 
         return UserGetProfileResponseDto.builder()
@@ -220,10 +220,10 @@ public class UserService {
      * 유저 번호로 유저 프로필 조회
      */
     @Transactional
-    public UserGetProfileResponseDto getProfileByNo(int userNo) throws Exception {
+    public UserGetProfileResponseDto getProfileByNo(int userNo, int myUserNo) throws Exception {
         User user = userRepository.findById(userNo).get();
         int commentCnt = commentRepository.findByUser(user).size(); // 댓글 수
-        int boardCnt = boardService.findAllBoardsByUserNo(user.getUserNo()).size(); // 게시글 수
+        int boardCnt = boardService.findAllBoardsByUserNo(user.getUserNo(), myUserNo).size(); // 게시글 수
         int dealCnt = marketService.getMarketByUser(user.getUserNo()); // 장터거래 수
 
         return UserGetProfileResponseDto.builder()

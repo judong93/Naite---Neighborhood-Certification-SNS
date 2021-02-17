@@ -291,9 +291,10 @@ public class UserController {
 
     @GetMapping("/profile/{userNo}")
     @ApiOperation(value = "타인 프로필 조회")
-    public Response getProfileByNo(@ApiParam(value = "유저 번호") @PathVariable int userNo) {
+    public Response getProfileByNo(@ApiParam(value = "유저 번호") @PathVariable int userNo, HttpServletRequest req) {
         try {
-            UserGetProfileResponseDto userGetProfileResponseDto = userService.getProfileByNo(userNo);
+            int myUserNo = getUserNo(req);
+            UserGetProfileResponseDto userGetProfileResponseDto = userService.getProfileByNo(userNo, myUserNo);
             return new Response("success", "유저 번호로 프로필 조회 성공", userGetProfileResponseDto);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);

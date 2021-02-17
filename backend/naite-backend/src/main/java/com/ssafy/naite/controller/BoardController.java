@@ -63,8 +63,9 @@ public class BoardController {
      */
     @GetMapping("/list/user/{userNo}")
     @ApiOperation(value = "게시글 유저별 조회")
-    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByUserNo(@PathVariable int userNo) {
-        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByUserNo(userNo);
+    public ResponseEntity<List<BoardDto.BoardResponseDto>> findAllBoardsByUserNo(@PathVariable int userNo, HttpServletRequest req) {
+        int myUserNo = getUserNo(req);
+        List<BoardDto.BoardResponseDto> boardResponseDtoList = boardService.findAllBoardsByUserNo(userNo, myUserNo);
         return new ResponseEntity<List<BoardDto.BoardResponseDto>>(boardResponseDtoList, HttpStatus.OK);
     }
 

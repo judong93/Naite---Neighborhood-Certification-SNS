@@ -83,10 +83,11 @@ public class CommentController {
 
     @ApiOperation(value = "유저별 댓글 쓴 게시글 조회")
     @GetMapping("/user/{userNo}")
-    public Response getBoardByUserComment(@PathVariable int userNo) {
+    public Response getBoardByUserComment(@PathVariable int userNo, HttpServletRequest req) {
         try {
+            int myUserNo = getUserNo(req);
             User user = userService.findByUserNo(userNo);
-            List<BoardDto.BoardResponseDto> result = commentService.getBoardByUserComment(user);
+            List<BoardDto.BoardResponseDto> result = commentService.getBoardByUserComment(user, myUserNo);
             return new Response("success", "댓글 쓴 게시글 조회 성공", result);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);

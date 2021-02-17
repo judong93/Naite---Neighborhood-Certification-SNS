@@ -169,16 +169,18 @@ public class CommentService {
         }
     }
 
-    public List<BoardDto.BoardResponseDto> getBoardByUserComment(User user) {
-        List<Board> boards = commentRepository.findByUserComment(user);
+    public List<BoardDto.BoardResponseDto> getBoardByUserComment(User user, int myUserNo) {
         List<BoardDto.BoardResponseDto> result = new ArrayList<>();
 
-        for (int i = 0; i < boards.size(); i++) {
-            if (boards.get(i).getBoardIsDeleted() == 1) continue;
-            Board b = boardRepository.findById(boards.get(i).getBoardNo()).get();
-            int marketNo = -1;
-            if (b.getBigCategoryNo() == 5) marketNo = marketRepository.findByBoard(b).get().getMarketNo();
-            result.add(new BoardDto.BoardResponseDto(b));
+        List<Comment> commentList = commentRepository.findByUser(user);
+        if(user.getUserNo() != myUserNo){
+            commentList = commentList.stream().filter(comment -> comment.getCommentIsUnknown() == 0).collect(Collectors.toList());
+        }
+
+        for(int i = 0; i < commentList.size(); i++){
+            Board board = commentList.get(i).getBoard();
+            if(board.getBoardIsDeleted() == 1) continue;
+            result.add(new BoardDto.BoardResponseDto(board));
         }
 
         return result;

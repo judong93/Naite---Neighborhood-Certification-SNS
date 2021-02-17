@@ -124,8 +124,12 @@ public class BoardService {
      * 게시글 유저별 조회
      */
     @Transactional(readOnly = true)
-    public List<BoardDto.BoardResponseDto> findAllBoardsByUserNo(int userNo) {
-        return boardRepository.findAll()
+    public List<BoardDto.BoardResponseDto> findAllBoardsByUserNo(int userNo, int myUserNo) {
+        List<Board> boardList = boardRepository.findAll().stream().collect(Collectors.toList());
+        if(userNo != myUserNo){
+            boardList = boardList.stream().filter(board -> board.getUnknownFlag() == 0).collect(Collectors.toList());
+        }
+        return boardList
                 .stream()
                 .filter(board -> board.getBoardIsDeleted() == 0)
                 .filter(board -> board.getUserNo() == userNo)
