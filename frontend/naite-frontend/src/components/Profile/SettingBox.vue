@@ -107,6 +107,11 @@ export default {
     border: none;
     transform:translateX(-50%)
 }
+.setting-btn:hover {
+  width: 54%;
+  height: 9%;
+  transition-duration: 0.3s;
+}
 @media screen and (max-width: 501px) {
   #settingform {
     width: 60%;

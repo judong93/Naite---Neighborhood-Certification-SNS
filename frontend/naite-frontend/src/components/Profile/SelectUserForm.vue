@@ -1,11 +1,16 @@
 <template>
   <div id="SelectUserForm">
-    <div v-for="(user,idx) in userJoinList" :key='idx' class="join-users">
-      <div @click="selectJoinUser(user)" class="join-user">
-        <i class="far fa-user-circle fa-2x"></i><span class="join-user-nick">{{user}}</span>
-        <i class="fas fa-chevron-right fa-2x"></i>
+    <div class="join-users">
+      <div v-for="(user,idx) in userJoinList" :key='idx' class="join-user-container">
+        <div @click="selectJoinUser(user)" class="join-user">
+          <div class="join-user-nick-container">
+            <i class="far fa-user-circle fa-2x"></i><span class="join-user-nick">{{user}}</span>
+          </div>
+          <i class="fas fa-chevron-right fa-2x"></i>
+        </div>
       </div>
     </div>
+    <button @click="deleteMarketPosting" class="setting-btn delete-market-button">글 삭제</button>
   </div>
 </template>
 
@@ -42,21 +47,33 @@ export default {
     },
     selectJoinUser: function (userNick) {
       this.$emit('selectJoinUser', userNick)
+    },
+    deleteMarketPosting: function () {
+      
     }
   }
 }
 </script>
 
 <style>
+  #SelectUserForm {
+    position: relative;
+    height: 75%;
+  }
   .join-users {
+    position: relative;
+    height: 70%;
+  }
+  .join-user-container {
     display: flex;
     overflow: auto;
-    height: 300px;
+    height: 60px;
   }
 
   .join-user {
+    position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: left;
     border: 2px lightgray solid;
     border-left: none;
     border-right: none;
@@ -70,9 +87,16 @@ export default {
   .join-user:hover {
     opacity: 0.5;
   }
+  .join-user-nick-container {
+    display: flex;
+    width: 90%;
+  }
   .join-user-nick {
     font-size: 25px;
-    margin-left: 0;
-    margin-right: 60%;
+    left: 10%;
+    margin-left: 5%;
+  }
+  .delete-market-button {
+    height: 12%;
   }
 </style>

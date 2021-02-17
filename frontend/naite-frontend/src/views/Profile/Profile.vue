@@ -89,7 +89,8 @@ export default {
       userJoinList: [],
       selectedMarketNo: 0,
       isSeller: 5,
-      replacedImgSrc: 'src/assets/이미지없을시.jpg'
+      replacedImgSrc: 'src/assets/이미지없을시.jpg',
+      spliceNo: 5,
     }
   },
   components: {
@@ -180,16 +181,13 @@ export default {
       axios.get(`${SERVER_URL}/board/list/user/${this.userNo}`)
         .then((res) => {
           this.postingCount = res.data.length
-          const length = parseInt((res.data.length -1) / 5)
+          const length = parseInt((res.data.length -1) / this.spliceNo)
           this.carouselLength = length
           this.userBoardPostings = []
           for (let i = 0; i <= length; i++) {
-            this.userBoardPostings.push(res.data.splice(0,5))
-            if (i===length) {
-              this.userPostings = this.userBoardPostings
-            }
+              this.userBoardPostings.push(res.data.splice(0,this.spliceNo))
           }
-          console.log(this.userBoardPostings)
+          this.userPostings = this.userBoardPostings
         })
         .catch((err) => {
           console.log(err)
@@ -199,13 +197,10 @@ export default {
       axios.get(`${SERVER_URL}/market/list/user/${this.userNo}`)
         .then((res) => {  
           this.marketCount = res.data.length
-          const length = parseInt((res.data.length -1) / 5)
+          const length = parseInt((res.data.length -1) / this.spliceNo)
           this.userMarketPostings = []
           for (let i = 0; i <= length; i++) {
-            this.userMarketPostings.push(res.data.splice(0,5))
-            }
-            if (this.activityCheckNum===2) {
-              this.userPostings = this.userMarketPostings
+              this.userMarketPostings.push(res.data.splice(0,this.spliceNo))
             }
         })
         .catch((err) => {
@@ -217,11 +212,11 @@ export default {
         .then((res) => {
           console.log(res)
           this.commentCount = res.data.data.length
-          const length = parseInt((res.data.data.length -1) / 5)
+          const length = parseInt((res.data.data.length -1) / this.spliceNo)
+          this.userCommentPostings = []
           for (let i = 0; i <= length; i++) {
-            this.userCommentPostings.push(res.data.data.splice(0,5))
+              this.userCommentPostings.push(res.data.data.splice(0,this.spliceNo))
           }
-          console.log(this.userCommentPostings)
         })
         .catch((err) => {
           console.log(err)
@@ -231,7 +226,6 @@ export default {
       const config = this.setToken()
       axios.get(`${SERVER_URL}/user/profile/${this.userNo}`, config)
         .then((res) => {
-          console.log(res.data.data)
           this.userNick = res.data.data.userNick
           this.userScore = res.data.data.userScore
           this.profileImg = res.data.data.userPic
@@ -246,13 +240,28 @@ export default {
       this.selectedMarketNo = marketNo
       this.isSeller = isSeller
     },
+    changeUserPosting: function () {
+      console.log('mounted')
+      if (window.innerWidth <= 501) {
+        this.activityCheckNum = 1
+        this.spliceNo = 6
+        this.getBoardList()
+        this.getMarketList()
+        this.getCommentList()
+      } else {
+        this.activityCheckNum = 1
+        this.spliceNo = 5
+        this.getBoardList()
+        this.getMarketList()
+        this.getCommentList()
+      }
+    },
     changeMarketStatus: function (status,marketNo) {
       const config = this.setToken()
       if (this.userNo === this.loginedUserNo) {
         if (status===0) {
           axios.get(`${SERVER_URL}/market/join/${marketNo}`, config)
             .then((res) => {
-              console.log(res.data)
               this.selectedMarketNo = marketNo
               this.formIsOpen = !this.formIsOpen
               this.formTitle = '거래에 참여한 유저를 선택해주세요'
@@ -305,13 +314,16 @@ export default {
     // 새로고침하면 userNo가 스트링으로 받아와짐.. 도대체 왜지?!
     this.userNo = Number(this.$route.params.userNo)
     this.getUserInfo()
+    if (window.innerWidth <= 501) {
+      this.spliceNo = 6
+    } 
     this.getBoardList()
     this.getMarketList()
     this.getCommentList()
     this.activityCheckNum = 1
   },
-  updated: function () {
-    console.log('변한다')
+  mounted: function () {
+    window.addEventListener('resize', this.changeUserPosting)
   }
 }
 </script>
@@ -438,7 +450,7 @@ hr {
   display: flex;
   justify-content: space-between;
   width: 60%;
-  z-index: 0;
+  z-index: -1;
   opacity: 0;
   transition: all .5s ease-in-out;
   transform: scale(0.95);
@@ -483,7 +495,7 @@ hr {
 .img-cover {
   position: absolute;
   width: 100%;
-  height: 86%;
+  height: 100%;
   background-color: rgba(0,0,0,0.4);
 }
 .card-title {
@@ -697,7 +709,7 @@ hr {
   .profile-cards-container {
     position: relative;
     /* margin-top: 5px; */
-    width: 80%;
+    width: 74.5%;
     height: 70%;
     overflow: auto;
   }
@@ -718,25 +730,27 @@ hr {
   .profile-card-container {
     flex-wrap: wrap;
     width: 100%;
+    justify-content: left;
   }
   .profile-card {
     height: 190px;
-    width: 112px;
+    width: 122px;
     margin: 0;
     font-size: 7.5px;
     margin: 1px;
   }
   .profile-card:hover {
     height: 190px;
-    width: 112px;
+    width: 122px;
     opacity: 0.5;
+
   }
   .card-title {
-    height: 14px;
+    height: 25px;
     margin-bottom: 12px;
   }
   .card-content {
-    height: 22px;
+    height: 44px;
   }
   .card-category {
     font-size: 7px;
