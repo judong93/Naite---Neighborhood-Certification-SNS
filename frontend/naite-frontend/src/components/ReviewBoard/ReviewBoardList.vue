@@ -173,6 +173,12 @@ export default {
     border: 1px solid rgb(224, 224, 224);
     display:flex;
 }
+.reviewlistBox::-webkit-scrollbar { width: 10px;}
+.reviewlistBox::-webkit-scrollbar-track { background-color:rgba(0, 0, 0, 0.5);border-radius: 10px;  }
+.reviewlistBox::-webkit-scrollbar-thumb { background: #e6e3e0f5;border-radius: 10px;  }
+.reviewlistBox::-webkit-scrollbar-thumb:hover { background: #e68c42; } 
+.reviewlistBox::-webkit-scrollbar-thumb:active { background: #e68c42; }
+.reviewlistBox::-webkit-scrollbar-button { display: none; } 
 
 .reviewBox {
     width: 100%;

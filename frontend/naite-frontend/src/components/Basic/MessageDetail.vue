@@ -220,7 +220,6 @@ export default {
             this.connectRoom(this.roomNo)
             this.connect()
             this.decoderUser()
-            console.log('watch')  
         },
     },
     created(){      

@@ -4,6 +4,9 @@
     <Login @changeSignup='changeSignup' :toLogin='toLogin' @switchFindLogin='switchFindLogin' :toFind='toFind' />
     <Signup @changeLogin='changeLogin' :toSignup='toSignup'/>
     <FindSign :toFind='toFind' @switchFindLogin='switchFindLogin' />
+    <!-- <div id='signlogo'> 
+      <img src="../../assets/naitelogo.png" alt="">
+    </div> -->
   </div>
 </template>
 
@@ -126,5 +129,8 @@ export default {
     background-color: rgba(0, 0, 0, 0.2);   
   }
 }
+
+
+
 
 </style>

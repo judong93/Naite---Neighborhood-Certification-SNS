@@ -1,6 +1,6 @@
 <template>
   <div id="profile">
-    <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' />
+    <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' :boardNo='boardNo' />
     <div class="profile">
       <div class="profile-box">
         <div @mouseover="showReliability" @mouseout="showImg" class="profile-img-container">
@@ -16,8 +16,10 @@
             </div>
           </div>
           <div class="activities">
-            <p @click="postingList" :class="{ underline: activityCheckNum===1}" class="activity"> 게시글{{ postingCount }} </p><p>|</p>
-            <p @click="groupBuyingList" :class="{ underline: activityCheckNum===2}" class="activity"> 장터거래{{ marketCount }} </p><p>|</p>
+            <p @click="postingList" :class="{ underline: activityCheckNum===1}" class="activity"> 게시글{{ postingCount }} </p>
+            <p>|</p>
+            <p @click="groupBuyingList" :class="{ underline: activityCheckNum===2}" class="activity"> 장터거래{{ marketCount }} </p>
+            <p>|</p>
             <p @click="commentList" :class="{ underline: activityCheckNum===3}" class="activity"> 댓글단 글{{ commentCount }} </p>
           </div>
         </div>  
@@ -26,10 +28,12 @@
       <div v-if="userNo===loginedUserNo" @click="selectSettings" class="mobile-profile-settings">프로필 편집</div>
       <hr>
       <div class="profile-cards-container">
-        <div v-for="(userPosting,idx) in userPostings" :key=idx class="profile-cards" :class="{ carouselactive: idx===carouselNo}">
+        <div v-for="(userPosting,idx) in userPostings" :key=idx class="profile-cards" :class="{ carouselactive: idx===carouselNo}">          
           <i @click="previousCarouselSet" v-if="carouselLength >=0" class="fas fa-chevron-left fa-2x carousel-move-btn"></i>
           <div class="profile-card-container">
-            <div v-for="(card,idx) in userPosting" :key="idx" class="profile-card">
+            <!-- {{userPosting. ... userNo ... unknownFlag}} -->    
+                
+            <div v-for="(card,idx) in userPosting" :key="idx" class="profile-card">                 
               <button @click="evalBuyer(card.marketNo, card.isSeller)" v-if="card.isSeller===0 && card.evalIsCompleted===0" class="eval-btn">평가를 부탁드려요!</button>
               <img @click="toBoardDetail(card.boardNo, card.marketNo, card.bigCategoryNo)" :src="card.files.length>0 ? card.files[0]: require('../../assets/이미지없을시.jpg')" class="posting-img">
               <div class="img-cover"></div>
@@ -41,7 +45,8 @@
               </div>
               <div class="card-category">{{ bigCategory[card.bigCategoryNo] }}게시글</div>
               <button v-if="activityCheckNum===1 && userNo===loginedUserNo" @click="deletePosting(card.boardNo)" class="profile-card-button cdb">삭제하기</button>
-              <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===0" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo)" 
+              
+              <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===0" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo,card.boardNo)" 
               class="profile-card-button market-not-completed"> <span>모집중</span> </div>
               <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===1" 
               class="profile-card-button market-is-completed"> <span>거래완료</span> </div>
@@ -91,6 +96,8 @@ export default {
       isSeller: 5,
       replacedImgSrc: 'src/assets/이미지없을시.jpg',
       spliceNo: 5,
+      myNo:'',
+      boardNo:'',
     }
   },
   components: {
@@ -119,7 +126,6 @@ export default {
           'auth-token':`${token}`
           }
       }
-      console.log(config)
       return config
     },
     deletePosting: async function (boardNo) { 
@@ -162,7 +168,6 @@ export default {
       }, 400);
     },
     nextCarouselSet: function () {
-      console.log(this.carouselLength)
       if (this.carouselNo < this.carouselLength) {
         this.carouselNo += 1
       } else {
@@ -178,7 +183,7 @@ export default {
     },
     // 각각 게시글 리스트를 하나의 함수에서 처리하면 좋았을텐데, API 주소가 규칙성이 없이 다르고, 데이터 양식도 달라서 불가피하게 다 나눔..ㅠ
     getBoardList: function () {
-      axios.get(`${SERVER_URL}/board/list/user/${this.userNo}`)
+      axios.get(`${SERVER_URL}/board/list/user/${this.userNo}`,this.setToken())
         .then((res) => {
           this.postingCount = res.data.length
           const length = parseInt((res.data.length -1) / this.spliceNo)
@@ -208,9 +213,8 @@ export default {
         })
     },
     getCommentList: function () {
-      axios.get(`${SERVER_URL}/comment/user/${this.userNo}`)
+      axios.get(`${SERVER_URL}/comment/user/${this.userNo}`,this.setToken())
         .then((res) => {
-          console.log(res)
           this.commentCount = res.data.data.length
           const length = parseInt((res.data.data.length -1) / this.spliceNo)
           this.userCommentPostings = []
@@ -240,8 +244,7 @@ export default {
       this.selectedMarketNo = marketNo
       this.isSeller = isSeller
     },
-    changeUserPosting: function () {
-      console.log('mounted')
+    changeUserPosting: function () {      
       if (window.innerWidth <= 501) {
         this.activityCheckNum = 1
         this.spliceNo = 6
@@ -256,7 +259,7 @@ export default {
         this.getCommentList()
       }
     },
-    changeMarketStatus: function (status,marketNo) {
+    changeMarketStatus: function (status,marketNo,boardNo) {
       const config = this.setToken()
       if (this.userNo === this.loginedUserNo) {
         if (status===0) {
@@ -266,6 +269,7 @@ export default {
               this.formIsOpen = !this.formIsOpen
               this.formTitle = '거래에 참여한 유저를 선택해주세요'
               this.userJoinList = res.data.data
+              this.boardNo = boardNo
               
             })
           // axios.put(`${SERVER_URL}/market/complete/${marketNo}`, {}, config)
@@ -302,14 +306,11 @@ export default {
       }
       this.carouselNo = 0
     },
-    screen: function () {
-      console.log('!!!!')
-    }
   },
   created: function () {
     this.Cards = this.postingCards
     // const config = this.setToken()
-    const decode = jwt_decode(localStorage.getItem('jwt'))
+    const decode = jwt_decode(localStorage.getItem('jwt'))    
     this.loginedUserNo = decode.user.userNo
     // 새로고침하면 userNo가 스트링으로 받아와짐.. 도대체 왜지?!
     this.userNo = Number(this.$route.params.userNo)
@@ -321,6 +322,7 @@ export default {
     this.getMarketList()
     this.getCommentList()
     this.activityCheckNum = 1
+    this.myNo = decode.user.userNo
   },
   mounted: function () {
     window.addEventListener('resize', this.changeUserPosting)
@@ -664,7 +666,7 @@ hr {
     height: 100vh;
   }
   .profile {
-    top: 13%;
+    top: 10%;
     height: 75%;
   }
   .profile-box {
@@ -684,14 +686,25 @@ hr {
     height: 100px;
   }
   .activities {
-    font-size: 14px;
-    top: 26px;
+    margin-top: 20px;
+    font-size: 12px;
+    top: 40px;
+    justify-content: left;
+    
+  }
+
+  .activities > p{
+    margin-right: 10px;
   }
   .username-settings {
     display: none;
   }
   .mobile-usernick {
     display: block;
+    position:absolute;
+    left: 39%;
+    top:2%;
+
     height: 20px;
     width: 70%;
   }
@@ -710,6 +723,7 @@ hr {
     position: relative;
     /* margin-top: 5px; */
     width: 74.5%;
+    width: 60.5%;
     height: 70%;
     overflow: auto;
   }

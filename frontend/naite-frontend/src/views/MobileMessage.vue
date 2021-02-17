@@ -130,8 +130,8 @@ export default {
     }
     .mobilemessageListBox > img {
         margin-right: 2%;
-        width: 15%;
-        height:10%;
+        width: 62px;
+        height:62px;
         border-radius: 20%;
         border: 1px solid rgb(156, 156, 156);
     }

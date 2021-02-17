@@ -11,13 +11,13 @@
                 <header>
                     <div>
                         <div>
-                            <img :src="!comment.userPic ? basicImg :comment.userPic" alt="" width='40px' height='40px'>
+                            <img :src="comment.isUnknown? basicImg : comment.userPic" alt="" width='40px' height='40px'>
                         </div>
 
                         <span v-if='!comment.isDeleted'>{{comment.isUnknown ? '익명':comment.userNick}}</span>
                         <span v-else class='deleted'>삭제된 글</span>
                     </div>
-                    <div>
+                    <div>                        
                         <div @click='recomment(idx)'>
                             <i class="fas fa-share"></i>
                             <span>대댓글 달기</span>
@@ -34,11 +34,11 @@
                             <i class="far fa-trash-alt"></i>
                             <span>삭제</span>
                         </div>
-                        <div v-if='!comment.userOwn && !comment.isDeleted' @click='sendMessage(comment.userNick)'>
+                        <div v-if='!comment.userOwn && !comment.isDeleted&&!comment.isUnknown' @click='sendMessage(comment.userNick)'>
                             <i class="far fa-comment-dots"></i>
                             <span>메세지 보내기</span>
                         </div>
-                        <div @click='otherProfile(comment.userNo)' v-if='!comment.userOwn && !comment.isDeleted'>
+                        <div @click='otherProfile(comment.userNo)' v-if='!comment.userOwn && !comment.isDeleted&&!comment.isUnknown'>
                             <i class="fas fa-user-alt"></i>
                             <span>프로필</span>
                         </div>
@@ -62,10 +62,10 @@
             <div class="recomment" v-else-if='comment.parentId && !comment.recomment'>
 
                 <header>
-                    <div>
+                    <div>                        
                         <i class="fas fa-share"></i>
                         <div>
-                            <img :src="!comment.userPic ? basicImg :comment.userPic" alt="" width='40px' height='40px'>
+                            <img :src="comment.isUnknown ? basicImg :comment.userPic" alt="" width='40px' height='40px'>
                         </div>
 
                         <span v-if='!comment.isDeleted'>{{comment.isUnknown ? '익명':comment.userNick}}</span>
@@ -84,11 +84,11 @@
                             <i class="far fa-trash-alt"></i>
                             <span>삭제</span>
                         </div>
-                        <div v-if='!comment.userOwn && !comment.isDeleted' @click='sendMessage(comment.userNick)'>
+                        <div v-if='!comment.userOwn && !comment.isDeleted&&!comment.isUnknown' @click='sendMessage(comment.userNick)'>
                             <i class="far fa-comment-dots"></i>
                             <span>메세지 보내기</span>
                         </div>
-                        <div @click='otherProfile(comment.userNo)' v-if='!comment.userOwn && !comment.isDeleted'>
+                        <div @click='otherProfile(comment.userNo)' v-if='!comment.userOwn && !comment.isDeleted&&!comment.isUnknown'>
                             <i class="fas fa-user-alt"></i>
                             <span>프로필</span>
                         </div>
@@ -164,7 +164,7 @@ export default {
             lastRecommentIdx:-1,    
             recommentContent:'', 
             recommentParentId:-1,
-            basicImg: '../../assets/basicProfile.png',
+            basicImg: "https://i4a402.p.ssafy.io/images/basic_profile.png",
             scrollHeight:'',
             updatedContent:'',   
             updateCommentNo:'',

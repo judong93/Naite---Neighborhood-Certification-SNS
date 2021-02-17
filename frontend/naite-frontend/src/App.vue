@@ -28,10 +28,15 @@ export default {
   },
   methods:{
     sendMessageDirect:function(roomNo,userNick){
-      this.directMessageRoomNo = {
+      if (screen.width < 501) {
+        this.$router.push({ name:'MobileMessage',params:{'roomNo':roomNo,'otherNick':userNick}})
+      } else {
+        this.directMessageRoomNo = {
         'roomNo':roomNo,
         'userNick':userNick
       }
+      }
+      
 
     },
     showing:function(){

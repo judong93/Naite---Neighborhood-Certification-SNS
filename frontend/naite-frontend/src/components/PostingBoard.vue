@@ -92,18 +92,20 @@ export default {
                 
                 return;
             }
+            if (files.length > 6 && this.bigCategoryNo===5){
+                alert('장터에는 최대 6장의 사진만 기재 가능해요!')
+            }
             this.formImages = files
             this.formImagesName += '선택된 사진:'
             for (let i=0;i<files.length;i++){
                 this.formImagesName += files[i].name
                 this.formImagesName += ', '
-            }
-            console.log(this.formImages,this.formImagesName)
+            }           
             
             
         },
         createForm:function(){
-            const unKnown = document.querySelector('.postingFooter input')
+            const unKnown = document.querySelector('.postingFooter>div>input')
 
             if (this.params.bigCategoryNo==='1' && unKnown.checked) {
                 this.params.unknownFlag = 1
@@ -143,7 +145,7 @@ export default {
         }
     },
     created:function(){
-        this.contentExplain = '카테고리를 선택해주세요!'+'\n*수군수군 및 장터는 세부 카테고리를 추가로 선택해주세요!*\n\n'+'1.번화가 : 번화가는 자유게시판 입니다. 자유롭고 다양한 글을 남겨주세요!\n\n2.동사무소 : 동사무소는 질문게시판입니다. 우리동네 혹은 이웃에게 궁금한 것을 적어보세요. \n\n 3. 수군수군 : 수군수군은 리뷰게시판입니다. 우리동네 시설을 이용하고 느끼신점을 작성해주세요!\n\n 4. 소리소문 : 소리소문은 핫이슈게시판입니다. 우리동네 할인정보/교통/동네 뉴스 등 여러 소식을 작성해주세요. \n\n 5.장터 : 장터는 공동구매 혹은 중고거래를 위한 게시판입니다. 이 게시판을 통해 알뜰한 소비하세요! \n\n **번화가를 제외한 게시물은 익명사용이 제한됩니다.**'
+        this.contentExplain = '카테고리를 선택해주세요!'+'\n*수군수군 및 장터는 세부 카테고리를 추가로 선택해주세요!*\n\n'+'1.번화가 : 번화가는 자유게시판 입니다. 자유롭고 다양한 글을 남겨주세요!\n\n2.동사무소 : 동사무소는 질문게시판입니다. 우리동네 혹은 이웃에게 궁금한 것을 적어보세요. \n\n 3. 수군수군 : 수군수군은 리뷰게시판입니다. 우리동네 시설을 이용하고 느끼신점을 작성해주세요!\n\n 4. 소리소문 : 소리소문은 핫이슈게시판입니다. 우리동네 할인정보/교통/동네 뉴스 등 여러 소식을 작성해주세요. \n\n 5.장터 : 장터는 공동구매 혹은 중고거래를 위한 게시판입니다. 이 게시판을 통해 알뜰한 소비하세요!(사진최대 6개) \n\n **번화가를 제외한 게시물은 익명사용이 제한됩니다.**'
         }
 }
 </script>
@@ -343,6 +345,11 @@ export default {
     }
     .postingFooter > div >span {
         right: 35%;
+    }
+    .postImageName {
+        font-size: 12px;
+        left: 16%;
+        bottom:11%;
     }
 }
 

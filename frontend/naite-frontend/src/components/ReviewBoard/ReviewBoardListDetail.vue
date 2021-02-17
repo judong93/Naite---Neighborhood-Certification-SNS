@@ -27,7 +27,7 @@
                             <i class="fas fa-ban"></i>
                             <span>신고</span>
                         </div>
-                        <div @click='otherProfile(apiData.userNo)'>
+                        <div @click='otherProfile(apiData.board.userNo)'>
                             <i class="fas fa-user-alt"  v-if='thisBoardUserNo !== apiData.userNo'></i>
                             <span   v-if='thisBoardUserNo !== apiData.userNo'>프로필</span>
                         </div>

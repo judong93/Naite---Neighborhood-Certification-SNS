@@ -4,7 +4,7 @@
     <div class="form-title">{{formTitle}}</div>
     <PwChangingForm v-if="formTitle==='비밀번호 재설정'" @pwChangingCompleted="changingCompleted" />
     <LocationChangingForm v-if="formTitle==='동네 재설정'" @changingAddressCompleted="changingCompleted" />
-    <SelectUserForm v-if="formTitle==='거래에 참여한 유저를 선택해주세요'" :userJoinList='userJoinList' @selectJoinUser="selectJoinUser" />
+    <SelectUserForm v-if="formTitle==='거래에 참여한 유저를 선택해주세요'" :userJoinList='userJoinList' @selectJoinUser="selectJoinUser" :boardNo='boardNo' />
     <UserEvaluatingForm v-if="formTitle==='평가를 남겨주세요!'" :selectedUserNick='selectedUserNick' :MarketNo='MarketNo' :isSeller="isSeller" />
     <ProfileImgChangingForm v-if="formTitle==='프로필 이미지 변경'" @changingImgCompleted="changingCompleted" />
   </div>
@@ -38,6 +38,7 @@ export default {
     userJoinList: Array,
     selectedMarketNo: Number,
     isSeller: Number,
+    boardNo:[Number,String]
   },
   methods: {
     closeForm: function () {

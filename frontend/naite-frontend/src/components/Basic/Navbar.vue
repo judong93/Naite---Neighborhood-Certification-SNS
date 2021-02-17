@@ -55,6 +55,10 @@
                     <i class="fas fa-user-alt"></i><br>
                     <span>My profile</span>
                 </div>
+                <div @click='logout()'>
+                    <i class="fas fa-sign-out-alt"></i><br>
+                    <span>Logout</span>
+                </div>
             </div>
 
         </div>
@@ -210,7 +214,7 @@ export default {
             let color =['rgba(53,105,165,0.7)','rgba(0,200,252,0.7)','rgba(252,186,39,0.7)','rgba(221,75,57,0,7)','rgba(247,230,0,0.7)','rgba(45,180,0,0.7)','rgba(168,122,79,0.7)']
             if (!this.mobileMenuBoo){
                 category.forEach(ca => {
-                    const top =700+i*(-75)
+                    const top =screen.height+i*(-75)-screen.height*0.075
                     const caBtn = document.querySelector(`.menu${i}`)
                     let j = _.random(0,color.length-1)
                     ca.style.visibility='visible'
@@ -352,7 +356,8 @@ export default {
 }
 
 .nav-status:hover {
-    border-radius:0;
+    background-size: 50% 50%;
+    border-radius:0;    
     width: 150px;
     height: 150px;
     right: 5%;
@@ -498,6 +503,9 @@ export default {
         height:100%;
         color:rgba(255, 255, 255, 0.8);
     }
+    .mobileNavBottom > div>span{
+        font-size: 12px;
+    }
     .menu{
         display: initial;
         background-color: rgba(0,0,0,1);
@@ -507,8 +515,8 @@ export default {
 
         visibility: hidden;
         position:fixed;
-        top:768px;
-        left:20px;
+        top:100%;
+        left:1%;
         transition: 0.3s;
         background-color: rgba(255,255,255,0.9);
         border-radius: 5px;

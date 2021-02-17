@@ -1,7 +1,9 @@
 <template>
   <div id="login">   
     <div class="loginBox">
-        <div class="login-head">LOGIN</div>
+        <div class="login-head">
+            LOGIN
+        </div>
 
         <form action="#" class='login-form'>
             <label for="id">ID</label><br>
@@ -29,6 +31,9 @@
         <button class="login-btn" @click='loginById'>로그인</button><br>
         <span class='find-pw' @click='switchFindLogin'>아이디/비밀번호 찾기</span><br>
         <span id='mobiSignup' @click='look_signup'>회원가입</span>
+        <!-- <div>
+            <img src="../../assets/naitelogo.png" alt="">
+        </div> -->
     </div>
 
     
@@ -192,6 +197,7 @@ export default {
     color:white;   
     animation-fill-mode: forwards;
     overflow: hidden;
+    /* background-color: red; */
     
     
 }
@@ -204,6 +210,7 @@ export default {
     left: 950px;
     transform: translate(-50%,-55%);
     transition: 0.3s;
+    overflow: hidden;
 }
 
 .login-head {
@@ -318,8 +325,10 @@ export default {
     display: none;
 }
 
+
 @media screen and (max-width: 501px) {
     #login {
+        overflow: hidden;
         width: 100vw;
         height: 100vh;
         color:white;

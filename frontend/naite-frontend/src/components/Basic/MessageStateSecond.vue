@@ -122,8 +122,8 @@ export default {
 }
 .messageListBox > img {
     margin-right: 2%;
-    width: 20%;
-    height:15%;
+    width: 65px;
+    height:65px;
     border-radius: 20%;
     border: 1px solid rgb(156, 156, 156);
 }

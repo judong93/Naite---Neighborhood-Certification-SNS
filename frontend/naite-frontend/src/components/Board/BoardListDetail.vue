@@ -4,7 +4,7 @@
             <div>
                 <div class="detailHead">
                     <div class="detailUser">
-                        <img :src="apiData.userPic">
+                        <img :src="apiData.unknownFlag? basicImg:apiData.userPic">
                     </div>
                     <div>
                         <h2 class="detailTitle">{{apiData.boardTitle}}</h2>
@@ -14,17 +14,17 @@
                 </div>
                 <div>
                     <div>
-                        <div @click='sendMessage()'>
-                            <i class="far fa-comments" v-if='thisBoardUserNo !== apiData.userNo'></i>
-                            <span   v-if='thisBoardUserNo !== apiData.userNo'>메세지</span>
+                        <div @click='sendMessage()' v-if='thisBoardUserNo !== apiData.userNo&&!apiData.unknownFlag'>
+                            <i class="far fa-comments" ></i>
+                            <span>메세지</span>
                         </div>
                         <div @click='reportBoard()'>
                             <i class="fas fa-ban" v-if='thisBoardUserNo !== apiData.userNo'></i>
                             <span v-if='thisBoardUserNo !== apiData.userNo'>신고</span>
                         </div>
-                        <div @click='otherProfile(apiData.userNo)'>
-                            <i class="fas fa-user-alt"  v-if='thisBoardUserNo !== apiData.userNo'></i>
-                            <span   v-if='thisBoardUserNo !== apiData.userNo'>프로필</span>
+                        <div @click='otherProfile(apiData.userNo)'  v-if='thisBoardUserNo !== apiData.userNo&&!apiData.unknownFlag'>
+                            <i class="fas fa-user-alt" ></i>
+                            <span >프로필</span>
                         </div>
                         
                         <div @click='updateBoard()' v-if='thisBoardUserNo === apiData.userNo'>
@@ -35,8 +35,7 @@
                             <i class="far fa-trash-alt"></i>
                             <span >삭제</span>
                         </div>
-                    </div>
-                    
+                    </div>                
                     <div>
                         <i class="far fa-clock"></i>
                         <span>{{apiData.boardCreatedAt}}</span>
@@ -44,21 +43,10 @@
                         <i class="fas fa-thumbs-up" @click='likeBoard' v-else></i>
                         <span>{{apiData.boardLikeCnt}}</span>
                         <i class="far fa-comment-dots"></i>
-                        <span>{{apiData.boardCommentCnt}}</span>
-               
+                        <span>{{apiData.boardCommentCnt}}</span>               
                     </div>
-
-
-
                 </div>
-
-
             </div>
-
-            
-
-
-
             <hr style='background-color:white;margin:10px;'>
             
             <div class="detailBody" v-if='!update' v-html='apiData.boardContent'>
@@ -105,7 +93,8 @@ export default {
             liked:false,
             thisBoardUserNo:0,
             update:false,
-            updateContent: '',    
+            updateContent: '',
+            basicImg: "https://i4a402.p.ssafy.io/images/basic_profile.png",    
         }
     },
     methods:{

@@ -150,8 +150,14 @@ export default {
     overflow-x: hidden;
     border: 1px solid rgb(224, 224, 224);
     display:flex;
+    -webkit-scrollbar-track: {background-color:white}
 }
-
+.listBox::-webkit-scrollbar { width: 10px;}
+.listBox::-webkit-scrollbar-track { background-color:rgba(0, 0, 0, 0.5);border-radius: 10px;  }
+.listBox::-webkit-scrollbar-thumb { background: #e6e3e0f5;border-radius: 10px;  }
+.listBox::-webkit-scrollbar-thumb:hover { background: #e68c42; } 
+.listBox::-webkit-scrollbar-thumb:active { background: #e68c42; }
+.listBox::-webkit-scrollbar-button { display: none; } 
 .Box {
     width: 100%;
     height: 100%;

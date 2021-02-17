@@ -9,15 +9,15 @@
           <i class="fas fa-chevron-right fa-2x"></i>
         </div>
       </div>
-    </div>
+    </div>    
     <button @click="deleteMarketPosting" class="setting-btn delete-market-button">글 삭제</button>
   </div>
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 
-// const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 
 export default {
   name: 'SelectUserForm',
@@ -30,6 +30,7 @@ export default {
   },
   props: {
     userJoinList: Array,
+    boardNo:[String,Number],
   },
   methods: {
     checkSpace:function () {
@@ -48,9 +49,22 @@ export default {
     selectJoinUser: function (userNick) {
       this.$emit('selectJoinUser', userNick)
     },
-    deleteMarketPosting: function () {
-      
-    }
+    deleteMarketPosting: async function () { 
+      const config = this.setToken()
+      const result = confirm("정말 삭제하시겠습니까?")
+      if (result) {
+        axios.put(`${SERVER_URL}/board/delete/${this.boardNo}`, {}, config)
+          .then(() => {
+            this.getBoardList()
+          })
+          .catch((err) => {
+            console.log(err)
+            alert('로그아웃 되었습니다. 다시 로그인 진행해주세요!')
+            localStorage.removeItem('jwt')
+            this.$router.push({name:'Sign'})
+          })        
+      }
+    },
   }
 }
 </script>
