@@ -317,11 +317,11 @@ public class UserController {
     public Response updateUserPic(@ApiParam(value = "변경할 새로운 유저 프로필 파일")@RequestParam(required = false) MultipartFile files, HttpServletRequest req) {
         int userNo = getUserNo(req);
         try {
-            userService.updateUserPic(files, userNo);
+            String userPic = userService.updateUserPic(files, userNo);
+            return new Response("success", "프로필이 성공적으로 변경되었습니다.", userPic);
         } catch (Exception e) {
             return new Response("error", e.getMessage(), null);
         }
-        return new Response("success", "프로필이 성공적으로 변경되었습니다.", null);
     }
 
 

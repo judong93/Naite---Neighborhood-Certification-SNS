@@ -258,7 +258,7 @@ public class UserService {
      * 유저 프로필 변경
      */
     @Transactional
-    public int updateUserPic(MultipartFile files, int userNo) throws IOException {
+    public String updateUserPic(MultipartFile files, int userNo) throws IOException {
         User user = userRepository.findById(userNo).get();
         String rootPath = "/home/ubuntu/images/";
         String apiPath = "https://i4a402.p.ssafy.io/images/";
@@ -271,6 +271,6 @@ public class UserService {
             files.transferTo(dest);
         }
         user.updateUserPic(apiPath + changeName);
-        return userRepository.save(user).getUserNo();
+        return apiPath + changeName;
     }
 }
