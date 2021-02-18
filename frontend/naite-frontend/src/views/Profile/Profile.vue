@@ -1,11 +1,12 @@
 <template>
   <div id="profile">
+    <HowToUse />
     <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' 
     :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' :boardNo='boardNo' 
     @evalCompleted="evalCompleted"/>
     <div class="profile">
       <div class="profile-box">
-        <div @mouseover="showReliability" @mouseout="showImg" class="profile-img-container">
+        <div @click="mobileFlip" @mouseover="showReliability" @mouseout="showImg" class="profile-img-container">
           <img v-if="onProfileImg===false" :src="profileImg" alt="No Image" class="profile-img">
           <div v-if="onProfileImg===true" class="reliability-letter">신뢰도</div>
           <div v-if="onProfileImg===true" class="reliability">{{ userScore }}</div>
@@ -68,6 +69,7 @@
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import SettingBox from '@/components/Profile/SettingBox'
+import HowToUse from '@/components/Basic/HowToUse'
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 
@@ -106,7 +108,8 @@ export default {
     }
   },
   components: {
-    SettingBox
+    SettingBox,
+    HowToUse,
   },
   methods: {
     deleteMarket:function(){
@@ -178,14 +181,27 @@ export default {
       this.$router.push({name:'MarketBoardDetail',params:{marketNo:marketNo}})
     },
     showReliability: function () {
-      setTimeout(() => {
+      if (window.innerWidth > 501) {
+        setTimeout(() => {
         this.onProfileImg = true
-      }, 400);
+      }, 400);   
+      }
+
     },
     showImg: function () {
-      setTimeout(() => {
+      if (window.innerWidth > 501) {
+        setTimeout(() => {
         this.onProfileImg = false
-      }, 400);
+        }, 400);      
+      }
+
+    },
+    mobileFlip: function () {
+      if (window.innerWidth <= 501) {
+        setTimeout(() => {
+          this.onProfileImg = !this.onProfileImg 
+        }, 400);    
+      }
     },
     nextCarouselSet: function () {
       if (this.carouselNo < this.carouselLength) {
@@ -744,8 +760,8 @@ hr {
   .profile-cards-container {
     position: relative;
     /* margin-top: 5px; */
-    width: 74.5%;
-    width: 60.5%;
+    /* width: 74.5%; */
+    width: 55.5%;
     height: 70%;
     overflow: auto;
   }
@@ -766,7 +782,7 @@ hr {
   .profile-card-container {
     flex-wrap: wrap;
     width: 100%;
-    justify-content: left;
+    /* justify-content: left; */
   }
   .profile-card {
     height: 190px;
@@ -794,5 +810,12 @@ hr {
   .profile-card-button {
     font-size: 13px;
   }
+  .profile-img-container:hover {
+    /* background-color: black; */
+    transform: none;
+  }
+  .profile-img-container div {
+  transform: none;
+}
 }
 </style>

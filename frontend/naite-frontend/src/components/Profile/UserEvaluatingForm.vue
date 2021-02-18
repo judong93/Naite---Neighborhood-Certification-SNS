@@ -64,10 +64,6 @@ export default {
           evalComment: this.evalComment,
           evalScore: this.evalScore
         }
-        console.log(params.buyerNick)
-        console.log(params.evalComment)
-        console.log(params.evalScore)
-        console.log(typeof(this.MarketNo))
         axios.put(`${SERVER_URL}/market/complete/${this.MarketNo}`,params, this.setToken())
           .then(() => {
             alert('평가가 완료되었습니다!')

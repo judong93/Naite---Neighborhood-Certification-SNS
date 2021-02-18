@@ -23,7 +23,8 @@
           <div class="subs-content">
             <div class="market-detail-writer">              
               <p @click="toWriterProfile">{{marketDetailContent.userNick}}</p>
-              <i @click="chatWithPoster" class="far fa-comment-dots fa-2x"><span>작성자와 채팅하기</span></i>
+              <i @click="chatWithPoster" class="far fa-comment-dots fa-2x"><span v-if="marketDetailContent.marketIsCompleted===0">작성자와 거래하기</span></i>
+              <p v-if="marketDetailContent.marketIsCompleted===1">거래완료</p>
             </div>
             <p>{{marketDetailContent.boardCreatedAt}}</p>
             <p>{{marketDetailContent.marketCost}}원</p>
@@ -75,19 +76,21 @@ export default {
     },
     chatWithPoster: function () {
       const userNick = this.marketDetailContent.userNick
-      axios.post(`${SERVER_URL}/market/join/${this.marketNo}/`, {}, this.setToken())
-        .then(() => {
-            axios.post(`${SERVER_URL}/chat/room?otherNick=${userNick}`,{},this.setToken())
-                  .then(res=>{
-                      this.$emit('sendMessageDirect',res.data,userNick)                    
-                  })
-                  .catch(err=>{
-                      console.log(err)
-                  })
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      if (this.marketDetailContent.marketIsCompleted===0) {
+        axios.post(`${SERVER_URL}/market/join/${this.marketNo}/`, {}, this.setToken())
+          .then(() => {
+              axios.post(`${SERVER_URL}/chat/room?otherNick=${userNick}`,{},this.setToken())
+                    .then(res=>{
+                        this.$emit('sendMessageDirect',res.data,userNick)                    
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                    })
+          })
+          .catch((err) => {
+            console.log(err)
+          })        
+      }
     },
     changeMarketPic: function (idx) {
       console.log('잘 찎힘')
@@ -97,7 +100,7 @@ export default {
   created: function () {
     const marketNo = this.$route.params.marketNo
     this.marketNo = marketNo
-    axios.get(`${SERVER_URL}/market/detail/${marketNo}/`)
+    axios.get(`${SERVER_URL}/market/detail/${marketNo}/`) 
       .then((res) => {
         this.marketDetailContent = res.data
         console.log(this.marketDetailContent)
@@ -204,6 +207,9 @@ export default {
 .market-detail-writer > p {
   padding-top: 5px;
   cursor: pointer;
+}
+.market-detail-writer > p:nth-child(3) {
+  margin-left: 15%;
 }
 .fa-comment-dots {
   position: relative;
