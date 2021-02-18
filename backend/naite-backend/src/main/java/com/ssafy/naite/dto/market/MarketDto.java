@@ -94,6 +94,7 @@ public class MarketDto {
         private int boardCommentCnt;
         private List<String> files = new ArrayList<String>();
         private String userPic;
+        private int userScore;
 
         public MarketResponseDto(Market market) {
             this.marketNo = market.getMarketNo();

@@ -67,6 +67,7 @@ public class MarketService {
                     marketResponseDto.setUserPic(user.getUserPic());
                     marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     marketResponseDto.setFiles(pictureRepository.findPicByBoardNo(marketResponseDto.getBoard().getBoardNo()));
+                    marketResponseDto.setUserScore(user.getUserScore());
                     return marketResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -91,6 +92,7 @@ public class MarketService {
                     marketResponseDto.setUserPic(user.getUserPic());
                     marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
                     marketResponseDto.setFiles(pictureRepository.findPicByBoardNo(marketResponseDto.getBoard().getBoardNo()));
+                    marketResponseDto.setUserScore(user.getUserScore());
                     return marketResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -115,6 +117,7 @@ public class MarketService {
         marketResponseDto.setUsersWithLike(likeUserList);
         marketResponseDto.setBoardCommentCnt(commentRepository.findAll().stream().filter(comment -> comment.getBoard().getBoardNo() == marketResponseDto.getBoard().getBoardNo()).collect(Collectors.toList()).size());
         marketResponseDto.setFiles(pictureRepository.findPicByBoardNo(marketResponseDto.getBoard().getBoardNo()));
+        marketResponseDto.setUserScore(user.getUserScore());
         return marketResponseDto;
     }
 
