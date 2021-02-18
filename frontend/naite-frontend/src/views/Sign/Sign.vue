@@ -104,8 +104,8 @@ export default {
   position:relative;
   background: url('../../assets/sign.jpg') no-repeat center center;
   background-size: 100vw 100vh;
-  height: 100vh;   
-  width:100vw;
+  height: 969px;   
+  width:1920px;
   /* overflow:hidden;  */
   overflow:auto;
   
@@ -132,6 +132,8 @@ export default {
   #sign {    
     background: url('../../assets/m_sign.jpg') no-repeat center center;
     overflow: hidden;
+    height: 100vh;   
+    width:100vw;
   }
 
   .bgColor {

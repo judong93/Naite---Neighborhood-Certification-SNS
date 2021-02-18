@@ -54,13 +54,6 @@ export default {
             } else if (this.i >= this.boardImg.length) {
                 this.i = this.boardImg.length-1
             }
-
-        
-
-
-
-
-
         },
         zoomOut:function(){
             this.hoveredImage = ''
@@ -110,6 +103,12 @@ export default {
         setTimeout(() => {                
                 this.loadingImg()
             }, 100);
+        let that = this
+        window.addEventListener('keyup',function(e){
+            if (e.key.toLowerCase()==='escape'){                
+                that.zoomOut()
+            }
+        })
     }
     
 }

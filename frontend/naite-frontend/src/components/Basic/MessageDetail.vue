@@ -230,6 +230,12 @@ export default {
         this.connectRoom(this.roomNo)            
         this.decoderUser()
         this.connect()
+        let that = this
+        window.addEventListener('keyup',function(e){
+            if (e.key.toLowerCase()==='escape'){
+                that.backtosecondstate()
+            }
+        })
     }
 }
 

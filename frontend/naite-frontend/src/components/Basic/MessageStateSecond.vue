@@ -77,6 +77,12 @@ export default {
     },
     created(){     
         this.renderChatList()   
+        let that = this
+        window.addEventListener('keyup',function(e){
+            if (e.key.toLowerCase()==='escape'){
+                that. closeSecond()
+            }
+        })
     },
     watch:{
     }
