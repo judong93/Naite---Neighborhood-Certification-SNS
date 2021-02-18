@@ -4,7 +4,7 @@
     <div class="market-detail-box">
       <div class="market-detail-img">
         <div class="market-detail-lg-img-container">
-          <img :src="marketDetailContent.files.length>0 ? marketDetailContent.files[this.selectedMarketImgNo]: require('../../assets/이미지없을시.jpg')" class="market-detail-lg-img" alt="이미지가 없습니다">
+          <img :src="imgLength>0 ? marketDetailContent.files[this.selectedMarketImgNo]: require('../../assets/이미지없을시.jpg')" class="market-detail-lg-img" alt="이미지가 없습니다">
         </div>
        
         <div class="market-detail-sm-img-container">
@@ -57,6 +57,7 @@ export default {
       selectedMarketImgNo: 0,
       marketDetailContent: [],
       profileImg:'',
+      imgLength: 0, 
     }
   },
   components: {
@@ -95,7 +96,6 @@ export default {
       }
     },
     changeMarketPic: function (idx) {
-      console.log('잘 찎힘')
       this.selectedMarketImgNo = idx
     }
   },
@@ -105,6 +105,7 @@ export default {
     axios.get(`${SERVER_URL}/market/detail/${marketNo}/`) 
       .then((res) => {
         this.marketDetailContent = res.data
+        this.imgLength = res.data.files.length
         axios.get(`${SERVER_URL}/user/profile/${this.marketDetailContent.board.userNo}`, this.setToken())
           .then((res) => {
             this.profileImg = res.data.data.userPic

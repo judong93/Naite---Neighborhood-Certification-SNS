@@ -62,8 +62,6 @@ export default {
       this.searchLocation = false
       this.changeAddressParams.userBasicAddress = result.address
       this.changeAddressParams.userDong = result.bname2
-      console.log(this.changeAddressParams.userBasicAddress)
-      console.log(this.changeAddressParams.userDong)
     },
     checkAddress:function(res) {
       this.addressConfirm = res
@@ -72,9 +70,11 @@ export default {
       const config = this.setToken()
       if (this.changeAddressParams.userDetailAddress==='') {
         alert('상세주소를 입력해주세요!')
+      } else if (!this.addressConfirm) {
+        alert('주소를 정확히 입력해주세요')
       } else {
         const params = this.changeAddressParams
-        axios.put(`${SERVER_URL}/user/profile/village`, {params} , config)
+        axios.put(`${SERVER_URL}/user/profile/village`, params , config)
           .then(() => {
             alert('동네가 변경되었습니다!')
             this.$emit('changingAddressCompleted')
