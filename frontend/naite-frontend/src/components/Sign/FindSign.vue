@@ -142,7 +142,6 @@ export default {
             
             axios.post(`${SERVER_URL}/user/sign/email/send`,params)
                 .then(res => {
-                    console.log(res)
                     if (res.data.response ==='error'){
                         this.pwEmailConfirm=true
                         this.sendingEmail = false
@@ -166,10 +165,8 @@ export default {
                 'key':this.emailCode,
                 'type':1,
             }
-            console.log(params)
             axios.get(`${SERVER_URL}/user/sign/email/auth`,{params})
                 .then(res => {
-                    console.log(res)
                     if(res.data.response === 'error') {
                         this.changePwBool = false
                         this.codeConfirm = true

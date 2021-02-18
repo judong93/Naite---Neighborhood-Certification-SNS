@@ -209,9 +209,12 @@ export default {
             }
         },
         logout:function(){
-            localStorage.removeItem('jwt')
-            this.$router.push({name:'Sign'})
-            this.$store.dispatch('logout')
+            const check = confirm("로그아웃 하시겠습니까?")
+            if (check){
+                localStorage.removeItem('jwt')
+                this.$router.push({name:'Sign'})
+                this.$store.dispatch('logout')
+            }
         },
         profile:function(){
             this.$router.push({name:'Profile', params:{userNo:this.userNo}})
@@ -266,8 +269,7 @@ export default {
         this.userNo = decode.user.userNo
         this.greeting = decode.greeting  
         axios.get(`${SERVER_URL}/user/profile/${this.userNo}`, this.setToken())
-        .then((res) => {
-            console.log(res)
+        .then((res) => {            
             const navImg = document.querySelector('.nav-status') 
             const imgUrl = `url("${res.data.data.userPic}")`
             navImg.style.backgroundImage= imgUrl
@@ -553,7 +555,7 @@ export default {
         top:100%;
         left:1%;
         transition: 0.3s;
-        background-color: rgba(255,255,255,0.9);
+        background-color: rgba(255, 255, 255, 0.815);
         border-radius: 5px;
         padding:1px 3px;
         

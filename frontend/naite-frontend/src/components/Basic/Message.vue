@@ -139,8 +139,7 @@ export default {
             this.roomNo = this.directMessageRoomNo.roomNo
             this.otherNick = this.directMessageRoomNo.userNick
             this.otherUserNo = this.directMessageRoomNo.userNo
-            this.otherPic = this.directMessageRoomNo.userPic
-            console.log(this.otherPic, this.otherUserNo)
+            this.otherPic = this.directMessageRoomNo.userPic            
             this.firstmessage=false
             this.secondmessage=true
             this.thirdmessage = false

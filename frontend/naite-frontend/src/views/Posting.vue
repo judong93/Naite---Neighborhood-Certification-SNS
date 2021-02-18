@@ -52,8 +52,7 @@ export default {
                         'auth-token': token,
                     }
                 })
-                    .then(res=>{
-                        console.log(res) 
+                    .then(()=>{
                         this.$router.push({name:'ReviewBoard'})
                         
                     })
@@ -95,8 +94,7 @@ export default {
                         'auth-token': token,
                     }
                 })
-                    .then(res=> {
-                        console.log(res)
+                    .then(()=> {
                         this.$router.push({name:'MarketBoard'})
                     })
                     .catch(err => {
@@ -135,8 +133,7 @@ export default {
                         'auth-token': token,
                     }
                 })
-                    .then(res => {
-                        console.log(res)
+                    .then(() => {                        
                         this.$router.push({name:'Board',params:{bigCategoryNo:params.bigCategoryNo}})
                     })
                     .catch(err=>{

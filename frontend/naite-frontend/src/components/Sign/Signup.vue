@@ -153,7 +153,6 @@ export default {
             signupForm.enctype='multipart/form-data'
             signupForm.method = 'post'
             signupForm.action=`${SERVER_URL}/user/sign/signup`
-            console.log(signupForm)
             document.body.appendChild(signupForm)
             signupForm.submit()
         },
@@ -203,9 +202,8 @@ export default {
                         this.idConfirm = true
                         this.idCheck = true
                         this.idConfirm = true
-                        setTimeout(() => {
-                            this.idMessage = res.data.message
-                        }, 1000);
+                        this.idMessage = res.data.message
+                        
                     }
                 })
                 .catch(err=>{
@@ -213,7 +211,6 @@ export default {
                 })
         },
         checkPw:function(event){
-
             this.params.userPw = event.target.value
             if (!check_eng.test(this.params.userPw) || !check_num.test(this.params.userPw) || !check_spc.test(this.params.userPw)){
                 this.pwMessage = '특수문자/영어/숫자를 모두 입력해주세요.'
@@ -367,9 +364,7 @@ export default {
                         this.emailConfirm = true
                         this.emailConfirmMessage = '이메일 인증이 완료되었습니다. 회원가입을 진행해주세요'
                         this.emailConfirmCheck = true
-                    }
-                    console.log(res.data)
-                    
+                    }                   
                 })
                 .catch(err => {
                     alert(err.data.message)
@@ -391,6 +386,20 @@ export default {
                 this.signupCheck = false
                 this.signupMessage ='아이디 및 닉네임 중복확인을 진행해주세요'
                 
+            }  else if (!pwCheck) {
+                this.signupCheck = false
+                this.signupMessage ='비밀번호를 확인해주세요!'
+            } else if (!nullCheck) {
+                this.signupCheck = false
+                this.signupMessage ='모든 정보를 기입해주세요!'
+                
+            } else if (!this.emailConfirm) {
+                this.signupCheck = false
+                this.signupMessage ='이메일인증을 진행해주세요!'
+                
+            } else if (!this.addressConfirm) {
+                this.signupCheck = false
+                this.signupMessage ='주소를 정확히 입력해주세요!'                
             } else if (pwCheck&&nullCheck&&this.emailConfirm&&this.addressConfirm) {
                 let signupFormData = new FormData()
                 const paramsKey =["userBasicAddress","userDetailAddress",'userDong',"userEmail","userId","userName","userNick","userPw"]
@@ -425,20 +434,6 @@ export default {
                     console.log(err)
                 })
 
-            } else if (!pwCheck) {
-                this.signupCheck = false
-                this.signupMessage ='비밀번호를 확인해주세요!'
-            } else if (!nullCheck) {
-                this.signupCheck = false
-                this.signupMessage ='모든 정보를 기입해주세요!'
-                
-            } else if (!this.emailConfirm) {
-                this.signupCheck = false
-                this.signupMessage ='이메일인증을 진행해주세요!'
-                
-            } else if (!this.addressConfirm) {
-                this.signupCheck = false
-                this.signupMessage ='주소를 정확히 입력해주세요!'                
             }
         },
         saveFile:function(e){

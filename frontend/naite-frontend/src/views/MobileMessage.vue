@@ -6,7 +6,8 @@
                 <h4>채팅</h4>            
             </div>
             <div class='mobilemessageList' v-for='(message,idx) in myChatList' :key="idx">
-                <div class="mobilemessageListBox" @click='messageDetail(message.roomNo,message.otherNick)'>                    
+                
+                <div class="mobilemessageListBox" @click='messageDetail(message.roomNo,message.otherNick,message.otherPic,message.otherUserNo)'>                    
                     <img :src='message.otherPic' alt="">
                     <div>
                         <span>{{message.otherNick}}</span><br>
@@ -59,10 +60,12 @@ export default {
                     console.log(err)
                 })
         },
-        messageDetail:function(roomNo,otherNick){
+        messageDetail:function(roomNo,otherNick,pic,num){
             this.messageDetailBoolean = !this.messageDetailBoolean
             this.roomNo = roomNo
             this.otherNick = otherNick
+            this.otherPic = pic
+            this.otherNo = num
             
 
         },
@@ -85,7 +88,12 @@ export default {
             this.otherNick = this.$route.params.otherNick
             this.messageDetailBoolean = true
         }
-        console.log(this.$route.params.otherNo,this.$route.params.otherPic)
+        if (this.$route.params.otherNo) {
+            this.otherNo = this.$route.params.otherNo
+        }
+        if (this.$route.params.otherPic){
+            this.otherPic = this.$route.params.otherPic
+        }
     }
 }
 </script>

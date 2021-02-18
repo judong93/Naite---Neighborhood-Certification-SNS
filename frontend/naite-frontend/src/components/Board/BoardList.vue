@@ -107,6 +107,9 @@ export default {
     computed:{
         createdSimple(){
             return (date) => {
+                if (!date){
+                    return;
+                }
                 var dateArray = date.split('-')
                 if (date.length > 10) {
                     return dateArray[0][2]+dateArray[0][3]+'년'+' '+dateArray[1]+'월'+' '+dateArray[2][0] + dateArray[2][1]+'일'

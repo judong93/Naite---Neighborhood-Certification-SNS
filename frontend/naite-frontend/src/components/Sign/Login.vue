@@ -69,8 +69,6 @@ export default {
     },
     methods:{
         look_signup: function(){
-            // const loginDiv = document.getElementById('login')
-            // loginDiv.style.top = '200%'
             const btn = document.getElementById('login')
             btn.style.webkitAnimationName = 'fadeout'
             btn.style.webkitAnimationDuration='0s'

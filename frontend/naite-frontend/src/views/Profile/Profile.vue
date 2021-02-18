@@ -168,7 +168,6 @@ export default {
             localStorage.removeItem('jwt')
             this.$router.push({name:'Sign'})
           })
-        console.log(this.userBoardPostings)
       }
     },
     toBoardDetail: function (boardNo,marketNo,bigCategoryNo) {

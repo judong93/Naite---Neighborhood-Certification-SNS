@@ -18,9 +18,7 @@ export default {
   methods:{
     transformCategoryBar: function () {
       this.categoryBarStatus=!this.categoryBarStatus
-      console.log(this.categoryBarStatus)
       const bar = document.getElementsByClassName('category-bar')
-      console.log(bar)
       if (this.categoryBarStatus) {
           bar.style.height='0px'
 

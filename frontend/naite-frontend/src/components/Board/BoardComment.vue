@@ -47,7 +47,7 @@
                 <body v-if='idx!==updatedIdx'>
                     <span class='commentContent deleted' v-if='comment.isDeleted'>삭제된 댓글입니다</span>
                     <span class='commentContent' v-else>{{comment.content}}</span><br>
-                    <span>{{comment.createdAt}}</span>
+                    <span>{{createdSimple(comment.createdAt)}}</span>
                 </body>
                 <body v-else style='display:flex;justify-content:space-between'>                  
                     <input type="text" v-model='updatedContent' @keypress.enter="commentUpdateComplete" style='width:70%'>
@@ -97,7 +97,7 @@
                 <body v-if='idx!==updatedIdx'>
                     <span class='commentContent deleted' v-if='comment.isDeleted'>삭제된 댓글입니다</span>
                     <span class='commentContent' v-else>{{comment.content}}</span><br>
-                    <span>{{comment.createdAt}}</span>
+                    <span>{{createdSimple(comment.createdAt)}}</span>
                 </body>
                 <body v-else style='display:flex;justify-content:space-between'>                  
                     <input type="text" v-model='updatedContent' @keypress.enter="commentUpdateComplete" style='width:70%'>
@@ -237,7 +237,6 @@ export default {
         toCommentInput:function(){
             const inputBtn = document.querySelector('.commentinput')
             inputBtn.focus()
-            console.log('focus',inputBtn)
         },
         createComment:function(num){
             this.params.boardId = this.$route.params.boardNo
@@ -257,8 +256,7 @@ export default {
                         alert('오류발생/로그아웃 후 재진행')
                         localStorage.removeItem('jwt')
                         this.$router.push({name:'Sign'})
-                    } else if (this.params.content) {   
-                         console.log(res)                     
+                    } else if (this.params.content) {                                               
                         const decode = jwt_decode(localStorage.getItem('jwt'))
                         const param = {
                             'content':this.params.content,
@@ -294,8 +292,7 @@ export default {
                     this.recommentParams.isUnknown = 0
                 }
                 
-            }
-            console.log(this.recommentParams)
+            }            
             axios.post(`${SERVER_URL}/comment`,this.recommentParams,this.setToken())
                 .then(res=>{
                     if(res.data.response==='error') {
@@ -303,7 +300,6 @@ export default {
                         localStorage.removeItem('jwt')
                         this.$router.push({name:'Sign'})
                     } else if (this.recommentParams.content) {
-                        console.log(res)
                         const decode = jwt_decode(localStorage.getItem('jwt'))                        
                         const param = {
                             'content':this.recommentParams.content,
@@ -356,8 +352,7 @@ export default {
                 recommentInput.focus()
             }, 500);
             this.recommentParams.content = ''
-            const parentId = this.apiData[idx].commentNo
-            console.log(parentId)
+            const parentId = this.apiData[idx].commentNo            
             const recommentInput = {
                 recomment:1,
             }
@@ -395,7 +390,7 @@ export default {
                 headers: {
                 'auth-token':`${token}`
                 }
-                }        
+            }        
             return config 
         }
     },
@@ -404,13 +399,9 @@ export default {
         axios.get(`${SERVER_URL}/comment/${No}`,this.setToken())
             .then(res=>{
                 if (res.data.response==='error'){
-                    alert('오류발생/로그아웃 후 재진행/머지')
-                    // localStorage.removeItem('jwt')
-                    // this.$router.push({name:'Sign'})
-                    console.log(res)
+                    alert('로그인을 다시 진행해주세요.')
                 } else {
                     this.apiData = res.data.data   
-                    
                 }
             })
             .catch(err=>{
@@ -424,7 +415,20 @@ export default {
         }
     },
     computed:{
-    }
+        createdSimple(){
+            return (date) => {
+                if (!date){
+                    return;
+                }
+                var dateArray = date.split('-')
+                if (date.length > 10) {
+                    return dateArray[0][2]+dateArray[0][3]+'년'+' '+dateArray[1]+'월'+' '+dateArray[2][0] + dateArray[2][1]+'일' + ' '+ dateArray[2][3] + dateArray[2][4]+ '시' + ' '+ dateArray[2][6]+ dateArray[2][7]+ dateArray[2][8]+'분'
+                } else {
+                    return date
+                }
+            }
+        }
+    },
 }
 </script>
 <style>

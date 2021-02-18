@@ -44,7 +44,6 @@ export default {
           'auth-token':`${token}`
           }
       }
-      console.log(config)
       return config
     },
   },

@@ -43,7 +43,6 @@ export default {
           'auth-token':`${token}`
           }
       }
-      console.log(config)
       return config
     },
     selectJoinUser: function (userNick) {

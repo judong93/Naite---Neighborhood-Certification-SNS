@@ -146,7 +146,9 @@ export default {
     },
     created:function(){
         this.contentExplain = '카테고리를 선택해주세요!'+'\n*수군수군 및 장터는 세부 카테고리를 추가로 선택해주세요!*\n\n'+'1.번화가 : 번화가는 자유게시판 입니다. 자유롭고 다양한 글을 남겨주세요!\n\n2.동사무소 : 동사무소는 질문게시판입니다. 우리동네 혹은 이웃에게 궁금한 것을 적어보세요. \n\n 3. 수군수군 : 수군수군은 리뷰게시판입니다. 우리동네 시설을 이용하고 느끼신점을 작성해주세요!\n\n 4. 소리소문 : 소리소문은 핫이슈게시판입니다. 우리동네 할인정보/교통/동네 뉴스 등 여러 소식을 작성해주세요. \n\n 5.장터 : 장터는 공동구매 혹은 중고거래를 위한 게시판입니다. 이 게시판을 통해 알뜰한 소비하세요!(사진최대 6개) \n\n **번화가를 제외한 게시물은 익명사용이 제한됩니다.**'
+        this.contentExplain.replace('\n', '&#13;&#10;')  
         }
+       
 }
 </script>
 
@@ -280,10 +282,10 @@ export default {
 
 @media screen and (max-width:501px) {
     #postingBoard {        
-        top: 10%;
+        top: 8vh;
         left: 0%;
-        width: 100%;
-        height: 80%;
+        width: 100vw;
+        height: 84vh;
         border-radius: 0px;
         padding: 10px;
         border: 5px solid #f8f8f875;
@@ -336,6 +338,13 @@ export default {
         width: 200%;
         margin-left: -100%;
 
+    }
+    .postingFooter {
+        display: flex;
+        width:90vw;
+        height: 10%;
+        justify-content: space-between;
+        
     }
     .postingFooter > div > span,.postingFooter > div >input {
         position:absolute;

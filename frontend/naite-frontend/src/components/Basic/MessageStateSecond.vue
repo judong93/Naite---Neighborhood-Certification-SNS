@@ -15,7 +15,7 @@
                             {{message.lastMessage ? message.lastMessage: `${message.otherNick}님과의 채팅방이 개설되었습니다!` }}
                         </div>
                         <div>
-                            {{message.lastMessageTime}}
+                            {{createdSimple(message.lastMessageTime)}}
                         </div>
                     </div>
                 </div>
@@ -82,6 +82,22 @@ export default {
         })
     },
     watch:{
+    },
+    computed:{
+        createdSimple(){
+            return (date) => {
+                if (!date){
+                    return;
+                }
+                var dateArray = date.split('-')
+                if (date.length > 10) {
+                    var timeArray = dateArray[2].split(' ')
+                    return dateArray[1]+'/'+dateArray[2][0] + dateArray[2][1]+' '+timeArray[0] +':'+timeArray[1][0]+timeArray[1][1]
+                } else {
+                    return date
+                }
+            }
+        }
     }
 }
 </script>

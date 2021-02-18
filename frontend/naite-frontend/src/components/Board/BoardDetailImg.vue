@@ -207,6 +207,7 @@ export default {
     margin:0px auto;
     max-height:454px;
     width:auto;
+    max-width:768px;
     object-fit: cover;
 }
 
@@ -281,8 +282,9 @@ export default {
     .hvdimg>body>div>img{
         display: block;
         margin:0px auto;
-        max-height:454px;
+        max-height:345px;
         width:auto;
+        max-width:345px;
         object-fit: cover;
     }
 

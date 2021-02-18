@@ -115,9 +115,6 @@ export default {
         backtosecondstate:function(){
             this.$emit('backtosecondstate',this.otherNick)
         },
-        scrolltobottom:function(){
-            console.log(document.querySelector('.chatList'))
-        },
         connectRoom:function(roomNo){
             if (roomNo === 0){
                 return
@@ -176,8 +173,7 @@ export default {
                 "userNick": recv.userNick, 
                 'userPic': this.otherPic,
                 "userOwn": recv.userOwn,
-            })
-            console.log(this.otherPic,'??')
+            })            
             this.scrollDown()
             
 
@@ -220,6 +216,9 @@ export default {
     computed:{
         createdSimple(){
             return (date) => {
+                if (!date){
+                    return;
+                }
                 var dateArray = date.split('-')
                 if (date.length > 10) {
                     var timeArray = dateArray[2].split(' ')

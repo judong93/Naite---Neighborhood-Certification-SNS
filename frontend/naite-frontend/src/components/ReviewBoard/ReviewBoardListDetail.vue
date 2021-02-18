@@ -203,8 +203,7 @@ export default {
                 'unknownFlag':0,
             }
             axios.put(`${SERVER_URL}/board/update/${this.apiData.board.boardNo}`,params,this.setToken())
-                .then(res => {
-                    console.log(res)
+                .then(() => {
                     this.apiData.board.boardContent = this.updateContent  
                     this.update = false
                 })
@@ -227,6 +226,9 @@ export default {
     computed:{
         createdSimple(){
             return (date) => {
+                if (!date){
+                    return;
+                }
                 var dateArray = date.split('-')
                 if (date.length > 10) {
                     return dateArray[0][2]+dateArray[0][3]+'년'+' '+dateArray[1]+'월'+' '+dateArray[2][0] + dateArray[2][1]+'일'
@@ -240,7 +242,6 @@ export default {
         apiData:function(){
             const decode = jwt_decode(localStorage.getItem('jwt'))
             this.thisBoardUserNo = decode.user.userNo   
-            console.log(this.apiData)
             for (let i=0; i<this.apiData.usersWithLike.length;i++) {
                 if (this.apiData.usersWithLike[i] === decode.user.userNick) {
                     this.liked = true                

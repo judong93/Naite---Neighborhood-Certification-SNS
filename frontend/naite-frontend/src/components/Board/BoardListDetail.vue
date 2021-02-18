@@ -138,8 +138,7 @@ export default {
             }
             if (!this.liked){
                 axios.post(`${SERVER_URL}/board/like`,params,this.setToken())
-                    .then(res=>{
-                        console.log(res)
+                    .then(()=>{
                         this.apiData.boardLikeCnt += 1
                         this.liked = true
                     })
@@ -148,8 +147,7 @@ export default {
                     })
             } else {
                 axios.post(`${SERVER_URL}/board/dislike`, params,this.setToken())
-                    .then(res=>{
-                        console.log(res)
+                    .then(()=>{
                         this.apiData.boardLikeCnt -= 1
                         this.liked = false
                     })
@@ -186,8 +184,7 @@ export default {
                 'unknownFlag':0,
             }
             axios.put(`${SERVER_URL}/board/update/${this.apiData.boardNo}`,params,this.setToken())
-                .then(res => {
-                    console.log(res)
+                .then(() => {
                     this.apiData.boardContent = this.updateContent  
                     this.update = false
                 })
@@ -210,6 +207,9 @@ export default {
     computed:{
         createdSimple(){
             return (date) => {
+                if (!date){
+                    return;
+                }
                 var dateArray = date.split('-')                
                 if (date.length > 10) {
                     return dateArray[0][2]+dateArray[0][3]+'년'+' '+dateArray[1]+'월'+' '+dateArray[2][0] + dateArray[2][1]+'일'

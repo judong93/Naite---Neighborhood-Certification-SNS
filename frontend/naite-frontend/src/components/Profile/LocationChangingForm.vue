@@ -44,8 +44,7 @@ export default {
           headers: {
           'auth-token':`${token}`
           }
-      }
-      console.log(config)
+      }      
       return config
     },
     checkSpace:function () {

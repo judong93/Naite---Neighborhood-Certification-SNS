@@ -43,7 +43,7 @@
             />
             
         </div>
-        <button @click='closeLocation' class='closeLocation'><i class="fas fa-backspace">취소</i></button>
+        <!-- <button @click='closeLocation' class='closeLocation'><i class="fas fa-backspace">취소</i></button> -->
     </div>
 </template>
 
@@ -95,22 +95,19 @@ export default {
             if (navigator.geolocation && this.searchLocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {       
                 that.serverLatitude = position.coords.latitude
-                that.serverLongitude = position.coords.longitude
-                alert('사용자위치정보 확인')
+                that.serverLongitude = position.coords.longitude                
                 });
             }
             
         },
         result: function(result){
-            console.log(result)
             this.userBname = result.address
             this.geo()
             this.$emit('selectAddress',result)            
         },
         userLatitude:function(){
             const a = Math.pow(this.serverLatitude-this.userLatitude,2)
-            const b = Math.pow(this.serverLongitude-this.userLongitude,2) 
-            console.log(this.serverLatitude, this.serverLongitude, this.userLatitude, this.userLongitude)           
+            const b = Math.pow(this.serverLongitude-this.userLongitude,2)             
             if (Math.sqrt(a+b)<=0.02) {
                 this.$emit('checkAddress',true)
             } else {
@@ -127,6 +124,14 @@ export default {
             script.src= 'http://dapi.kakao.com/v2/maps/sdk.js?appkey=e990ec2518ab112eae22d81bcd858753&libraries=services'
             document.head.appendChild(script)
         }
+    },
+    created(){
+        let that = this
+        window.addEventListener('keyup',function(e){
+            if (e.key.toLowerCase()==='escape'){
+                that.closeLocation()
+            }
+        })
     }
 
     

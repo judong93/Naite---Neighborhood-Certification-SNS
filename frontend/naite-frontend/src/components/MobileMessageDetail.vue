@@ -6,7 +6,7 @@
                 <h5>{{otherNick}}님과의 채팅방</h5>
             </div>
             <div>
-                <button>프로필 바로가기</button>
+                <button @click='otherProfile'>프로필 바로가기</button>
             </div>
         </header>
 
@@ -16,7 +16,7 @@
                     <div v-if='chat.userNick !== myNick' class='mobileotherChat'>
                         <div>
                             <div style='border-radius:30%;display:block;overflow:hidden;width:50px;margin-right:10px;'>
-                                <img :src="chat.userPic" alt="" width='50px' v-if='idx===0 || chatDetail[idx-1].userNick !==chat.userNick&& chatDetail[idx-1].time !==chat.time ||chatDetail[idx-1].userNick !==chat.userNick'>
+                                <img :src="chat.userPic" alt="" width='50px' height="50px" v-if='idx===0 || chatDetail[idx-1].userNick !==chat.userNick&& chatDetail[idx-1].time !==chat.time ||chatDetail[idx-1].userNick !==chat.userNick'>
                             </div>
                         </div>
                         <div class='mobileotherChatmsg'>
@@ -118,6 +118,10 @@ export default {
         }
     },
     methods:{
+        otherProfile:function(){
+            this.$router.push({name:'Profile',params:{userNo:this.otherNo}})
+
+        },
         backtosecondstate:function(){
             this.$emit('backtosecondstate')
         },
@@ -238,7 +242,7 @@ export default {
         
         this.connectRoom(this.roomNo)            
         this.decoderUser()
-        this.connect()
+        this.connect()        
         
 
     }
