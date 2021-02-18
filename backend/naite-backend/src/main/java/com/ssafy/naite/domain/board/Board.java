@@ -102,4 +102,23 @@ public class Board {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "boardNo=" + boardNo +
+                ", userNo=" + userNo +
+                ", bigCategoryNo=" + bigCategoryNo +
+                ", boardTitle='" + boardTitle + '\'' +
+                ", boardContent='" + boardContent + '\'' +
+                ", boardPic='" + boardPic + '\'' +
+                ", boardCreatedAt=" + boardCreatedAt +
+                ", boardUpdatedAt=" + boardUpdatedAt +
+                ", boardLikeCnt=" + boardLikeCnt +
+                ", unknownFlag=" + unknownFlag +
+                ", boardReportCnt=" + boardReportCnt +
+                ", openFlag=" + openFlag +
+                ", boardIsDeleted=" + boardIsDeleted +
+                '}';
+    }
 }

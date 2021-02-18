@@ -12,6 +12,10 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>{
     @Query("select distinct b from Comment c, Board b where b = c.board and c.user = :user")
     List<Board> findByUserComment(User user);
 
+    @Query("select distinct b from Comment c, Board b where b = c.board and c.user = :user and c.commentIsDeleted = 0 and c.commentIsUnknown = 0" +
+            "and b.boardIsDeleted = 0")
+    List<Board> findDistinctBoardByUser(User user);
+
     List<Comment> findByUser(User user);
     List<Comment> findByCommentParentId(Integer id);
 

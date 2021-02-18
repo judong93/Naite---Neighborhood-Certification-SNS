@@ -172,14 +172,10 @@ public class CommentService {
     public List<BoardDto.BoardResponseDto> getBoardByUserComment(User user, int myUserNo) {
         List<BoardDto.BoardResponseDto> result = new ArrayList<>();
 
-        List<Comment> commentList = commentRepository.findByUser(user);
-        if(user.getUserNo() != myUserNo){
-            commentList = commentList.stream().filter(comment -> comment.getCommentIsUnknown() == 0).collect(Collectors.toList());
-        }
+        List<Board> boardList = commentRepository.findDistinctBoardByUser(user);
 
-        for(int i = 0; i < commentList.size(); i++){
-            Board board = commentList.get(i).getBoard();
-            if(board.getBoardIsDeleted() == 1) continue;
+        for (int i = 0; i < boardList.size(); i++) {
+            Board board = boardList.get(i);
             result.add(new BoardDto.BoardResponseDto(board));
         }
 
