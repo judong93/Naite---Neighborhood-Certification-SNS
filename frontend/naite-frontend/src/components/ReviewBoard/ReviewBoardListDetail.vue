@@ -48,7 +48,7 @@
                         <i class="far fa-star"></i>
                         <span>{{apiData.reviewStar}}점</span>    
                         <i class="far fa-clock"></i>
-                        <span>{{apiData.boardCreatedAt}}</span>
+                        <span>{{createdSimple(apiData.boardCreatedAt)}}</span>
                         <i class="far fa-thumbs-up" @click='likeBoard' v-if='!liked'></i>
                         <i class="fas fa-thumbs-up" @click='likeBoard' v-else></i>
                         <span>{{apiData.board.boardLikeCnt}}</span>
@@ -145,7 +145,7 @@ export default {
             
             axios.post(`${SERVER_URL}/chat/room?otherNick=${userNick}`,{},this.setToken())
                 .then(res=>{
-                    this.$emit('sendMessageDirect',res.data,userNick)
+                    this.$emit('sendMessageDirect',res.data,userNick,this.apiData.userPic,this.apiData.userNo)                    
                 })
                 .catch(err=>{
                     console.log(err)
@@ -166,8 +166,7 @@ export default {
                     })
             } else {
                 axios.post(`${SERVER_URL}/board/dislike`, params,this.setToken())
-                    .then(res=>{
-                        console.log(res)
+                    .then(()=>{
                         this.apiData.board.boardLikeCnt -= 1
                         this.liked = false
                     })
@@ -224,6 +223,18 @@ export default {
         }
 
 
+    },
+    computed:{
+        createdSimple(){
+            return (date) => {
+                var dateArray = date.split('-')
+                if (date.length > 10) {
+                    return dateArray[0][2]+dateArray[0][3]+'년'+' '+dateArray[1]+'월'+' '+dateArray[2][0] + dateArray[2][1]+'일'
+                } else {
+                    return date
+                }
+            }
+        }
     },
     watch:{
         apiData:function(){

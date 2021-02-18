@@ -42,7 +42,7 @@
                                     <i class="far fa-star"></i>
                                     {{list.reviewStar}}점
                                     <i class="far fa-clock"></i>
-                                    {{list.boardCreatedAt}}
+                                    {{createdSimple(list.boardCreatedAt)}}
                                 </div>
                             </div>
                         </div>
@@ -124,7 +124,19 @@ export default {
     },
     created:function(){
         this.loadList()
-    }
+    },
+    computed:{
+        createdSimple(){
+            return (date) => {
+                var dateArray = date.split('-')
+                if (date.length > 10) {
+                    return dateArray[0][2]+dateArray[0][3]+'년'+' '+dateArray[1]+'월'+' '+dateArray[2][0] + dateArray[2][1]+'일'
+                } else {
+                    return date
+                }
+            }
+        }
+    },
 }
 </script>
 

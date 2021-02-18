@@ -7,29 +7,38 @@
         <div class='mainboardBack' >
             <div class="mainBoardFree" v-for='(no,idx) in boardNo' :key="idx">
                 <div class="mainBoardHead">
-                    <div class='leftPin'></div>
-                    <div class='mainBoardHeadTitle'>{{boardTitle[idx]}}</div>
+                    <div class='leftPin'></div>                   
+                    <div class='mainBoardHeadTitle'>
+                        {{boardTitle[idx]}} <span>{{boardSmallTitle[idx]}}</span>
+                    </div>
                     <div class='rightPin'></div>
                 </div>
                 <hr>
                 <div class="mainBoardBody" v-for='(data,idx2) in apiData[`${idx}`]' :key='idx2'>
-                    <img :src="data.unknownFlag? basicImg:data.userPic" alt="" width='30px' height="30px" style='margin-right:0px;border-radius:100%;'>                    
-                    <p @click='toDetail(data.boardNo)' style='cursor:pointer'>{{data.boardTitle}}</p>
-                    <div @click='toDetail(data.boardNo)' style='cursor:pointer' class='mainBoardStatus'>
-                        <i class="fas fa-user-alt" ></i>
-                        {{data.unknownFlag? '익명':data.userNick}}
-                        <i class="far fa-images" style='margin-left:5px'></i>
-                        {{data.files.length}}
-                        <i class="far fa-thumbs-up"></i>
-                        {{data.boardLikeCnt}}
-                        <i class="far fa-comment-dots"></i>
-                        {{data.boardCommentCnt}}
-                        <br>
-                        <i class="far fa-clock"></i>
-                        {{data.boardCreatedAt}}
-                        
-                        
+                    <div>   
+                        <img :src="data.unknownFlag? basicImg:data.userPic" alt="">                    
                     </div>
+                    <div @click='toDetail(data.boardNo)' style='cursor:pointer'>
+                        <div >
+                            {{data.boardTitle}}
+                        </div>
+                        <div>
+                            
+                            <i class="fas fa-user-alt" ></i>
+                            {{data.unknownFlag? '익명':data.userNick}}
+                            <i class="far fa-images" style='margin-left:5px'></i>
+                            {{data.files.length}}
+                            <i class="far fa-thumbs-up"></i>
+                            {{data.boardLikeCnt}}
+                            <i class="far fa-comment-dots"></i>
+                            {{data.boardCommentCnt}}
+                        
+                            <i class="far fa-clock"></i>
+                            {{createdSimple(data.boardCreatedAt)}}
+                        </div>
+                    </div>
+                        
+                    
                 </div>
             </div>
         </div>
@@ -48,6 +57,7 @@ export default {
         return {
             boardNo:[1,2,4],
             boardTitle:['번화가소식','동사무소소식','소리소문'],
+            boardSmallTitle:['자유게시판','질문게시판','리뷰게시판'],
             apiData: {
                 '0': {},
                 '1': {},
@@ -73,12 +83,22 @@ export default {
         },
     },
     computed:{
+        createdSimple(){
+            return (date) => {
+                var dateArray = date.split('-')
+                if (date.length > 10) {
+                    return dateArray[0][2]+dateArray[0][3]+'년'+' '+dateArray[1]+'월'+' '+dateArray[2][0] + dateArray[2][1]+'일'
+                } else {
+                    return date
+                }
+            }
+        }
     },
     created(){
         for (let i=0;i<3;i++){            
             axios.get(`${SERVER_URL}/board/list/top/${this.boardNo[i]}`,this.setToken())
                 .then(res => {
-                    this.apiData[`${i}`] = res.data               
+                    this.apiData[`${i}`] = res.data                       
                 })  
                 .catch(err=>{
                     console.log(err)
@@ -120,23 +140,35 @@ export default {
     position:relative;
     border-radius: 10px;
     width: 30%;
-    height: 90%;    
+    max-height: 90%;    
     margin: auto;
     background-color: white;
     font-size: 15px;
+    
 }
 .mainBoardHead {
     display:flex;
     justify-content: space-between;
     
 }
-
 .mainBoardHeadTitle {
-    margin-top: 10px;
+    margin-top: 20px;
+    
+}
+.mainBoardHead>div:nth-child(2){
+    font-size: 24px;
+    margin-left: -20%;
+    margin-bottom:-2%;
+    width:100%;
+}
+.mainBoardHead>div:nth-child(2)>span{
+    font-size: 12px;
+    
 }
 
 .mainBoardHead + hr {
     width: 100%;
+    border-top: 1px solid black;
 }
 
 .leftPin, .rightPin {
@@ -148,26 +180,48 @@ export default {
 
 .mainBoardBody {
     display: flex;
-    justify-content: space-between;
-    margin: 20px 10px;
-    padding-bottom: 10px;
+    justify-content:left;
+    margin: 10px 10px;
+    padding: 0 5px 5px 5px;
     border-bottom: 1px solid black;
     
 }
 
-.mainBoardBody > p {
-    text-align: left;
-    width:200px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+.mainBoardBody > div:nth-child(1) {
+    display:flex;
+    align-items: center;
+}
+.mainBoardBody > div:nth-child(1)>img {
+    width: 55px;
+    height:55px;
+    border-radius: 30%;
+    margin-right: 10px;
+    border:0.5px solid rgba(0, 0, 0, 0.123);
 }
 
-.mainBoardStatus {
+.mainBoardBody > div:nth-child(2) {
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.mainBoardBody > div:nth-child(2)> div:nth-child(1) {
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.mainBoardBody > div:nth-child(2)> div:nth-child(2){
     text-align: right;
     font-size: 10px;
-    width:170px;
 }
+
+
 
 @media screen and (max-width:501px) {
     #mainboardlist {

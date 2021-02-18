@@ -1,8 +1,13 @@
 <template>
     <div id="messagedetail">
         <header>
-            <i class="fas fa-arrow-left" @click='backtosecondstate()'></i>
-            <h3>{{otherNick}}님과의 채팅방</h3>
+            <div>
+                <i class="fas fa-arrow-left" @click='backtosecondstate()'></i>
+                <h3>{{otherNick}}님과의 채팅방</h3>
+            </div>
+            <div>
+                <button @click='goProfile'>프로필 바로가기</button>
+            </div>
         </header>
 
         <body>
@@ -11,7 +16,7 @@
                     <div v-if='chat.userNick !== myNick' class='otherChat'>
                         <div>
                             <div style='border-radius:30%;display:block;overflow:hidden;width:50px;margin-right:10px;'>
-                                <img :src="chat.userPic" alt="" width='50px' v-if='idx===0 || chatDetail[idx-1].userNick !==chat.userNick&& chatDetail[idx-1].time !==chat.time ||chatDetail[idx-1].userNick !==chat.userNick'>
+                                <img :src="chat.userPic" alt="" width='50px' height='50px' v-if='idx===0 || chatDetail[idx-1].userNick !==chat.userNick&& chatDetail[idx-1].time !==chat.time ||chatDetail[idx-1].userNick !==chat.userNick'>
                             </div>
                         </div>
                         <div class='otherChatmsg'>
@@ -25,19 +30,17 @@
                                     </div>
                                 </body>
                                 <footer v-if='!idx|| chatDetail[idx+1]&&chatDetail[idx+1].userNick!==chat.userNick||!chatDetail[idx+1]'>
-                                    {{chat.time}}
+                                    {{createdSimple(chat.time)}}
                                 </footer>
                             </div>
                         </div>
-
-
                     </div>
                     <div v-else class='myChat'>
                         <body >
                             {{chat.message}}
                         </body>
                         <footer  v-if='!idx|| chatDetail[idx+1]&&chatDetail[idx+1].userNick!==chat.userNick||!chatDetail[idx+1]'>
-                            {{chat.time}}
+                            {{createdSimple(chat.time)}}
                         </footer>
                     </div>
 
@@ -56,7 +59,7 @@
                 <span class="sr-only">Loading...</span>
             </div>
             <vue-typer class='typerConnecting'
-                :text="['connecting...']"
+                :text="['이웃을 부르는중']"
                 :repeat='Infinity'
                 :shuffle='false'
                 initial-action='typing'
@@ -83,18 +86,14 @@ import jwt_decode from 'jwt-decode'
 let reconnect = 0
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
-// let sock = new SockJS('https://i4a402.p.ssafy.io:8080/ws-stomp')
-// let ws = Stomp.over(sock)
-// let reconnect = 0
-
-
-
 
 export default {
     name:'MessageDetail',
     props:{
         roomNo:Number,
         otherNick:String,
+        otherPic:String,
+        otherUserNo:[String,Number]
         
     },
     data:function(){
@@ -109,6 +108,10 @@ export default {
         }
     },
     methods:{
+        goProfile:function(){
+            this.$router.push({name:'Profile', params:{userNo:this.otherUserNo}})
+            this.backtosecondstate()
+        },
         backtosecondstate:function(){
             this.$emit('backtosecondstate',this.otherNick)
         },
@@ -135,7 +138,6 @@ export default {
 
             }
             if (!this.myMessage){
-                alert('내용입력')
                 return
             }
 
@@ -169,12 +171,13 @@ export default {
         },
         recvMessage: function(recv) {            
             this.chatDetail.push({"messageNo":recv.messageNo,
-            "message":recv.message, 
-            "time":recv.time, 
-            "userNick": recv.userNick, 
-            'userPic': recv.userPic,
-            "userOwn": recv.userOwn,
+                "message":recv.message, 
+                "time":recv.time, 
+                "userNick": recv.userNick, 
+                'userPic': this.otherPic,
+                "userOwn": recv.userOwn,
             })
+            console.log(this.otherPic,'??')
             this.scrollDown()
             
 
@@ -188,8 +191,7 @@ export default {
                 });
             }, function(){                
                 if(reconnect++ <= 5) {
-                    setTimeout(function() {
-                        console.log('reconnect')
+                    setTimeout(function() {                        
                         that.sock = new SockJS("https://i4a402.p.ssafy.io/api/ws-stomp");
                         that.ws = Stomp.over(that.sock);
                         that.connect();
@@ -214,6 +216,19 @@ export default {
             chattingRoom.scrollTop = chattingRoom.scrollHeight  
         }
         
+    },
+    computed:{
+        createdSimple(){
+            return (date) => {
+                var dateArray = date.split('-')
+                if (date.length > 10) {
+                    var timeArray = dateArray[2].split(' ')
+                    return dateArray[1]+'/'+dateArray[2][0] + dateArray[2][1]+' '+timeArray[0] +':'+timeArray[1][0]+timeArray[1][1]
+                } else {
+                    return date
+                }
+            }
+        }
     },
     watch:{
         roomNo:function(){            
@@ -255,11 +270,24 @@ export default {
     background-color: #a87a4ffa;
     color:white;        
 }
-#messagedetail>header>i{
+#messagedetail>header>div:nth-child(1)>i{
     margin:0 3%;
     padding:0.5% 0;
     font-size: 24px;
 }
+#messagedetail>header>div:nth-child(1){
+    display:flex;
+    width:90%;
+}
+#messagedetail>header>div:nth-child(2)>button{
+    border:none;
+    outline: none;
+    background-color: transparent;
+    width:100%;
+    color:white;
+    transition:0.3s
+}
+
 #messagedetail>body{
     position:relative;
 }
@@ -271,6 +299,14 @@ export default {
     overflow: auto;
     padding:10px;
 }
+#messagedetail>body>div::-webkit-scrollbar { width: 10px;}
+#messagedetail>body>div::-webkit-scrollbar-track { background-color:rgba(0, 0, 0, 0.5);border-radius: 10px;  }
+#messagedetail>body>div::-webkit-scrollbar-thumb { background: #e6e3e0f5;border-radius: 10px;  }
+#messagedetail>body>div::-webkit-scrollbar-thumb:hover { background: #e68c42; } 
+#messagedetail>body>div::-webkit-scrollbar-thumb:active { background: #e68c42; }
+#messagedetail>body>div::-webkit-scrollbar-button { display: none; } 
+
+
 #messagedetail>body>div>div {
     margin-bottom: 10px;
 }
@@ -307,6 +343,7 @@ export default {
     
 }
 .otherChatmsg>div>footer {
+    font-family: font1;
     font-size: 5px;
     white-space: nowrap;
 }
@@ -335,6 +372,8 @@ export default {
 .myChat>footer {
     font-size: 5px;
     white-space: nowrap;
+    font-family: font1;
+    
 }
 
 

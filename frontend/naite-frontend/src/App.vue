@@ -35,15 +35,18 @@ export default {
     changeImg:function(imgUrl){
       this.imgUrl = imgUrl
     },
-    sendMessageDirect:function(roomNo,userNick){
+    sendMessageDirect:function(roomNo,userNick,userPic,userNo){
       if (screen.width < 501) {
         this.$router.push({ name:'MobileMessage',params:{'roomNo':roomNo,'otherNick':userNick}})
       } else {
         this.directMessageRoomNo = {
         'roomNo':roomNo,
-        'userNick':userNick
+        'userNick':userNick,
+        'userPic':userPic,
+        'userNo':userNo,
+        }
       }
-      }
+
       
 
     },

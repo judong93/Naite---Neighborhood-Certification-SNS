@@ -51,24 +51,33 @@ export default {
 }
 #preview {
     position: relative;
+    display:block;
     width: 150px;
     height:150px;    
     border-radius: 100%;
     overflow: hidden;
-    margin-left: 150px;
+    margin-top: 20px;
+    left:50%;
+    transform:translateX(-50%)
+    
+
 }
 
 
 #mobilePreview + button {
     position:relative;
+    display:block;
     font-size: 15px;
-    top:0;
+    margin-top: 20px;
     height: 40px;
-    margin-left: 170px;
+    width:32%;
+    text-align:center ;
+    left:50%;
     color:white;
+    transform:translateX(-50%);
     border:none;
     border-radius: 10px;
-    background-color: rgb(141, 138, 138);
+    background-color: rgb(243, 133, 43);
 
 }
 @media screen and (max-width: 501px) {
@@ -93,6 +102,7 @@ export default {
         height: 5%;
         margin-left:0%;
         margin-top: 0%;
+        width:100%;
         transform: translateX(-50%);
         color:black;
         border:none;

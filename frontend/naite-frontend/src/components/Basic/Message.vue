@@ -2,7 +2,7 @@
     <div id="message" >
         <div v-if='firstmessage'  @click='changeWindow'><i class="far fa-comment-dots"></i></div>
         <MessageStateSecond v-else-if='secondmessage' @messageDetail='messageDetail' @closeSecond='closeSecond' />
-        <MessageDetail :roomNo='roomNo' :otherNick='otherNick' @backtosecondstate='backtosecondstate' v-else />
+        <MessageDetail :roomNo='roomNo' :otherNick='otherNick' @backtosecondstate='backtosecondstate' :otherUserNo='otherUserNo' :otherPic='otherPic' v-else />
         <div class='newMessageAlter'>
             <!-- <i class="far fa-envelope-open" style='font-size:15px;color:white'></i> -->
             <span>새로운 메세지가 도착했어요!</span>
@@ -41,6 +41,8 @@ export default {
             lastList:[],
             newMessage:false,
             finalMessage:[],
+            otherUserNo:'',
+            otherPic:'',
 
         }
     },
@@ -52,10 +54,12 @@ export default {
             this.test = false
             this.changeWindow()
         },
-        messageDetail:function(roomNo,otherNick){
+        messageDetail:function(roomNo,otherNick,otherUserNo,otherPic){
             this.changeWindow()
             this.roomNo = roomNo
             this.otherNick = otherNick
+            this.otherUserNo = otherUserNo
+            this.otherPic=otherPic
 
         },
         closeSecond:function(){
@@ -121,8 +125,6 @@ export default {
                         this.newMessage = true
                         this.finalMessage = this.lastList
                         this.lastList = res.data
-
-
                     } else {
                         this.lastList = res.data
                     }
@@ -136,10 +138,13 @@ export default {
         directMessageRoomNo:function(){
             this.roomNo = this.directMessageRoomNo.roomNo
             this.otherNick = this.directMessageRoomNo.userNick
+            this.otherUserNo = this.directMessageRoomNo.userNo
+            this.otherPic = this.directMessageRoomNo.userPic
+            console.log(this.otherPic, this.otherUserNo)
             this.firstmessage=false
             this.secondmessage=true
             this.thirdmessage = false
-            this.changeWindow()
+            this.changeWindow()            
         },
         newMessage:function(){
             const alertMessage = document.querySelector('.newMessageAlter')
@@ -165,7 +170,7 @@ export default {
             if (localStorage.getItem('jwt')){
                 this.renderChatList()
             }
-        }, 20000);
+        }, 1000);
     }
     
 }

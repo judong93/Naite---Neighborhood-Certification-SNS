@@ -5,8 +5,7 @@
             <i class="fas fa-times-circle" @click='closeSecond'></i>
         </div>
         <div class='messageList' v-for='(message,idx) in myChatList' :key="idx">
-            
-            <div class="messageListBox" @click='messageDetail(message.roomNo,message.otherNick,idx)'>
+            <div class="messageListBox" @click='messageDetail(message.roomNo,message.otherNick,message.otherUserNo,message.otherPic)'>
                 <img :src='message.otherPic' alt="">
                 <div>
                     <span>{{message.otherNick}}</span><br>
@@ -52,14 +51,12 @@ export default {
                 .then(res => {
                     this.myChatList = res.data                       
                 })
-                .catch(err => {
-                    console.log(err)
+                .catch(() => {                    
+                    location.reload()
                 })
         },
-        messageDetail:function(roomNo,otherNick,idx){
-            this.$emit('messageDetail',roomNo,otherNick)
-            this.myChatList[idx].new = false
-
+        messageDetail:function(roomNo,otherNick,otherUserNo,otherPic){
+            this.$emit('messageDetail',roomNo,otherNick,otherUserNo,otherPic)
         },
         closeSecond:function(){
             this.$emit('closeSecond')
@@ -102,6 +99,14 @@ export default {
     border: 1px solid #3F9F47;
     border-radius: 10px;
 }
+#messagestatesecond::-webkit-scrollbar { width: 10px;}
+#messagestatesecond::-webkit-scrollbar-track { background-color:rgba(0, 0, 0, 0.5);border-radius: 10px;  }
+#messagestatesecond::-webkit-scrollbar-thumb { background: #e6e3e0f5;border-radius: 10px;  }
+#messagestatesecond::-webkit-scrollbar-thumb:hover { background: #e68c42; } 
+#messagestatesecond::-webkit-scrollbar-thumb:active { background: #e68c42; }
+#messagestatesecond::-webkit-scrollbar-button { display: none; } 
+
+
 .message2ndTitle {    
     
     padding: 0 10px;

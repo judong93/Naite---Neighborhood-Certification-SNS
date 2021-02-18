@@ -38,7 +38,7 @@
                     </div>                
                     <div>
                         <i class="far fa-clock"></i>
-                        <span>{{apiData.boardCreatedAt}}</span>
+                        <span>{{createdSimple(apiData.boardCreatedAt)}}</span>
                         <i class="far fa-thumbs-up" @click='likeBoard' v-if='!liked'></i>
                         <i class="fas fa-thumbs-up" @click='likeBoard' v-else></i>
                         <span>{{apiData.boardLikeCnt}}</span>
@@ -126,7 +126,7 @@ export default {
 
             axios.post(`${SERVER_URL}/chat/room?otherNick=${userNick}`,{},this.setToken())
                 .then(res=>{
-                    this.$emit('sendMessageDirect',res.data,userNick)                    
+                    this.$emit('sendMessageDirect',res.data,userNick,this.apiData.userPic,this.apiData.userNo)                    
                 })
                 .catch(err=>{
                     console.log(err)
@@ -207,6 +207,18 @@ export default {
 
 
     },
+    computed:{
+        createdSimple(){
+            return (date) => {
+                var dateArray = date.split('-')                
+                if (date.length > 10) {
+                    return dateArray[0][2]+dateArray[0][3]+'년'+' '+dateArray[1]+'월'+' '+dateArray[2][0] + dateArray[2][1]+'일'
+                } else {
+                    return date
+                }
+            }
+        }
+    },
     watch:{
         apiData:function(){
             const decode = jwt_decode(localStorage.getItem('jwt'))
@@ -215,8 +227,7 @@ export default {
                 if (this.apiData.usersWithLike[i] === decode.user.userNick) {
                     this.liked = true                
                 }
-            }            
-                        
+            }                    
             this.apiData.boardContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')            
 
 

@@ -36,11 +36,11 @@ export default {
             
             this.updateCommentCntCheck+=1
         },
-        sendMessageDirect:function(roomNo,userNick){
+        sendMessageDirect:function(roomNo,userNick,userPic,userNo){
             if (screen.width < 501) {
                 this.$router.push({name:'MobileMessage',params:{'roomNo':roomNo,'otherNick':userNick}})
             } else {
-                this.$emit('sendMessageDirect',roomNo,userNick)
+                this.$emit('sendMessageDirect',roomNo,userNick,userPic,userNo)                    
             }
         }
         

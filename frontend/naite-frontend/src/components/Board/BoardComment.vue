@@ -34,7 +34,7 @@
                             <i class="far fa-trash-alt"></i>
                             <span>삭제</span>
                         </div>
-                        <div v-if='!comment.userOwn && !comment.isDeleted&&!comment.isUnknown' @click='sendMessage(comment.userNick)'>
+                        <div v-if='!comment.userOwn && !comment.isDeleted&&!comment.isUnknown' @click='sendMessage(comment.userNick,comment.userPic,comment.userNo)'>
                             <i class="far fa-comment-dots"></i>
                             <span>메세지 보내기</span>
                         </div>
@@ -84,7 +84,7 @@
                             <i class="far fa-trash-alt"></i>
                             <span>삭제</span>
                         </div>
-                        <div v-if='!comment.userOwn && !comment.isDeleted&&!comment.isUnknown' @click='sendMessage(comment.userNick)'>
+                        <div v-if='!comment.userOwn && !comment.isDeleted&&!comment.isUnknown' @click='sendMessage(comment.userNick,comment.userPic,comment.userNo)'>
                             <i class="far fa-comment-dots"></i>
                             <span>메세지 보내기</span>
                         </div>
@@ -201,12 +201,12 @@ export default {
             this.updatedContent = this.apiData[idx].content
 
         },
-        sendMessage:function(Nick){
+        sendMessage:function(Nick,pic,num){
             const userNick = Nick
 
             axios.post(`${SERVER_URL}/chat/room?otherNick=${userNick}`,{},this.setToken())
                 .then(res=>{
-                    this.$emit('sendMessageDirect',res.data,userNick)                    
+                    this.$emit('sendMessageDirect',res.data,userNick,pic,num) 
                 })
                 .catch(err=>{
                     console.log(err)
