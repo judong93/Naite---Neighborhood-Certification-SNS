@@ -1,6 +1,8 @@
 <template>
   <div id="profile">
-    <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' :boardNo='boardNo' />
+    <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' 
+    :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' :boardNo='boardNo' 
+    @evalCompleted="evalCompleted"/>
     <div class="profile">
       <div class="profile-box">
         <div @mouseover="showReliability" @mouseout="showImg" class="profile-img-container">
@@ -48,8 +50,10 @@
               
               <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===0" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo,card.boardNo)" 
               class="profile-card-button market-not-completed"> <span>모집중</span> </div>
-              <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===1" 
+              <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===1 && card.evalIsCompleted===0"
               class="profile-card-button market-is-completed"> <span>거래완료</span> </div>
+              <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===1 && card.evalIsCompleted===1" @click="showEvaluation(card.marketNo)"
+              class="profile-card-button eval-is-completed"> <span>평가보기</span> </div>
             </div>
           </div>
           <i @click="nextCarouselSet" class="fas fa-chevron-right fa-2x carousel-move-btn"></i>
@@ -270,26 +274,18 @@ export default {
               this.formTitle = '거래에 참여한 유저를 선택해주세요'
               this.userJoinList = res.data.data
               this.boardNo = boardNo
-              
             })
-          // axios.put(`${SERVER_URL}/market/complete/${marketNo}`, {}, config)
-          //   .then(() => {
-          //     this.getMarketList()
-          //     this.userPostings = this.userMarketPostings
-          //   })
-          
-        } else {
-          const result = confirm('다시 모집하시겠습니까?')
-          if (result) {
-            axios.put(`${SERVER_URL}/market/restore/${marketNo}`, {}, config)
-              .then(() => {
-                this.getMarketList()
-                this.userPostings = this.userMarketPostings
-              })
-          }
-        }
+        } 
       }
-
+    },
+    showEvaluation: function (marketNo) {
+      this.formIsOpen = !this.formIsOpen
+      this.formTitle = '평가 내용'
+      this.selectedMarketNo = marketNo
+    },
+    evalCompleted: function () {
+      this.getMarketList()
+      this.userPostings = this.userMarketPostings
     }
   },
   watch: {
@@ -302,7 +298,7 @@ export default {
         this.carouselLength = this.userMarketPostings.length -1
       } else {
         this.userPostings = this.userCommentPostings
-        this,this.carouselLength = this.userCommentPostings.length -1
+        this.carouselLength = this.userCommentPostings.length -1
       }
       this.carouselNo = 0
     },
@@ -624,6 +620,15 @@ hr {
 }
 .market-is-completed:before, .market-is-completed:after {
   background:#FF7F50;
+}
+.eval-is-completed {
+  background-color: cornflowerblue;
+}
+.eval-is-completed:hover {
+  color: cornflowerblue;
+}
+.eval-is-completed:before, .eval-is-completed:after {
+  background-color: cornflowerblue;
 }
 #settings-icon:hover {
   font-size: 130%;

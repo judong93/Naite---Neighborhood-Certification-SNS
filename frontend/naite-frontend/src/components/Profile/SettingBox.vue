@@ -5,8 +5,9 @@
     <PwChangingForm v-if="formTitle==='비밀번호 재설정'" @pwChangingCompleted="changingCompleted" />
     <LocationChangingForm v-if="formTitle==='동네 재설정'" @changingAddressCompleted="changingCompleted" />
     <SelectUserForm v-if="formTitle==='거래에 참여한 유저를 선택해주세요'" :userJoinList='userJoinList' @selectJoinUser="selectJoinUser" :boardNo='boardNo' />
-    <UserEvaluatingForm v-if="formTitle==='평가를 남겨주세요!'" :selectedUserNick='selectedUserNick' :MarketNo='MarketNo' :isSeller="isSeller" />
+    <UserEvaluatingForm v-if="formTitle==='평가를 남겨주세요!'" :selectedUserNick='selectedUserNick' :MarketNo='MarketNo' :isSeller="isSeller" @evalCompleted="evalCompleted"/>
     <ProfileImgChangingForm v-if="formTitle==='프로필 이미지 변경'" @changingImgCompleted="changingCompleted" />
+    <EvalShowingForm v-if="formTitle==='평가 내용'" :MarketNo='MarketNo' />
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import LocationChangingForm from '@/components/Profile/LocationChangingForm'
 import SelectUserForm from '@/components/Profile/SelectUserForm'
 import UserEvaluatingForm from '@/components/Profile/UserEvaluatingForm'
 import ProfileImgChangingForm from '@/components/Profile/ProfileImgChangingForm'
+import EvalShowingForm from '@/components/Profile/EvalShowingForm'
 
 export default {
   name: 'SettingBox',
@@ -30,7 +32,8 @@ export default {
     LocationChangingForm,
     SelectUserForm,
     UserEvaluatingForm,
-    ProfileImgChangingForm
+    ProfileImgChangingForm,
+    EvalShowingForm,
   },
   props: {
     formIsOpen: Boolean,
@@ -55,6 +58,11 @@ export default {
       this.selectedUserNick = userNick
       console.log(userNick)
     },
+    evalCompletd: function () {
+      const settingForm = document.getElementById('settingform')
+      settingForm.style.display = 'none'
+      this.$emit('evalCompleted')
+    }
   },
   watch: {
     formIsOpen: function () {
@@ -77,7 +85,7 @@ export default {
   height: 64.2%;
   /* border: 3px solid red; */
   z-index: 2;
-  background-color: rgb(189, 180, 99);
+  background-color: #fae35f;
   border-radius: 10px;
   left: 40%;
   right: 40%;
