@@ -131,6 +131,9 @@ export default {
     components:{
                 
     },
+    props:{
+    imgUrl:[String]  
+    },
     data: function() {
         return {
             greeting:'',
@@ -249,9 +252,18 @@ export default {
         this.userNo = decode.user.userNo
         this.greeting = decode.greeting          
         setTimeout(() => {
-            const navImg = document.querySelector('.nav-status')   
-            navImg.style.backgroundImage= `url(${decode.userPic})`
+            const navImg = document.querySelector('.nav-status') 
+            const imgUrl = `url("${decode.userPic}")`
+            navImg.style.backgroundImage= imgUrl
+
         }, 100);
+    },
+    watch:{
+        imgUrl:function(){
+            const navImg = document.querySelector('.nav-status') 
+            const imgUrl = `url("${this.imgUrl}")`
+            navImg.style.backgroundImage= imgUrl
+        }
     }
 
     

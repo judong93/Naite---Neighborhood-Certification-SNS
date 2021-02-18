@@ -1,7 +1,7 @@
 <template>
   <div id="profile-settings">
     <SettingBox 
-    :formIsOpen='formIsOpen' :formTitle='formTitle' />
+    :formIsOpen='formIsOpen' :formTitle='formTitle' @changeImg='changeImg'/>
     <div class="blackboard">
       <div class="settings-content">
         <div class="setting-title">
@@ -56,6 +56,9 @@ export default {
     SettingBox
   },
   methods: {
+    changeImg:function(imgUrl){
+      this.$emit('changeImg',imgUrl)
+    },
     backToProfile: function () {
       this.$router.push({ name: 'Profile', params:{userNo:this.userNo}})
     },

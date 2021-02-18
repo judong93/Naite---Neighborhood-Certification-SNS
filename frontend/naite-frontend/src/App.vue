@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Navbar v-if='signNav' />
-    <router-view @sendMessageDirect='sendMessageDirect'/>
+    <Navbar v-if='signNav' :imgUrl = 'imgUrl' />
+    <router-view @sendMessageDirect='sendMessageDirect' @changeImg='changeImg'/>
     <Message v-if='signNav' :directMessageRoomNo='directMessageRoomNo' />
   </div>
 </template>
@@ -24,9 +24,13 @@ export default {
       signNav: false,
       mobileMessageState:false,
       directMessageRoomNo:'',
+      imgUrl:'',
     }
   },
   methods:{
+    changeImg:function(imgUrl){
+      this.imgUrl = imgUrl
+    },
     sendMessageDirect:function(roomNo,userNick){
       if (screen.width < 501) {
         this.$router.push({ name:'MobileMessage',params:{'roomNo':roomNo,'otherNick':userNick}})

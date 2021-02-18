@@ -45,9 +45,10 @@ export default {
       const settingForm = document.getElementById('settingform')
       settingForm.style.display = 'none'
     },
-    changingCompleted: function () {
+    changingCompleted: function (imgUrl) {
       const settingForm = document.getElementById('settingform')
       settingForm.style.display = 'none'
+      this.$emit('changeImg',imgUrl)
     },
     selectJoinUser: function (userNick) {
       this.formTitle = '평가를 남겨주세요!'

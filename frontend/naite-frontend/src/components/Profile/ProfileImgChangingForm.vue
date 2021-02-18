@@ -51,10 +51,10 @@ export default {
       let formData = new FormData
       formData.append('files',this.userPic)
       axios.put(`${SERVER_URL}/user/profile/pic`,formData,this.setToken())
-        .then(() => {
+        .then((res) => {
             alert('프로필이미지 변경완료')
             this.userPic = ''
-            this.$emit('changingImgCompleted')
+            this.$emit('changingImgCompleted',res.data.data)
         })
         .catch(err=>{
           console.log(err)

@@ -159,13 +159,14 @@ export default {
             }
         }
     },
-    created(){
-        setInterval(() => {
-            this.renderChatList()
-        }, 10000);
+    created(){        
         
+        setInterval(() => {
+            if (localStorage.getItem('jwt')){
+                this.renderChatList()
+            }
+        }, 20000);
     }
-
     
 }
 </script>
