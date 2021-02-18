@@ -76,7 +76,7 @@ public class ChatRoomService {
             ChatMessage lastMessage = getLastMessage(roomId);
             String lastMessageTime = "";
             if (lastMessage == null) {
-                result.add(new ChatRoomGetDto(roomId, other.getUserNick(), other.getUserPic(), "", ""));
+                result.add(new ChatRoomGetDto(roomId, other.getUserNo(), other.getUserNick(), other.getUserPic(), "", ""));
             } else {
                 if (lastMessage.getTime().plusHours(1).isAfter(LocalDateTime.now())) {
                     lastMessageTime = "방금 전";
@@ -90,7 +90,7 @@ public class ChatRoomService {
                     lastMessageTime = lastMessage.getTime().plusHours(9).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm (E)")).toString();
                 }
 
-                result.add(new ChatRoomGetDto(roomId, other.getUserNick(), other.getUserPic(), lastMessage.getMessage(), lastMessageTime));
+                result.add(new ChatRoomGetDto(roomId, other.getUserNo(), other.getUserNick(), other.getUserPic(), lastMessage.getMessage(), lastMessageTime));
             }
         }
         return result;
