@@ -69,7 +69,6 @@ export default {
           'auth-token':`${token}`
           }
       }
-      console.log(config)
       return config
     },
     deleteAccount: function () {
@@ -90,7 +89,6 @@ export default {
     openPwChangingForm: function () {
       this.formIsOpen = !this.formIsOpen
       this.formTitle = '비밀번호 재설정'
-      console.log(this.formIsOpen)
     },
     openProfileImgChangingForm: function () {
       this.formIsOpen = !this.formIsOpen
@@ -107,12 +105,13 @@ export default {
       axios.put(`${SERVER_URL}/user/profile/nick/${this.changedNick}`, {}, this.setToken())
         .then((res) => {
           if (res.data.response==="error") {
+            this.changedNick = ''
             alert(res.data.message)
           } else {
-            alert('변경이 완료되었습니다. 다시 로그인하시면 변경사항이 적용됩니다!')
+            this.userNick = this.changedNick
+            this.isNickInputOpen = false
+            this.$emit('changeNick',this.userNick)
           }
-          this.isNickInputOpen = false
-          this.changedNick = ''
         })
     },
     closeNickInput: function () {
@@ -127,7 +126,14 @@ export default {
     const decode = jwt_decode(localStorage.getItem('jwt'))
     this.userId = decode.user.userId
     this.userNo = decode.user.userNo
-    this.userNick = decode.user.userNick
+    axios.get(`${SERVER_URL}/user/profile/${this.userNo}`, this.setToken())
+      .then((res) => {
+          this.userNick = res.data.data.userNick
+          
+      })
+      .catch((err) => {
+          console.log(err)
+      })  
   }
 }
 </script>

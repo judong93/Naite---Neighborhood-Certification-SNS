@@ -19,7 +19,7 @@
                 <input type="text" @click='realSearch'>
                 <span @click="startSearch">Click here >></span>
                 <i class="fas fa-times-circle" @click='closeSearch'></i>
-                <span>{{greeting}}</span>
+                <span>{{userNick}}님 환영합니다.</span>
                 <div class="nav-status">
                     <div class="statusHover">   
                         
@@ -124,6 +124,9 @@
 <script>
 import jwt_decode from 'jwt-decode'
 import _ from 'lodash'
+import axios from 'axios'
+
+const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 
 
 export default {
@@ -132,13 +135,15 @@ export default {
                 
     },
     props:{
-    imgUrl:[String]  
+    imgUrl:[String] ,
+    changedNick:String, 
     },
     data: function() {
         return {
             greeting:'',
             userNo:'',
             mobileMenuBoo:false,
+            userNick:'',
         }
     },
     methods:{
@@ -241,7 +246,16 @@ export default {
         },
         mobileMessage:function(){
             this.$router.push({name:'MobileMessage',params:{'roomNo':-1,'otherNick':'동룡'}})
-        }
+        },
+        setToken:function(){
+            const token=localStorage.getItem('jwt')
+            const config = {
+                headers: {
+                'auth-token':`${token}`
+                }
+            }
+            return config
+        },
     },
     computed: {
 
@@ -250,19 +264,28 @@ export default {
         const token = localStorage.getItem('jwt')
         const decode = jwt_decode(token)
         this.userNo = decode.user.userNo
-        this.greeting = decode.greeting          
-        setTimeout(() => {
+        this.greeting = decode.greeting  
+        axios.get(`${SERVER_URL}/user/profile/${this.userNo}`, this.setToken())
+        .then((res) => {
+            console.log(res)
             const navImg = document.querySelector('.nav-status') 
-            const imgUrl = `url("${decode.userPic}")`
+            const imgUrl = `url("${res.data.data.userPic}")`
             navImg.style.backgroundImage= imgUrl
-
-        }, 100);
+            this.userNick = res.data.data.userNick
+            
+        })
+        .catch((err) => {
+            console.log(err)
+        })        
     },
     watch:{
         imgUrl:function(){
             const navImg = document.querySelector('.nav-status') 
             const imgUrl = `url("${this.imgUrl}")`
             navImg.style.backgroundImage= imgUrl
+        },
+        changedNick:function(){
+            this.userNick = this.changedNick
         }
     }
 

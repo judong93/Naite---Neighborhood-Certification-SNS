@@ -1,47 +1,58 @@
 <template>
   <div id="signup">               
-        <div class="signupform">
-            <div class='signuphead'>회원가입</div>
-            <button class='backBtn' @click='toLogin'><i class="fas fa-arrow-circle-left"><span>뒤로가기</span></i></button> 
-            <div class="signupleftdiv">
-                <label for="#" >아이디</label><br>
-                <input id='idInput' type="text" v-model='params.userId' @keypress.space="checkSpace" @keypress.enter='idComfirmMet'><button  v-if='!idConfirm' class="idConfirm" @click='idComfirmMet'>중복확인</button><br>
-                <label for="#">비밀번호</label><br>
-                <input type="password" v-model='params.userPw' @keypress.enter="checkSpace"><br>
-                <label for="#">비밀번호확인</label><br>
-                <input type="password" v-model='pwConfirm' @keypress.space="checkSpace"><br>   
-                <label for="#">닉네임</label><br>
-                <input id='nickInput' type="text"  v-model='params.userNick' @keypress.space="checkSpace" @keypress.enter='nickemailComfirmMet'><button  v-if='!nickConfirm' class="nickConfirm" @click='nickemailComfirmMet'>중복확인</button><br>   
-                <label for="#">프로필사진</label><br>
-                <label for="signupPic" class='signupPicForm' v-if='beforeSelectPic'>이미지 선택</label><br v-if='beforeSelectPic'>
-                <input 
-                type="file" 
-                id='signupPic' 
-                name='files' 
-                @change='saveFile'                
-                >
-                <ProfilePreview :profileImg = 'userPic' :beforeSelectPic='beforeSelectPic' @resettingPic='resettingPic'/>
-                <!-- <input type="text"  v-model='params.userPic' @keypress.space="checkSpace"><br>    -->
-            </div>
-            <div class="signuprightdiv">
-                <label for="#" >이름</label><br>
-                <input type="text"  v-model='params.userName' @keypress.space="checkSpace"><br>                
-                <label for="#">이메일</label><br>
-                <input class='emailInput' type="text"  v-model='params.userEmail' @keypress.space="checkSpace" @keypress.enter='emailComfirm'><button  v-if='!emailConfirm' class="emailSend" @click='emailComfirm'>메일보내기</button><br>            
-                <label for="#">이메일인증</label><br>
-                <input id='emailConfirmInput' type="text"  v-model='userEmailConfirm' @keypress.space="checkSpace" @keypress.enter='emailConfirmSend'><button v-if='!emailConfirm' class="emailConfirmSend" @click='emailMatching'>인증요청</button><br>            
-                <label for="#">주소</label><br>
-                <input type="text" 
-                placeholder="클릭하여 주소를 검색해주세요" 
-                v-model='params.userBasicAddress'
-                @click='openSearchLocation' 
-                readonly/> <br>                
-                <label for="#">상세주소</label><br>
-                <input type="text"  v-model='params.userDetailAddress'/><br>   
-                <button class="signupComplete" @click='completeSignup'>회원가입</button>
-            </div>
-        </div>
+        <div class="signUpForm">
+            <header>
+                <button class='backBtn' @click='toLogin'><i class="fas fa-arrow-circle-left"></i><span>뒤로가기</span></button> 
+                <h2>회원가입</h2>
+            </header>
+            <body>
+                <div>
+                    <label for="#" >아이디</label>
+                    <input id='idInput' type="text" v-model='params.userId' @keypress.space="checkSpace" @input='idComfirmMet' placeholder="5자 ~ 15자, 영어 및 숫자 함께 사용,한글 및 특수문자x">
+                    <div :class='{fontRed:!idCheck,fontBlue:idCheck}'>{{idMessage}}</div>
+                    <label for="#">비밀번호</label>
+                    <input type="password" v-model='params.userPw' @input='checkPw' @keypress.enter="checkSpace" placeholder="8자이상, 영어/숫자/특수문자를 한개 이상 사용해주세요"><br>
+                    <div :class='{fontRed:!pwCheck,fontBlue:pwCheck}'>{{pwMessage}}</div>
+                    <label for="#">비밀번호확인</label>
+                    <input type="password" v-model='pwConfirm' @keypress.space="checkSpace" ><br>   
+                    <div>{{pwConfirmMessage}}</div>
+                    <label for="#">닉네임</label>
+                    <input id='nickInput' type="text"  v-model='params.userNick' @keypress.space="checkSpace" @keypress.enter='nickemailComfirmMet'><button  v-if='!nickConfirm' class="nickConfirm" @click='nickemailComfirmMet'>중복확인</button><br>   
+                    <div>{{nickMessage}}</div>
+                    <label for="#">프로필사진</label>
+                    <label for="signupPic" class='signupPicForm' v-if='beforeSelectPic'>이미지 선택</label><br v-if='beforeSelectPic'>
+                    <input 
+                    type="file" 
+                    id='signupPic' 
+                    name='files' 
+                    @change='saveFile'                
+                    >
+                    <ProfilePreview :profileImg = 'userPic' :beforeSelectPic='beforeSelectPic' @resettingPic='resettingPic'/>
+                </div>
+                <div>
+                    <label for="#" >이름</label>
+                    <input type="text"  v-model='params.userName' @keypress.space="checkSpace"><br>                
+                    <label for="#">이메일</label>
+                    <input class='emailInput' type="text"  v-model='params.userEmail' @keypress.space="checkSpace" @keypress.enter='emailComfirm'><button  v-if='!emailConfirm' class="emailSend" @click='emailComfirm'>메일전송</button><br>            
+                    <div>{{emailMessage}}</div>
+                    <label for="#">이메일인증</label>
+                    <input id='emailConfirmInput' type="text"  v-model='userEmailConfirm' @keypress.space="checkSpace" @keypress.enter='emailConfirmSend'><button v-if='!emailConfirm' class="emailConfirmSend" @click='emailMatching'>인증요청</button><br>            
+                    <div>{{emailConfirmMessage}}</div>
+                    <label for="#">주소</label>
+                    <input type="text" 
+                    placeholder="클릭하여 주소를 검색해주세요" 
+                    v-model='params.userBasicAddress'
+                    @click='openSearchLocation' 
+                    readonly/>                 
+                    <label for="#">상세주소</label>
+                    <input type="text"  v-model='params.userDetailAddress'/>   
+                    <button class="signupComplete" @click='completeSignup'>회원가입</button>
+                    <div>{{signupMessage}}</div>
 
+                </div>
+                
+            </body>
+        </div>
         <Location :searchLocation='searchLocation' @selectAddress = 'selectAddress' @checkAddress='checkAddress' />
   </div>
 </template>
@@ -55,6 +66,10 @@ import axios from 'axios'
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 // const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
+var check_num = /[0-9]/;
+var check_eng = /[a-zA-Z]/;
+var check_spc = /[~!@#$%^&*()_+|<>?:{}]/;
+var check_kor = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
 
 export default {
     name:'Signup',
@@ -83,6 +98,15 @@ export default {
             nickConfirm:false,
             userPic:'',
             beforeSelectPic:true,
+            idMessage:'',
+            idCheck:true,
+            pwMessage:'',
+            pwCheck:true,
+            pwConfirmMessage:'',
+            nickMessage:'',
+            emailMessage:'',
+            emailConfirmMessage:'',
+            signupMessage:'',
         }
     },
     methods:{
@@ -94,6 +118,7 @@ export default {
                 if (i===7){ 
                     var addPic = document.querySelector('.testff')
                     signupForm.appendChild(addPic)
+                    
 
                 } else {
                     var addInput = document.createElement('input')
@@ -119,30 +144,72 @@ export default {
             showSignup.style.webkitAnimationDuration='0s'
         },
         idComfirmMet:function(){
-            const btn = document.getElementById('idInput')
+            this.idMessage=''
+            this.idCheck = true
+            this.idConfirm = false
+            if (!this.params.userId){
+                this.idCheck = false
+                this.idMessage = '아이디를 입력해주세요.'
+                
+                return;
+            } else if (this.params.userId.length < 5 || this.params.userId.length>15 ){
+                this.idCheck = false
+                this.idMessage = '아이디 길이를 확인해주세요. *최소5자 ~ 최대 15자*'
+                
+                return;
+            } else if (check_spc.test(this.params.userId || check_kor.test(this.params.userId))){
+                this.idCheck = false
+                this.idMessage = '특수문자 및 한글은 사용불가능합니다.'
+                
+                return;
+            } else if (!check_eng.test(this.params.userId || !check_num.test(this.params.userId))){
+                this.idCheck = false
+                this.idMessage = '영어와 숫자를 함께 사용하여 아이디를 생성해주세요.'
+                
+                return;
+            } else {
+                this.idCheck = true
+                this.idMessage = '아이디 인증 중...'
+            }
             axios.post(`${SERVER_URL}/user/sign/id/${this.params.userId}`)
                 .then(res=>{
                     if(res.data.response==='error'){
-                        alert(res.data.message)
+                        this.idCheck = false
+                        this.idMessage = res.data.message
+                        this.params.userId = ''
                     } else {
                         this.idConfirm = true
-                        alert(res.data.message)
-                        btn.style.width='80%'
+                        this.idCheck = true
+                        setTimeout(() => {
+                            this.idMessage = res.data.message
+                        }, 100);
                     }
                 })
                 .catch(err=>{
                     console.log(err)
                 })
         },
+        checkPw:function(event){
+
+            this.params.userPw = event.target.value
+            if (!check_eng.test(this.params.userPw) || !check_num.test(this.params.userPw) || !check_spc.test(this.params.userPw)){
+                this.pwMessage = '특수문자/영어/숫자를 모두 입력해주세요.'
+                this.pwCheck = false
+            } else if(this.params.userPw.length <8){
+                this.pwMessage = '8자 이상 입력해주세요!'
+                this.pwCheck = false
+            } else {
+                this.pwMessage = '확인되었습니다. 회원가입을 진행해주세요'
+                this.pwCheck = true
+            }
+        },
         nickemailComfirmMet:function(){
-            const btn = document.getElementById('nickInput')
             axios.post(`${SERVER_URL}/user/sign/nick/${this.params.userNick}`)
                 .then(res => {
                     if(res.data.response==='error'){
                         alert(res.data.message)
                     } else {
-                        btn.style.width='80%'
-                        alert(res.data.message)
+                        
                         this.nickConfirm = true
                     }
                 })
@@ -202,7 +269,6 @@ export default {
                     } else {
                         this.emailConfirm = true
                         alert('이메일 인증이 완료되었습니다!')
-                        document.getElementById('emailConfirmInput').style.width='80%'
                     }
                     console.log(res.data)
                     
@@ -338,6 +404,22 @@ export default {
     color: rgba(255, 255, 255, 0.6)
 }
 
+@keyframes textEffect{
+    0% {
+        margin-right: 5%;
+    }
+    33% {
+        margin-right: 4%;
+    }
+    66% {
+        margin-right: 6%;
+    }
+    100%{
+        margin-right: 5%;
+    }
+}
+
+
 
 #signup {
     position: absolute;
@@ -348,299 +430,123 @@ export default {
     font-family: font1;
     visibility: hidden;
     animation-fill-mode: forwards;
-}
-.signuphead {
-    position: absolute;
-    left: 50%;
-    top: 5%;
-    font-size: 40px;
+    background-color: rgba(255, 0, 0, 0.411);
     color:white;
-    transform: translate(-50%,-50%);
-
-
 }
-.signupform {
-    position: absolute;
-    width: 1200px;
-    height: 900px;
+
+
+.signUpForm{
+    position:absolute;
     top:50%;
     left:50%;
-    transform:translate(-50%,-50%);
-    display:flex;
-    
-    font-size: 30px;
-    color:white;
-    
+    width: 60%;
+    height:80%;
+    background-color: rgba(0, 0, 255, 0.37);
+    transform: translate(-50%,-50%);
+
 }
 
-.signupleftdiv{    
-    width: 50%;
-    height: 80%;
-    margin-top: 10%;
+.signUpForm > header {
+    margin-bottom: 2%;
+}
+
+.signUpForm>header>button {
+    position:absolute;
     text-align: left;
- 
-}
-.signuprightdiv{   
-    width: 50%;
-    height: 80%;
-    margin-top: 10%;
-    text-align: left; 
-}
-
-.signuprightdiv>input{
-    text-align: left;
-    
-}
-
-
-
-.signupform input {
-    width: 80%;
-    height: 5%;
-    border-style: dotted;
-    border-top: none;
-    border-left: none;
-    border-right: none;
+    left:0;
+    border:none;
     outline: none;
     background-color: transparent;
-    color:white;
-    font-size: 16px;
-}
-.signuprightdiv > .emailInput{
-    width: 70%;
-    
-}
-
-
-.signupform label {
-    font-size: 18px;
-    margin-top:5%;
-}
-
-.signupComplete{
-    margin-top: 10%;
-    background-color: cornflowerblue;
-    color:white;
-    border:none;
-    border-radius: 10px;
-    cursor:pointer;
-    font-size: 18px;
-}
-
-.backBtn {
-    position:absolute;
-    margin-top: 2%;
-    background-color: transparent;
-    border: none;
-    color:white;
-    border-radius: 10px;
-    cursor:pointer;
-    font-size: 20px;
-    transition:0.3s; 
-}
-.backBtn:hover{
-    color:greenyellow
-}
-.backBtn > i > span {
     font-family: font1;
-    margin-left: 10px;
-}
-
-.emailSend, .idConfirm, .nickConfirm, .emailConfirmSend {    
-    font-size: 12px;
-    border:none;
-    border-radius: 10px;
-    height:5%; 
-    background-color: rgb(114, 114, 114);   
     color:white;
-}   
-
-#idInput {
-    width: 70%
+    width:100%;
+    transition: 0.3s;
+}
+.signUpForm>header>button>span{
+    margin-left: 1%;
+    white-space: nowrap;
+    
+}
+.signUpForm>header>button:hover{
+    font-size: 20px;
+    left:-3%;
 }
 
-#nickInput {
-    width: 70%;
+.signUpForm>body {
+    display:flex;
+    height: 92%;
 }
 
-#emailConfirmInput {
-    width: 72%;
+.signUpForm>body>div {
+    width:50%;
+    font-family: font1;
+    padding:1%;
+    color:white;
+    background-color: tomato;
+    height:100%;
+   
 }
 
-#signupPic {
-    display: none;
-}
-
-.signupPicForm{
-    position: relative;
-    cursor:pointer;
+.signUpForm>body>div>label{
+    display:flex;
+    align-items:flex-end;
+    height:5%;
     margin:0;
-    margin-top: 0;
-    background-color: rgb(17, 235, 35);
-    padding:5px;
-    border-radius: 10px;
-    font-size: 15px;
+    font-size: 20px;
+    
+}
+.signUpForm>body>div>input {
+    height: 5%;
+    margin-bottom: 5%;
+    margin-right: 5%;
+    width:70%;
+    border: none;
+    background-color: transparent;
+    outline: none;
+    border-bottom: 1px solid white;
+    color:white;
     transition:0.3s;
-    top: -5%;
 }
-.signupPicForm:hover{
-    background-color: rgb(1, 101, 250);
+.signUpForm>body>div>button{
+    border:none;
+    outline:none;
+    border-radius: 10px;
+    padding:5px 10px;
+    font-size: 14px;
+    color:white;
+    background-color: rgba(0, 0, 0, 0.664);  
+    transition:0.3s;
 }
-@media screen and (max-width: 501px) {
-    
-    #signup {
-        position: absolute;
-        height: 100%;
-        top:0%;
-        width:100%;      
-        transition: 0.3s;  
-        font-family: font1;
-        visibility: hidden;
-        animation-fill-mode: forwards;
-    }
-    .signupform {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-        top:0;
-        left:0;
-        transform:none;
-        display:block;
-        font-size:15px;
-        color:white;
-        
-    }
-    .signuphead {
-        position: relative;
-        left: 0;
-        top: 0;
-        font-size: 25px;
-        color:white;
-        transform: none;
-        margin: 10% auto;       
-    }
+.signUpForm>body>div:nth-child(2)>button:nth-of-type(3){
+    display:block;
+    border:none;
+    outline:none;
+    width:70%;
+    border-radius: 10px;
+    padding:5px 10px;
+    font-size: 14px;
+    color:white;
+    background-color: rgba(161, 230, 34, 0.637);
+}
+.signUpForm>body>div>div {
+    margin-top: -5%;
+    margin-bottom:5%;
+    font-size: 14px;
+    width:70%;
+    text-align-last: right;
+    transition:0.5s;   
+}
+.signUpForm>body>div:nth-child(2)>div:nth-last-child(1) {
+    margin-top: 0%;
+    margin-bottom:5%;
+    font-size: 14px;   
+}
+.fontRed {
+    color:red
+}
 
-    .signupleftdiv{    
-        width: 80%;
-        height: 80%;        
-        margin: 10% auto;
-        text-align: left;
-    
-    }
-    .signuprightdiv{   
-        width: 80%;
-        height: 80%;
-        margin: -35% auto;
-        text-align: left; 
-    }
-
-    .signuprightdiv>input{
-        text-align: left;
-        
-    }
-
-
-
-    .signupform input {
-        width: 80%;
-        height: 5%;
-        border-style: dotted;
-        border-top: none;
-        border-left: none;
-        border-right: none;
-        outline: none;
-        background-color: transparent;
-        color:white
-    }
-    .signuprightdiv > .emailInput{
-        width: 70%;
-        
-    }
-
-
-    .signupform label {
-        margin-top:5%;
-    }
-
-    .signupComplete{
-        position:relative;
-        margin-top: 10%;
-        margin-left:0%;
-        background-color: rgb(247, 247, 247);
-        color:black;
-        width:100%;
-        height:7%;
-        border:none;
-        border-radius: 10px;
-        cursor:pointer;
-        font-size: 15px;
-    }
-
-    .backBtn {
-        position:absolute;
-        margin-top: 2%;
-        top:0;
-        left:10%;
-        background-color: transparent;
-        border: none;
-        font-size: 14px;
-        color:white;
-        border-radius: 10px;
-        cursor:pointer; 
-    }
-
-    .backBtn:hover {
-        color:white;
-    }
-
-    .backBtn > i > span {
-        font-family: font1;
-        margin-left: 10px;
-    }
-
-    .emailSend, .idConfirm, .nickConfirm, .emailConfirmSend {    
-        font-size: 15px;
-        border:none;
-        border-radius: 10px;
-        height:5%; 
-        background-color: rgba(255, 255, 255, 0.678);   
-        color:black;
-    }   
-
-    #idInput {
-        width: 70%
-    }
-
-    #nickInput {
-        width: 70%;
-    }
-
-    #emailConfirmInput {
-        width: 72%;
-    }
-
-    #signupPic {
-        display: none;
-    }
-
-    .signupPicForm{
-        position: relative;
-        cursor:pointer;
-        margin:0;
-        margin-top: 0;
-        background-color: rgb(255, 255, 255);
-        color:black;
-        padding:5px;
-        border-radius: 10px;
-        font-size: 15px;
-        transition:0.3s;
-        top: 0%;
-        width:100%;
-        text-align: center;
-    }
-    .signupPicForm:hover{
-        background-color: rgb(1, 101, 250);
-    }
+.fontBlue {
+    color:blue
 }
 
 </style>

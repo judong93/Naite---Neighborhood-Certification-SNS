@@ -56,7 +56,6 @@ export default {
     selectJoinUser: function (userNick) {
       this.formTitle = '평가를 남겨주세요!'
       this.selectedUserNick = userNick
-      console.log(userNick)
     },
     evalCompletd: function () {
       const settingForm = document.getElementById('settingform')
