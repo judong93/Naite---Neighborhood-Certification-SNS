@@ -1,8 +1,8 @@
 <template>
   <div id="profile">
-    <HowToUse />
+    <!-- <HowToUse /> -->
     <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' 
-    :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' :boardNo='boardNo' 
+    :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' :boardNo='boardNo' @deleteMarket="deleteMarket"
     @evalCompleted="evalCompleted"/>
     <div class="profile">
       <div class="profile-box">
@@ -69,7 +69,7 @@
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import SettingBox from '@/components/Profile/SettingBox'
-import HowToUse from '@/components/Basic/HowToUse'
+// import HowToUse from '@/components/Basic/HowToUse'
 
 const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 
@@ -109,7 +109,7 @@ export default {
   },
   components: {
     SettingBox,
-    HowToUse,
+    // HowToUse,
   },
   methods: {
     deleteMarket:function(){

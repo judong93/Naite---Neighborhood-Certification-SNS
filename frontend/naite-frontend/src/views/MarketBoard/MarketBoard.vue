@@ -15,9 +15,8 @@
       <span class='write-button' @click='writeBoard'>글 쓰기 </span>
     </div>
     <div class="group-buying">
-      <div v-for="(posting, idx) in marketPostings" :key="idx">
-        <div @click="toMarketDetail(posting.marketNo)"  v-if="posting.marketIsCompleted===0" class="posting-box">
-          <img :src="posting.files.length>0 ? posting.files[0]: require('../../assets/NoImage.png')" alt="" class="posting-img">
+        <div @click="toMarketDetail(posting.marketNo)"  v-for="(posting, idx) in marketPostings" :key="idx" class="posting-box">
+          <img :src="posting.files.length>0  ? posting.files[0]: require('../../assets/NoImage.png')" alt="" class="posting-img">
             <div class="posting-card">  
               <div  class="posting-title">
                 {{ posting.board.boardTitle }}
@@ -42,7 +41,6 @@
                 </div>
               </div>
             </div>
-          </div>
       </div>
     </div>
 
@@ -100,6 +98,7 @@ export default {
     axios.get(`${SERVER_URL}/market/list/6/`, this.setToken())
       .then((res) => {
         this.marketPostings = res.data
+        console.log(this.marketPostings)
       })
       .catch((err) => {
         console.log(err)

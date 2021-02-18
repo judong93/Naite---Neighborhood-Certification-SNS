@@ -24,7 +24,7 @@ export default {
     return {
       sellerUserNick: '',
       buyerUserNick: '',
-      buyerSCore: 0,
+      buyerScore: 0,
       buyerComment: '',
       sellerScore: 0,
       sellerComment: '',
