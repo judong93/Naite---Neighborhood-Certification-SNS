@@ -21,7 +21,7 @@
 
             </div>
         </div>
-        <MobileMessageDetail :otherNick = 'otherNick' :roomNo = 'roomNo' @backtosecondstate='backtosecondstate' v-else/>
+        <MobileMessageDetail :otherNick = 'otherNick' :roomNo = 'roomNo' :otherPic='otherPic' :otherNo='otherNo' @backtosecondstate='backtosecondstate' v-else/>
     </div>
 </template>
 <script>
@@ -39,6 +39,8 @@ export default {
             messageDetailBoolean:false,
             roomNo:0,
             otherNick:'',
+            otherNo:'',
+            otherPic:'',
         }
     },
     components:{
@@ -83,6 +85,7 @@ export default {
             this.otherNick = this.$route.params.otherNick
             this.messageDetailBoolean = true
         }
+        console.log(this.$route.params.otherNo,this.$route.params.otherPic)
     }
 }
 </script>

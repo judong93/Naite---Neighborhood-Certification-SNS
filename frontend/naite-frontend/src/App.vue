@@ -37,7 +37,8 @@ export default {
     },
     sendMessageDirect:function(roomNo,userNick,userPic,userNo){
       if (screen.width < 501) {
-        this.$router.push({ name:'MobileMessage',params:{'roomNo':roomNo,'otherNick':userNick}})
+        this.$router.push({name:'MobileMessage',params:{'roomNo':roomNo,'otherNick':userNick,'otherPic':userPic,'otherNo':userNo}})
+        
       } else {
         this.directMessageRoomNo = {
         'roomNo':roomNo,

@@ -157,7 +157,7 @@ export default {
 }
 .mainBoardHead>div:nth-child(2){
     font-size: 24px;
-    margin-left: -20%;
+    margin-left: 15%;
     margin-bottom:-2%;
     width:100%;
 }
@@ -169,6 +169,7 @@ export default {
 .mainBoardHead + hr {
     width: 100%;
     border-top: 1px solid black;
+    margin-bottom: 5px;
 }
 
 .leftPin, .rightPin {

@@ -1,8 +1,13 @@
 <template>
     <div id="mobilemessagedetail">
         <header>
-            <i class="fas fa-arrow-left" @click='backtosecondstate'></i>
-            <h5>{{otherNick}}님과의 채팅방</h5>
+            <div>
+                <i class="fas fa-arrow-left" @click='backtosecondstate'></i>
+                <h5>{{otherNick}}님과의 채팅방</h5>
+            </div>
+            <div>
+                <button>프로필 바로가기</button>
+            </div>
         </header>
 
         <body>
@@ -95,8 +100,10 @@ const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
 export default {
     name:'MobileMessageDetail',
     props:{
-        roomNo:Number,
+        roomNo:[Number,String],
         otherNick:String,
+        otherPic:String,
+        otherNo:[Number,String]
         
     },
     data:function(){
@@ -134,7 +141,6 @@ export default {
 
             }
             if (!this.myMessage){
-                alert('내용입력')
                 return
             }
 
@@ -171,7 +177,7 @@ export default {
             "message":recv.message, 
             "time":recv.time, 
             "userNick": recv.userNick, 
-            'userPic': recv.userPic,
+            'userPic': this.otherPic,
             "userOwn": recv.userOwn,
             })
             setTimeout(() => {  
@@ -183,15 +189,13 @@ export default {
         connect: function(){
             let that = this            
             this.ws.connect({},function(){ 
-
                 that.ws.subscribe(`/sub/chat/room/${that.roomNo}`,function(mes){                      
                     let recv = JSON.parse(mes.body)  
                     that.recvMessage(recv)                    
                 });                                
             }, function(){                
                 if(reconnect++ <= 5) {
-                    setTimeout(function() {
-                        console.log('reconnect')
+                    setTimeout(function() {                        
                         that.sock = new SockJS("https://i4a402.p.ssafy.io/api/ws-stomp");
                         that.ws = Stomp.over(that.sock);
                         that.connect();
@@ -214,8 +218,7 @@ export default {
         },
         scrollDown:function(){
             const chattingRoom = document.querySelector('#mobilemessagedetail>body>div')
-            chattingRoom.scrollTop = chattingRoom.scrollHeight  
-            console.log(chattingRoom,chattingRoom.scrollTop)
+            chattingRoom.scrollTop = chattingRoom.scrollHeight           
         }
         
     },
@@ -236,10 +239,7 @@ export default {
         this.connectRoom(this.roomNo)            
         this.decoderUser()
         this.connect()
-
         
-        
-
 
     }
 }
@@ -262,8 +262,21 @@ export default {
         width:100%;
         background-color: #a87a4fc4;
         color:white;        
+        justify-content: space-between;
     }
-    #mobilemessagedetail>header>i{
+    #mobilemessagedetail>header>div:nth-child(1){
+        display:flex;
+        width:70%;
+        
+    }
+     #mobilemessagedetail>header>div:nth-child(2)>button {
+        border:none;
+        outline: none;
+        background-color: transparent;
+        color:white;
+        font-size: 12px;
+     }
+    #mobilemessagedetail>header>div:nth-child(1)>i{
         margin:0 3%;
         padding:0.5% 0;
     }
@@ -362,6 +375,7 @@ export default {
         background-color: #a87a4fbe;
         color:white;
         border-radius: 10px;
+        height: 48px;
     }
 
 

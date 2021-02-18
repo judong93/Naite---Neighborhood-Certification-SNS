@@ -6,7 +6,7 @@
         <div class="market-detail-lg-img-container">
           <img :src="marketDetailContent.files.length>0 ? marketDetailContent.files[this.selectedMarketImgNo]: require('../../assets/이미지없을시.jpg')" class="market-detail-lg-img" alt="이미지가 없습니다">
         </div>
-        {{marketDetailContent}}
+       
         <div class="market-detail-sm-img-container">
           
           <img @click="changeMarketPic(idx)" :src="marketImg" v-for="(marketImg, idx) in marketDetailContent.files" :key="idx" alt="" class="market-detail-sm-img">
@@ -105,19 +105,19 @@ export default {
     axios.get(`${SERVER_URL}/market/detail/${marketNo}/`) 
       .then((res) => {
         this.marketDetailContent = res.data
-        console.log(this.marketDetailContent)
+        axios.get(`${SERVER_URL}/user/profile/${this.marketDetailContent.board.userNo}`, this.setToken())
+          .then((res) => {
+            this.profileImg = res.data.data.userPic
+          })
+          .catch((err) => {
+            console.log(err)
+        })
       })
       .catch((err) => {
         console.log(err)
       })
 
-    axios.get(`${SERVER_URL}/user/profile/${this.marketDetailContent.board.userNo}`, this.setToken())
-      .then((res) => {
-        this.profileImg = res.data.data.userPic
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+   
   }
 }
 </script>
