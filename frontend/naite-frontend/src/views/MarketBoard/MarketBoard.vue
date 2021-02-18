@@ -15,32 +15,34 @@
       <span class='write-button' @click='writeBoard'>글 쓰기 </span>
     </div>
     <div class="group-buying">
-      <div @click="toMarketDetail(posting.marketNo)" v-for="(posting, idx) in marketPostings" :key="idx" class="posting-box">
-        <img :src="posting.files.length>0 ? posting.files[0]: require('../../assets/NoImage.png')" alt="" class="posting-img">
-        <div class="posting-card">  
-          <div  class="posting-title">
-            {{ posting.board.boardTitle }}
-          </div>
-          <div class='posting-content'>
-            {{posting.board.boardContent}}
-          </div>
-          <div class="area-created">
-            <div>
-              가격: {{ posting.marketCost }}원
+      <div v-for="(posting, idx) in marketPostings" :key="idx">
+        <div @click="toMarketDetail(posting.marketNo)"  v-if="posting.marketIsCompleted===0" class="posting-box">
+          <img :src="posting.files.length>0 ? posting.files[0]: require('../../assets/NoImage.png')" alt="" class="posting-img">
+            <div class="posting-card">  
+              <div  class="posting-title">
+                {{ posting.board.boardTitle }}
+              </div>
+              <div class='posting-content'>
+                {{posting.board.boardContent}}
+              </div>
+              <div class="area-created">
+                <div>
+                  가격: {{ posting.marketCost }}원
+                </div>
+                <div>
+                  <i class="fas fa-user"></i>
+                  {{posting.userNick}}님
+                  <i class="fas fa-surprise"  v-if='posting.userScore>66' style='color:green;opacity:0.7'></i>              
+                  <i class="fas fa-smile-beam" v-else-if='posting.userScore>40'  style='color:blue;opacity:0.5'></i>
+                  <i class="fas fa-meh" v-else-if='posting.userScore>25'  style='color:orange;opacity:0.5;'></i>
+                  <i class="fas fa-sad-cry" v-else style='color:red;opacity:0.7'></i>
+                  <span>신뢰도 {{posting.userScore}}점</span>
+                  <i class="far fa-clock"></i>
+                  {{ posting.boardCreatedAtSimple }}
+                </div>
+              </div>
             </div>
-            <div>
-              <i class="fas fa-user"></i>
-              {{posting.userNick}}님
-              <i class="fas fa-surprise"  v-if='posting.userScore>66' style='color:green;opacity:0.7'></i>              
-              <i class="fas fa-smile-beam" v-else-if='posting.userScore>40'  style='color:blue;opacity:0.5'></i>
-              <i class="fas fa-meh" v-else-if='posting.userScore>25'  style='color:orange;opacity:0.5;'></i>
-              <i class="fas fa-sad-cry" v-else style='color:red;opacity:0.7'></i>
-              <span>신뢰도 {{posting.userScore}}점</span>
-              <i class="far fa-clock"></i>
-              {{ posting.boardCreatedAtSimple }}
-            </div>
           </div>
-        </div>
       </div>
     </div>
 
@@ -154,6 +156,9 @@ export default {
   left: 20%;
   right: 20%;
   text-align: left;
+}
+.group-buying > div {
+  display: inline-block;
 }
 .vl {
   border: 1px solid lightgray;
