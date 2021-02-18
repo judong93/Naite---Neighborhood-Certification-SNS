@@ -172,15 +172,23 @@ public class MarketDto {
     @Getter
     @Setter
     public static class EvalsResponseDto {
+        private int sellerUserNo;
+        private String sellerUserNick;
         private int sellerScore;
         private String sellerComment;
+        private int buyerUserNo;
+        private String buyerUserNick;
         private int buyerScore;
         private String buyerComment;
 
         @Builder
-        public EvalsResponseDto(int sellerScore, String sellerComment, int buyerScore, String buyerComment) {
+        public EvalsResponseDto(int sellerUserNo, String sellerUserNick, int sellerScore, String sellerComment, int buyerUserNo, String buyerUserNick, int buyerScore, String buyerComment) {
+            this.sellerUserNo = sellerUserNo;
+            this.sellerUserNick = sellerUserNick;
             this.sellerScore = sellerScore;
             this.sellerComment = sellerComment;
+            this.buyerUserNo = buyerUserNo;
+            this.buyerUserNick = buyerUserNick;
             this.buyerScore = buyerScore;
             this.buyerComment = buyerComment;
         }

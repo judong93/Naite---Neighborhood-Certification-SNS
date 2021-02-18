@@ -399,7 +399,13 @@ public class MarketService {
         Market market = marketRepository.findById(marketNo).orElseThrow(() -> new IllegalAccessError("[marketNo=" + marketNo + "] 해당 마켓글이 존재하지 않습니다."));
         Evaluation evalByBuyer = evaluationRepository.findByMarketAndEvalIsSeller(market, 0);
         Evaluation evalBySeller = evaluationRepository.findByMarketAndEvalIsSeller(market, 1);
+        User seller = userRepository.findById(evalBySeller.getUser().getUserNo()).get();
+        User buyer = userRepository.findById(evalByBuyer.getUser().getUserNo()).get();
 
+        if (seller == null)
+            throw new Exception("판매자 사용자가 존재하지 않습니다.");
+        if (buyer == null)
+            throw new Exception("구매자 사용자가 존재하지 않습니다.");
 
         if (evalBySeller == null)
             throw new Exception("판매자의 평가가 이루어지지 않았습니다.");
@@ -407,8 +413,12 @@ public class MarketService {
             throw new Exception("구매자의 평가가 이루어지지 않았습니다.");
 
         return MarketDto.EvalsResponseDto.builder()
+                .buyerUserNo(buyer.getUserNo())
+                .buyerUserNick(buyer.getUserNick())
                 .buyerScore(evalBySeller.getEvalScore())
                 .buyerComment(evalBySeller.getEvalComment())
+                .sellerUserNo(seller.getUserNo())
+                .sellerUserNick(seller.getUserNick())
                 .sellerScore(evalByBuyer.getEvalScore())
                 .sellerComment(evalByBuyer.getEvalComment())
                 .build();
