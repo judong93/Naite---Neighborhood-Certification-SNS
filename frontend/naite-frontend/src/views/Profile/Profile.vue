@@ -168,7 +168,6 @@ export default {
             localStorage.removeItem('jwt')
             this.$router.push({name:'Sign'})
           })
-        console.log(this.userBoardPostings)
       }
     },
     toBoardDetail: function (boardNo,marketNo,bigCategoryNo) {
@@ -243,7 +242,11 @@ export default {
           this.userMarketPostings = []
           for (let i = 0; i <= length; i++) {
               this.userMarketPostings.push(res.data.splice(0,this.spliceNo))
+            if (this.title==="평가끝났다" && i === length) {
+              this.userPostings = this.userMarketPostings
             }
+          }
+
         })
         .catch((err) => {
           console.log(err)
@@ -318,11 +321,8 @@ export default {
       this.selectedMarketNo = marketNo
     },
     evalCompleted: function () {
+      this.formTitle = '평가끝났다'
       this.getMarketList()
-      this.marketPostingChanged()
-    },
-    marketPostingChanged: function () {
-      this.userPostings = this.userMarketPostings
     },
     joinerSelected: function (userNick) {
       this.formIsOpen = !this.formIsOpen
