@@ -35,11 +35,10 @@
               <i class="fas fa-smile-beam" v-else-if='userScore[idx]>40'  style='color:blue;opacity:0.5'></i>
               <i class="fas fa-meh" v-else-if='userScore[idx]>25'  style='color:orange;opacity:0.5;'></i>
               <i class="fas fa-sad-cry" v-else style='color:red;opacity:0.7'></i>
-              <span>신뢰도 {{userScore[idx]}}점</span>
+              <span>신뢰도 {{posting.userScore}}점</span>
               <i class="far fa-clock"></i>
               {{ posting.boardCreatedAtSimple }}
             </div>
-
           </div>
         </div>
       </div>
@@ -99,16 +98,6 @@ export default {
     axios.get(`${SERVER_URL}/market/list/6/`, this.setToken())
       .then((res) => {
         this.marketPostings = res.data
-        this.userScore=[]
-          for (let i=0;i<res.data.length;i++){
-            axios.get(`${SERVER_URL}/user/profile/${res.data[i].board.userNo}`, this.setToken())
-              .then(res=>{
-                this.userScore.push(res.data.data.userScore)
-              })
-              .catch(err=>{
-                console.log(err)
-              })
-          }
       })
       .catch((err) => {
         console.log(err)
@@ -120,16 +109,6 @@ export default {
       axios.get(`${SERVER_URL}/market/list/${smallCategoryNo}/`, this.setToken())
         .then((res) => {
           this.marketPostings = res.data
-          this.userScore=[]
-          for (let i=0;i<res.data.length;i++){
-            axios.get(`${SERVER_URL}/user/profile/${res.data[i].board.userNo}`, this.setToken())
-              .then(res=>{
-                this.userScore.push(res.data.data.userScore)
-              })
-              .catch(err=>{
-                console.log(err)
-              })
-          }
         })
         .catch((err) => {
           console.log(err)

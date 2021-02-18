@@ -52,6 +52,11 @@ export default {
         axios.post(`${SERVER_URL}/market/eval/${this.MarketNo}`, params, this.setToken())
           .then(() => {
             alert('평가가 완료되었습니다!')
+            this.$emit('evalCompleted')
+
+          })
+          .catch((err) => {
+            console.log(err)
           })
       } else {
         const params = {
@@ -59,13 +64,26 @@ export default {
           evalComment: this.evalComment,
           evalScore: this.evalScore
         }
-        console.log(params)
-        axios.put(`${SERVER_URL}/market/complete/${this.MarketNo}`, params, this.setToken())
+        console.log(params.buyerNick)
+        console.log(params.evalComment)
+        console.log(params.evalScore)
+        console.log(typeof(this.MarketNo))
+        axios.put(`${SERVER_URL}/market/complete/${this.MarketNo}`,params, this.setToken())
           .then(() => {
             alert('평가가 완료되었습니다!')
+            this.$emit('evalCompleted')
+          })
+          .catch((err) => {
+            console.log(err)
           })
       }
 
+    },
+    watch: {
+      MarketNo: function () {
+        this.evalComment = ''
+        this.evalScore = 0
+      }
     }
   }
 }
