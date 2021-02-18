@@ -1,7 +1,7 @@
 <template>
   <div id="how-to-use">
     <div class="how-to-use-button"><i class="fas fa-chevron-circle-right fa-2x"></i></div>
-    <div class="how-to-use-content"></div>
+    <div class="how-to-use-content">d</div>
   </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
 <style>
   #how-to-use {
     position: absolute;
-    top:  9.5%;
+    top:  9.2%;
     width: 18%;
     height: 91%;
     left: 0;
@@ -29,8 +29,11 @@ export default {
   }
   .how-to-use-content {
     position: absolute;
+    background-color: rgb(152, 196, 193);
     width: 100%;
     height: 100%;
-    border: 3px lightgreen solid;
+    z-index: ;
+    /* border-radius: 3%; */
+    /* border: 3px lightgreen solid; */
   }
 </style>
