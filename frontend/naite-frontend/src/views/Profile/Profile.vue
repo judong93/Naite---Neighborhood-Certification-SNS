@@ -1,9 +1,9 @@
 <template>
   <div id="profile">
     <!-- <HowToUse /> -->
-    <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' 
+    <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' :selectedUserNick='selectedUserNick'
     :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' :boardNo='boardNo' @deleteMarket="deleteMarket"
-    @evalCompleted="evalCompleted"/>
+    @evalCompleted="evalCompleted" @joinerSelected="joinerSelected" />
     <div class="profile">
       <div class="profile-box">
         <div @click="mobileFlip" @mouseover="showReliability" @mouseout="showImg" class="profile-img-container">
@@ -105,6 +105,7 @@ export default {
       myNo:'',
       boardNo:'',
       selectedMarketIdx:'',
+      selectedUserNick: '',
     }
   },
   components: {
@@ -318,7 +319,15 @@ export default {
     },
     evalCompleted: function () {
       this.getMarketList()
+      this.marketPostingChanged()
+    },
+    marketPostingChanged: function () {
       this.userPostings = this.userMarketPostings
+    },
+    joinerSelected: function (userNick) {
+      this.formIsOpen = !this.formIsOpen
+      this.formTitle = '평가를 남겨주세요!'
+      this.selectedUserNick = userNick
     }
   },
   watch: {
@@ -761,7 +770,7 @@ hr {
     position: relative;
     /* margin-top: 5px; */
     /* width: 74.5%; */
-    width: 55.5%;
+    width: 68.5%;
     height: 70%;
     overflow: auto;
   }

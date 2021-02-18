@@ -53,6 +53,8 @@ export default {
           .then(() => {
             alert('평가가 완료되었습니다!')
             this.$emit('evalCompleted')
+            this.evalComment = ''
+            this.evalScore = 0
 
           })
           .catch((err) => {
@@ -68,6 +70,8 @@ export default {
           .then(() => {
             alert('평가가 완료되었습니다!')
             this.$emit('evalCompleted')
+            this.evalComment = ''
+            this.evalScore = 0
           })
           .catch((err) => {
             console.log(err)
@@ -75,12 +79,6 @@ export default {
       }
 
     },
-    watch: {
-      MarketNo: function () {
-        this.evalComment = ''
-        this.evalScore = 0
-      }
-    }
   }
 }
 </script>

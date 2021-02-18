@@ -24,8 +24,8 @@ export default {
   name: 'SettingBox',
   data: function () {
     return {
-      selectedUserNick: '',
       MarketNo: 0,
+      isJoinerSelected: 0,
     }
   },
   components: {
@@ -42,8 +42,10 @@ export default {
     userJoinList: Array,
     selectedMarketNo: Number,
     isSeller: Number,
-    boardNo:[Number,String]
-  },
+    boardNo:[Number,String],
+    selectedUserNick: String,
+  }
+  ,
   methods: {
     closeForm: function () {
       const settingForm = document.getElementById('settingform')
@@ -55,12 +57,10 @@ export default {
       this.$emit('changeImg',imgUrl)
     },
     selectJoinUser: function (userNick) {
-      this.formTitle = '평가를 남겨주세요!'
-      this.selectedUserNick = userNick
+      this.$emit('joinerSelected', userNick)
     },
-    evalCompletd: function () {
-      const settingForm = document.getElementById('settingform')
-      settingForm.style.display = 'none'
+    evalCompleted: function () {
+      this.closeForm()
       this.$emit('evalCompleted')
     },
     deleteMarket: function() {

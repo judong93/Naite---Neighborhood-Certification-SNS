@@ -98,7 +98,6 @@ export default {
     axios.get(`${SERVER_URL}/market/list/6/`, this.setToken())
       .then((res) => {
         this.marketPostings = res.data
-        console.log(this.marketPostings)
       })
       .catch((err) => {
         console.log(err)
@@ -353,7 +352,7 @@ export default {
     display: inline-block;
     overflow: hidden;
     height: 90px;
-    width: 100%;
+    width: 96%;
     margin-right: 20px;
     margin-bottom: 10px;
     border-bottom: 2px solid lightgray;
