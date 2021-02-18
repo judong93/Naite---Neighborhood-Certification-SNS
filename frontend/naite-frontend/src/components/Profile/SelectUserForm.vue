@@ -55,6 +55,8 @@ export default {
       if (result) {
         axios.put(`${SERVER_URL}/board/delete/${this.boardNo}`, {}, config)
           .then(() => {
+            alert('해당 게시물이 삭제되었습니다.')
+            this.$emit('deleteMarket')
           })
           .catch((err) => {
             console.log(err)

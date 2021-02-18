@@ -1,6 +1,6 @@
 <template>
   <div id="profile">
-    <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' :boardNo='boardNo' />
+    <SettingBox :formIsOpen='formIsOpen' :formTitle='formTitle' :userJoinList='userJoinList' :selectedMarketNo='selectedMarketNo' :isSeller='isSeller' :boardNo='boardNo' @deleteMarket='deleteMarket' />
     <div class="profile">
       <div class="profile-box">
         <div @mouseover="showReliability" @mouseout="showImg" class="profile-img-container">
@@ -46,7 +46,7 @@
               <div class="card-category">{{ bigCategory[card.bigCategoryNo] }}게시글</div>
               <button v-if="activityCheckNum===1 && userNo===loginedUserNo" @click="deletePosting(card.boardNo)" class="profile-card-button cdb">삭제하기</button>
               
-              <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===0" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo,card.boardNo)" 
+              <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===0" @click="changeMarketStatus(card.marketIsCompleted, card.marketNo,card.boardNo,idx)" 
               class="profile-card-button market-not-completed"> <span>모집중</span> </div>
               <div v-if="card.bigCategoryNo===5 && card.marketIsCompleted===1" 
               class="profile-card-button market-is-completed"> <span>거래완료</span> </div>
@@ -98,12 +98,28 @@ export default {
       spliceNo: 5,
       myNo:'',
       boardNo:'',
+      selectedMarketIdx:'',
     }
   },
   components: {
     SettingBox
   },
   methods: {
+    deleteMarket:function(){
+      axios.get(`${SERVER_URL}/market/list/user/${this.userNo}`)
+        .then((res) => {  
+          this.marketCount = res.data.length
+          const length = parseInt((res.data.length -1) / this.spliceNo)
+          this.userMarketPostings = []
+          for (let i = 0; i <= length; i++) {
+              this.userMarketPostings.push(res.data.splice(0,this.spliceNo))
+            }
+          this.userPostings = this.userMarketPostings
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
     postingList: function () {
       this.activityCheckNum = 1
       this.Cards = this.postingCards
@@ -259,7 +275,8 @@ export default {
         this.getCommentList()
       }
     },
-    changeMarketStatus: function (status,marketNo,boardNo) {
+    changeMarketStatus: function (status,marketNo,boardNo,idx) {
+      this.selectedMarketIdx = idx
       const config = this.setToken()
       if (this.userNo === this.loginedUserNo) {
         if (status===0) {
@@ -269,8 +286,7 @@ export default {
               this.formIsOpen = !this.formIsOpen
               this.formTitle = '거래에 참여한 유저를 선택해주세요'
               this.userJoinList = res.data.data
-              this.boardNo = boardNo
-              
+              this.boardNo = boardNo              
             })
           // axios.put(`${SERVER_URL}/market/complete/${marketNo}`, {}, config)
           //   .then(() => {
