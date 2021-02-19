@@ -35,7 +35,6 @@ export default {
       pwMessage: '',
       pwCheckConfirm: false,
       pwConfirmMessage: '',
-      pwCheckConfirm: false,
     }
   },
   methods: {
@@ -57,11 +56,17 @@ export default {
       } else {
         const config = this.setToken()
         axios.put(`${SERVER_URL}/user/profile/password`, {currentPw:this.nowPw, newPw: this.newPw}, config)
-        .then(() => {
-          alert('비밀번호가 변경되었습니다!')
-          setTimeout(() => {
+        .then((res) => {
+          alert(res.data.message)
+          this.nowPw = '',
+          this.newPw = '',
+          this.newPwConfirm = ''
+          if (res.data.message==='비밀번호 재설정 완료') {
+            setTimeout(() => {
             this.$emit('pwChangingCompleted')
           }, 400);
+          }
+
         })
         .catch((err) => {
           console.log(err)
