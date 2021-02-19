@@ -34,6 +34,7 @@ export default {
       pwCheck: false,
       pwMessage: '',
       pwConfirmMessage: '',
+      pwCheckConfirm: false,
     }
   },
   methods: {
