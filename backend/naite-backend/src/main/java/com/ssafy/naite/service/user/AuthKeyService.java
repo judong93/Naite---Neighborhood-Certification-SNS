@@ -37,10 +37,13 @@ public class AuthKeyService {
     }
 
     public void compare(String userEmail, String certified, Integer keyType) throws Exception{
-        AuthKey authKey = authKeyRepository.findByUserEmailAndAuthType(userEmail,keyType).get();
-        if (certified.equals(authKey.getAuthKey())) {
-            authKey.updateKey("success");
-            authKeyRepository.save(authKey);
+        Optional<AuthKey> authKey = authKeyRepository.findByUserEmailAndAuthType(userEmail,keyType);
+        if (!authKey.isPresent())
+            throw new Exception("제대로 가입되지 않은 사용자");
+        if (certified.equals(authKey.get().getAuthKey())) {
+            AuthKey realKey = authKey.get();
+            realKey.updateKey("success");
+            authKeyRepository.save(realKey);
         } else {
             throw new Exception("인증 키가 일치하지 않습니다.");
         }

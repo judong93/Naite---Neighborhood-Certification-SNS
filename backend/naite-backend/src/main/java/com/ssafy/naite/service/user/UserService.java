@@ -42,6 +42,7 @@ public class UserService {
         Optional<User> existed = userRepository.findByUserId(requestDto.getUserId());
         if(!existed.isPresent()) throw new Exception("등록된 아이디가 없습니다.");
         else {
+            if (existed.get().getUserActive() == 0) throw new Exception("탈퇴한 회원입니다.");
             User user = existed.get();
             // salt 해독
             String salt = user.getUserSalt();

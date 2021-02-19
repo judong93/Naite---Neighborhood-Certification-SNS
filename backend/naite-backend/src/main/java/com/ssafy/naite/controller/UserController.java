@@ -93,7 +93,7 @@ public class UserController {
         try {
             User user = userService.save(userSignUpRequestDto);
             // 이메일 인증 키 auth_key에 "empty"로 저장 -> 미인증 상태
-            authKeyService.save(new AuthKeySaveRequestDto(user.getUserEmail(), "empty", 0));
+            authKeyService.save(new AuthKeySaveRequestDto(user.getUserEmail(), "success", 0));
             villageService.saveVillage(user, userSignUpRequestDto.getUserDong());
             return new Response("success", "회원가입 완료", null);
         } catch (Exception e) {
@@ -109,7 +109,7 @@ public class UserController {
 
         // user에 해당 user_email 있는지 확인
         User user = userService.findByEmail(emailSendRequestDto.getUserEmail());
-        if ((emailSendRequestDto.getType() == 0 && user == null) || emailSendRequestDto.getType() == 1) {
+        if ((emailSendRequestDto.getType() == 0 && user == null) || (emailSendRequestDto.getType() == 1 && user != null)) {
             // 랜덤키 생성
             Random random = new Random();
             StringBuffer buffer = new StringBuffer();
