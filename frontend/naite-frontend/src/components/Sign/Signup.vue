@@ -212,6 +212,7 @@ export default {
         },
         checkPw:function(event){
             this.params.userPw = event.target.value
+            this.pwCheck = false
             if (!check_eng.test(this.params.userPw) || !check_num.test(this.params.userPw) || !check_spc.test(this.params.userPw)){
                 this.pwMessage = '특수문자/영어/숫자를 모두 입력해주세요.'
                 this.pwCheck = false
@@ -225,6 +226,7 @@ export default {
         },
         checkPwConfirm:function(event){
             this.pwConfirm=event.target.value
+            this.pwConfirmCheck=false
             if (this.pwConfirm !== this.params.userPw){
                 this.pwConfirmMessage = '비밀번호를 일치시켜주세요'
                 this.pwConfirmCheck = false
@@ -238,6 +240,7 @@ export default {
         },
         nickemailComfirmMet:function(event){
             this.params.userNick=event.target.value
+            this.userNickCheck = false
             this.nickConfirm = false
             if (this.params.userNick.length < 1){
                 this.userNickCheck = false
@@ -275,6 +278,7 @@ export default {
         },
         inputName:function(event){
             this.params.userName = event.target.value
+            this.nameCheck = false
             var getTextLength = function(str) {
                 var len = 0;
                 for (var i = 0; i < str.length; i++) {
@@ -284,6 +288,9 @@ export default {
             }
             if (getTextLength(this.params.userName ) < 2){
                 this.nameMessage = '이름을 입력해주세요'
+                this.nameCheck = false
+            } else if (check_num.test(this.params.userName) || check_spc.test(this.params.userName)){
+                this.nameMessage = '특수 문자 및 숫자를 사용할 수 없습니다.'
                 this.nameCheck = false
             } else if (check_eng.test(this.params.userName)){
                 this.nameMessage = '한국이름을 입력해주세요'
@@ -306,6 +313,7 @@ export default {
             this.params.userDong = result.bname2
         },
         emailComfirm:function(){
+            this.emailMessageCheck = false
             if (!check_email.test(this.params.userEmail)||check_kor.test(this.params.userEmail)){
                 this.emailMessage = '이메일 형식에 맞춰주세요'
                 this.emailMessageCheck = false
@@ -335,13 +343,15 @@ export default {
                 })
         },
         checkAddress:function(res) {
-            this.addressConfirm = res
+            this.addressConfirm = res          
+            // this.addressConfirm = true       
         },
         checkSpace: function(){
             event.returnValue = false;
         },
         emailMatching:function(event){
             this.userEmailConfirm=event.target.value
+            this.emailConfirmCheck = false
             
             if (check_eng.test(this.userEmailConfirm)||check_spc.test(this.userEmailConfirm)||check_kor.test(this.userEmailConfirm)){
                 this.emailConfirmMessage = '숫자만 입력 가능합니다'
@@ -367,7 +377,8 @@ export default {
                     }                   
                 })
                 .catch(err => {
-                    alert(err.data.message)
+                    this.emailConfirmMessage = err.data.message
+                    this.emailConfirmCheck = false
                 })
         },
         completeSignup:function(){  
@@ -377,11 +388,10 @@ export default {
                 if (key!='userPic' &&!this.params[key]) {
                     nullCheck = false
                 }
-            }
+            }            
             if (this.params.userPw === this.pwConfirm) {
                 pwCheck = true
             }
-        
             if(!this.idConfirm || !this.nickConfirm){
                 this.signupCheck = false
                 this.signupMessage ='아이디 및 닉네임 중복확인을 진행해주세요'
@@ -410,7 +420,6 @@ export default {
                 if(this.userPic){
                     signupFormData.append('files',this.userPic)
                 }
-                
                 axios.post(`${SERVER_URL}/user/sign/signup`,
                     signupFormData, {
                         headers: {

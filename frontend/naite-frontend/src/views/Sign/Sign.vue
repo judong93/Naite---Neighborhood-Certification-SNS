@@ -104,8 +104,8 @@ export default {
   position:relative;
   background: url('../../assets/sign.jpg') no-repeat center center;
   background-size: 100vw 100vh;
-  height: 969px;   
-  width:1920px;
+  height: 100vh;   
+  width:100vw;
   /* overflow:hidden;  */
   overflow:auto;
   

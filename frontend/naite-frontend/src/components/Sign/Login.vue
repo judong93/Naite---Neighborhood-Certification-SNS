@@ -2,7 +2,6 @@
   <div id="login">   
     <div class="loginBox">
         <div class="login-head">
-            LOGIN
         </div>
 
         <form action="#" class='login-form'>
@@ -170,7 +169,14 @@ export default {
             this.params.userId= this.$store.state.autoLogin.userId
             this.params.userPw= this.$store.state.autoLogin.userPw
             this.loginById()
-        }     
+        } 
+        if (screen.width<501){
+            setTimeout(() => {
+                document.querySelector('.login-head > img').setAttribute('src',"../../assets/naiteLogoBlack.png")
+                console.log(document.querySelector('.login-head > img'))
+            }, 10);
+
+        }    
     }
 }
 </script>
@@ -203,27 +209,34 @@ export default {
 .loginBox {
     position:relative;
     width: 700px;
-    height: 1000px;
-    top:600px;
+    height: 800px;
+    top:500px;
     left: 950px;
     transform: translate(-50%,-55%);
     transition: 0.3s;
-    overflow: hidden;
+    overflow:visible;    
 }
 
 .login-head {
-    position:absolute;
+    position:relative;
+    display:block;
     font-size: 60px;
     left: 50%;
-    top: 5%;
-    transform:translate(-50%,-50%)
+    top: 10%;
+    width:100%;
+    height:25%;
+    transform:translate(-50%,-50%);
+    background-image: url('../../assets/naiteLogoWhite.png');
+    background-size: 250px 210px;
+    background-repeat: no-repeat;
+    background-position: center;    
 }
 
 .login-form{
     /* background-color: red; */
-    position:absolute;    
+    position:relative;    
     width: 80%;
-    top: 15%;
+    top: -3%;
     left:50%;
     transform:translateX(-50%);
     text-align: left;    
@@ -253,10 +266,10 @@ export default {
 
 
 #login-checkbox {
-    position: absolute;
+    position: relative;
     text-align: left;    
     vertical-align: center;
-    top:40%;
+    top:-3%;
     left: 10%;
     width: 100%;
 
@@ -281,39 +294,26 @@ export default {
 
 
 .login-btn {
-    position: absolute;
+    position: relative;
+    display: block;
     width: 50%;
     height: 5%;
-    top: 55%;
+    top:5%;
     left: 50%;
     color:white;
     background-color: rgb(102, 102, 245);
     border-radius: 10px;
-    border: none;
-    right:20%;
-    transform:translateX(-50%)
-
-}
-
-.login-btn-sns {
-    position: absolute;
-    width: 50%;
-    height: 5%;
-    top: 65%;
-    left: 50%;
-    color:white;
-    background-color: rgb(21, 255, 0);
-    border-radius: 10px;
-    border: none;
-    right:20%;
+    border: none;    
     transform:translateX(-50%)
 
 }
 
 .find-pw{
-    position:absolute;
-    bottom: 30%;
+    position:relative;
+    display: block;
     left: 50%;
+    width: 25%;
+    top: 10%;
     transform: translateX(-50%);
     cursor:pointer;
     border-bottom: white solid 1px;
@@ -355,16 +355,30 @@ export default {
         left:0;
     }
 
+    
     .login-head {
         position:relative;
-        font-size: 20px;
-        margin-top: 20%;   
+        display:block;
+        font-size: 60px;
+        left: 50%;
+        top: 20%;
+        width:100%;
+        height:25%;
+        transform:translate(-50%,-50%);
+        background-image: url('../../assets/naiteLogoBlack.png');
+        background-size: 150px 130px;
+        background-repeat: no-repeat;
+        background-position: center;    
+    }
+    .login-head>img{
+        src: 'url("../../assets/naiteLogoBlack.png")';
+        width:250px;
     }
 
     .login-form {
         position: relative;
         font-size: 15px;
-        top:0;
+        top:-5%;
         left:0;
         transform: none;
         margin: 20% auto 1%;
@@ -390,7 +404,7 @@ export default {
         position: relative;
         text-align: left;    
         vertical-align: center;
-        top:0%;
+        top:-5%;
         left: 0%;
         width: 100%;
         font-size: 10px;
@@ -416,13 +430,14 @@ export default {
         width: 50%;
         height: 5%;
         top: 0;
-        left: 0;
-        color:white;
+        left: 50%;
+        color:black;
         background-color: rgba(102, 102, 245);
         border-radius: 10px;
-        border: none;
+        background-color: transparent;
+        border: 3px solid rgba(102,102,245);
         right:0%;
-        transform:none;
+        transform:translateX(-50%);
         margin-top: 5%;
         font-size: 15px;
 
@@ -430,28 +445,37 @@ export default {
 
     .find-pw{
         position:relative;
-        top: 5%;
-        left: 0%;
-        transform:none;
+        top: 2%;
+        left: 50%;        
         cursor:pointer;
         border-bottom: white solid 1px;
-        color:white;
+        color:black;
+        width:50%;
+        height: 5%;
+        padding-top: 1%;
         background-color: rgba(0,0,0,0.3);
-        border-radius: 5px;
+        background-color: transparent;
+        border: 3px solid rgba(71, 241, 80, 0.692);
+        border-radius: 10px;
         padding:5px;
-        font-size: 10px;        
+        font-size: 15px;        
     }
     
     #mobiSignup {
         position:relative;
-        top:5%;
+        top:2%;
         font-size: 15px;
         display: block;
-        color:white;
-        background-color: rgba(0,0,0,0.3);
-        width:20%;
-        margin: 5% auto;
-        border-radius: 5px;
+        color:black;
+        background-color: transparent;
+        border: 3px solid rgb(204, 131, 71);
+        width:50%;
+        left:50%;
+        padding-top: 1%;
+        height:5%;
+        transform: translateX(-50%);
+        margin: none;
+        border-radius: 10px;
 
     }
 

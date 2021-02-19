@@ -173,8 +173,10 @@ export default {
                 "userNick": recv.userNick, 
                 'userPic': this.otherPic,
                 "userOwn": recv.userOwn,
-            })            
-            this.scrollDown()
+            })  
+            setTimeout(() => {
+                this.scrollDown()
+            }, 10);          
             
 
         },
