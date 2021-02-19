@@ -8,7 +8,7 @@
 
 
 
-<img src='README/naiteLogoBlack.png' alt='나이테 모바일 로고' width='40%' ><img src='README/naiteLogo.png' alt='나이테 모바일 로고' width='40%' >
+<img src='README/naiteLogoBlack.png' alt='나이테 모바일 로고' width='40%' ><img src='README/naitelogo.png' alt='나이테 모바일 로고' width='40%' >
 
 
 
