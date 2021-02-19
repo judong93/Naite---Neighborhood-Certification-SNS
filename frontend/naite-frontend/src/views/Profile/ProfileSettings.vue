@@ -141,7 +141,7 @@ export default {
     },
     changeNick: function () {
       axios.put(`${SERVER_URL}/user/profile/nick/${this.changedNick}`, {}, this.setToken())
-        .then((res) => {
+        .then((res) => {         
           if (res.data.response==="error") {
             this.changedNick = ''
             alert(res.data.message)

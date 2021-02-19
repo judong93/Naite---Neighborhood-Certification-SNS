@@ -3,7 +3,8 @@
         <div class="webNav">
             <div class="navBorder"></div>
             <div class="nav-title" @click='showCategory(0)'>
-                나의 이웃테두리: 나이테
+                나의 이웃테두리 : 나이테
+                <!-- <img src="../../assets/naiteLogoBlack.png" width='150px' alt="" style='position:absolute;left:20%;top:0;'> -->
             </div>
             <div class="nav-link">
                 <a href="#" @click='showCategory(0)'>골목길</a>

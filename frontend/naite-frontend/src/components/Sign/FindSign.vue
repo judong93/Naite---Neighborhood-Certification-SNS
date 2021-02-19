@@ -9,7 +9,7 @@
             </div>
             <label for="">이메일</label><br>
             <input type="text" placeholder="회원가입시 입력했던 이메일을 입력해주세요" id='emailInput' @keypress.enter='findIdMethod' v-model='email'><br>
-            <div v-if='userId && findIdBool' style='margin-top:-40px'>회원님의 아이디는 {{userId}} 입니다.</div>
+            <div v-if='userId && findIdBool' style='margin-top:-40px;color:rgb(0, 255, 0);'>회원님의 아이디는 {{userId}} 입니다.</div>
             <div v-if='userId && !findIdBool' style='margin-top:-40px;color:red;'>{{userId}}</div>
             <button @click='findIdMethod'>아이디찾기</button><br>
             <span @click='switchPwId'>비밀번호 찾기</span>
@@ -29,6 +29,8 @@
                     @keypress.enter='sendingEmailMethod'
                 ><br>
                 <div v-if='pwEmailConfirm' style='margin-top:-40px;color:red;'>유저정보를 확인해주세요</div>
+                <div v-else-if='pwEmailSend' style='margin-top:-40px;color:blue;'>입력한 정보를 확인 중 입니다</div>
+                <div v-else-if='emailSendComplete' style='margin-top:-40px;color:rgb(0, 255, 0);'>입력한 정보를 확인 중 입니다</div>
                 <button @click='sendingEmailMethod'>
                     인증메일보내기
                 </button>
@@ -44,10 +46,10 @@
             <div v-else>
                 <!-- 비밀번호일치여부 확인 및 일치할 시 비밀번호 변경 후 로그인페이지로 -->
                 <label for="">비밀번호</label><br>
-                <input type="password" placeholder="" v-model='changePw'><br>
+                <input type="password" placeholder="8자이상, 영어/숫자/특수문자를 한개 이상 사용해주세요" v-model='changePw'><br>
                 <label for="">비밀번호확인</label><br>
-                <input id='findPwEmail' v-model='changePwConfirm' type="password" placeholder="" @keypress.enter='changePwMethod'><br>
-                <div v-if='!pwSame' style='margin-top:-40px;color:red;'>비밀번호가 일치하지 않습니다.</div>
+                <input id='findPwEmail' v-model='changePwConfirm' type="password" placeholder="8자이상, 영어/숫자/특수문자를 한개 이상 사용해주세요" @keypress.enter='changePwMethod'><br>
+                <div v-if='!pwSame' style='margin-top:-40px;color:red;'>{{pwmes}}</div>
                 <button @click='changePwMethod'>비밀번호변경</button>
             </div>
             <span @click='switchPwId'>아이디찾기</span>
@@ -78,8 +80,9 @@ export default {
             changePw:'',
             changePwConfirm:'',
             pwSame:true,
-            
-
+            pwEmailSend:false,
+            emailSendComplete:false,
+            pwmes:'',
         }
     },
     props:{
@@ -105,6 +108,9 @@ export default {
             this.$emit('switchFindLogin')
             this.resetInfo()
             this.findId=true
+            this.pwEmailConfirm=false
+            this.pwEmailSend = false
+            this.emailSendComplete = false
         },
         switchPwId:function(){
             if (this.findId){
@@ -134,20 +140,26 @@ export default {
         },
         sendingEmailMethod:function(){
             this.pwEmailConfirm=false
+            this.pwEmailSend = false
+            this.emailSendComplete = false
+            this.changePwBool = false
             const params ={
                 'type':1,
                 'userEmail': this.pwEmail,
                 'userId':this.pwId,
             }
             
+            this.pwEmailSend = true
             axios.post(`${SERVER_URL}/user/sign/email/send`,params)
-                .then(res => {
+                .then(res => {                    
                     if (res.data.response ==='error'){
                         this.pwEmailConfirm=true
                         this.sendingEmail = false
+                        this.emailSendComplete = false
                     } else {
                         this.pwEmailConfirm=false
                         this.sendingEmail = true
+                        this.emailSendComplete = true
                         
                     }
                     
@@ -182,8 +194,18 @@ export default {
         changePwMethod:function(){
             this.pwSame=true
 
+            var check_num = /[0-9]/;
+            var check_eng = /[a-zA-Z]/;
+            var check_spc = /[~!@#$%^&*()_+./,';|<>?:{}"-]/;
+
             if (this.changePw !== this.changePwConfirm) {
                 this.pwSame=false
+                this.pwmes = '비밀번호가 일치하지 않습니다'
+                return ;
+            }
+            if (!check_num.test(this.changePw)||!check_eng.test(this.changePw)||!check_spc.test(this.changePw)){
+                this.pwSame=false
+                this.pwmes = '영어/숫자/특수문자를 모두 사용해주세요'
                 return ;
             }
             //  put /user/sign/password/{userId}
