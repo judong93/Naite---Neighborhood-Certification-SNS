@@ -314,6 +314,7 @@ export default {
         },
         emailComfirm:function(){
             this.emailMessageCheck = false
+            this.emailConfirm = false
             if (!check_email.test(this.params.userEmail)||check_kor.test(this.params.userEmail)){
                 this.emailMessage = '이메일 형식에 맞춰주세요'
                 this.emailMessageCheck = false
@@ -350,9 +351,14 @@ export default {
             event.returnValue = false;
         },
         emailMatching:function(event){
-            this.userEmailConfirm=event.target.value
-            this.emailConfirmCheck = false
-            
+            if (this.emailMessageCheck&&this.emailConfirm){
+                this.emailMessage = '메일을 다시 전송해주세요'
+                 this.emailMessageCheck = false
+
+            }
+                this.userEmailConfirm=event.target.value
+                this.emailConfirmCheck = false
+                this.emailConfirm = false
             if (check_eng.test(this.userEmailConfirm)||check_spc.test(this.userEmailConfirm)||check_kor.test(this.userEmailConfirm)){
                 this.emailConfirmMessage = '숫자만 입력 가능합니다'
                 this.emailConfirmCheck = false
@@ -433,6 +439,16 @@ export default {
                             this.signupMessage ='나이테에 오신걸 환영합니다. 이웃과 소통을 통해 나이테를 즐겨주세요^^'
                             setTimeout(() => {
                                 this.toLogin()
+                                this.params= {
+                                    "userBasicAddress": "",
+                                    "userDetailAddress": "",
+                                    'userDong':'',
+                                    "userEmail": "",
+                                    "userId": "",
+                                    "userName": "",
+                                    "userNick": "",
+                                    "userPw": ""
+                                }
                             }, 500);
                         } else {
                             this.signupCheck = false

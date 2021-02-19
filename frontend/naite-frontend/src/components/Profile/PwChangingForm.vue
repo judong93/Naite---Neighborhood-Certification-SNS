@@ -33,8 +33,8 @@ export default {
       newPwConfirm: '',
       pwCheck: false,
       pwMessage: '',
-      pwConfirmMessage: '',
       pwCheckConfirm: false,
+      pwConfirmMessage: '',
     }
   },
   methods: {
@@ -56,9 +56,17 @@ export default {
       } else {
         const config = this.setToken()
         axios.put(`${SERVER_URL}/user/profile/password`, {currentPw:this.nowPw, newPw: this.newPw}, config)
-        .then(() => {
-          alert('비밀번호가 변경되었습니다!')
-          this.$emit('pwChangingCompleted')
+        .then((res) => {
+          alert(res.data.message)
+          this.nowPw = '',
+          this.newPw = '',
+          this.newPwConfirm = ''
+          if (res.data.message==='비밀번호 재설정 완료') {
+            setTimeout(() => {
+            this.$emit('pwChangingCompleted')
+          }, 400);
+          }
+
         })
         .catch((err) => {
           console.log(err)
@@ -82,12 +90,12 @@ export default {
         this.newPwConfirm=event.target.value
         if (this.newPwConfirm !== this.newPw){
             this.pwConfirmMessage = '비밀번호를 일치시켜주세요'
-            this.pwConfirmCheck = false
+            this.pwCheckConfirm = false
         } else if (!this.pwCheck){
             this.pwConfirmMessage = '비밀번호 양식을 맞춰주세요'
-            this.pwConfirmCheck = false
+            this.pwCheckConfirm = false
         }  else {
-            this.pwConfirmCheck = true
+            this.pwCheckConfirm = true
             this.pwConfirmMessage = '비밀번호가 일치합니다. 변경을 진행해주세요'
         }
     },
