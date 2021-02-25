@@ -20,9 +20,7 @@
 
 > 번화가는 동네 주민들과 자유로운 이야기를 주고받을 수 있는 ‘자유게시판’입니다. 사용자는 익명으로 글과 댓글을 작성할 수 있습니다.
 
-<img src='./README/번화가.gif'>
-
-<img src='./README/번화가모바일.gif'>
+<img src='./README/board1.gif' width='74%'><img src='./README/board1mobile.gif' width='20%'>
 
 
 
