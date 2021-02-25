@@ -10,14 +10,14 @@
         </div>
       </div>
     </div>    
-    <button @click="deleteMarketPosting" class="setting-btn delete-market-button">글 삭제</button>
+    <button @click="deleteMarketPosting" class="delete-market-button">글 삭제</button>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 
-const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
   name: 'SelectUserForm',
@@ -77,6 +77,10 @@ export default {
   .join-users {
     position: relative;
     height: 70%;
+    overflow: auto;
+  }
+  .join-users::-webkit-scrollbar {
+    display: none;
   }
   .join-user-container {
     display: flex;
@@ -111,6 +115,24 @@ export default {
     margin-left: 5%;
   }
   .delete-market-button {
+    position: absolute;
+    width: 50%;
     height: 12%;
+    top: 80%;
+    left: 50%;
+    color:white;
+    background-color: rgb(102, 102, 245);
+    border-radius: 10px;
+    border: none;
+    transform:translateX(-50%)
+  }
+  @media screen and (max-width: 501px) {
+  #SelectUserForm {
+    position: relative;
+    height: 66%;
+  }
+  .delete-market-button {
+    top: 80%;
+  }
   }
 </style>

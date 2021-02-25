@@ -91,10 +91,7 @@ import jwt_decode from 'jwt-decode'
 import BoardDetailImg from '@/components/Board/BoardDetailImg'
 
 
-const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
-// const SERVER_URL = 'http://i4a402.p.ssafy.io:8080'
-
-
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
     name:'ReviewBoardListDetail',
