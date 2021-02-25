@@ -121,7 +121,7 @@ export default {
             console.log('Welcome naite!')
         } else {
             const script = document.createElement('script');
-            script.src= 'http://dapi.kakao.com/v2/maps/sdk.js?appkey=e990ec2518ab112eae22d81bcd858753&libraries=services'
+            script.src= 'http://dapi.kakao.com/v2/maps/sdk.js?appkey=??&libraries=services'
             document.head.appendChild(script)
         }
     },

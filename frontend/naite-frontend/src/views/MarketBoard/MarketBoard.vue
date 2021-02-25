@@ -54,7 +54,7 @@ import BoardImg from '@/components/Board/BoardImg'
 import MarketCategory from '@/views/MarketBoard/MarketCategory'
 import axios from 'axios'
 
-const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
   name: "MarketBoard",
