@@ -258,13 +258,13 @@ ___
 
 
 
-| 학번    | 이름   | Github 주소                                       | 역할       |
-| ------- | ------ | ------------------------------------------------- | ---------- |
-| 0449828 | 김민경 | [minkyoe](https://github.com/minkyoe)             | 백엔드     |
-| 0445187 | 이유진 | [leejjin](https://github.com/leejjin)             | 백엔드     |
-| 0448358 | 조성훈 | [JoChoSunghoon](https://github.com/JoChoSunghoon) | 백엔드     |
-| 0448767 | 이동희 | [Donghee-L](https://github.com/Donghee-L)         | 프론트엔드 |
-| 0447329 | 박주동 | [judong93](https://github.com/judong93)           | 프론트엔드 |
+| 이름   | Github 주소                                       | 역할       |
+| ------ | ------------------------------------------------- | ---------- |
+| 김민경 | [minkyoe](https://github.com/minkyoe)             | 백엔드     |
+| 이유진 | [leejjin](https://github.com/leejjin)             | 백엔드     |
+| 조성훈 | [JoChoSunghoon](https://github.com/JoChoSunghoon) | 백엔드     |
+| 이동희 | [Donghee-L](https://github.com/Donghee-L)         | 프론트엔드 |
+| 박주동 | [judong93](https://github.com/judong93)           | 프론트엔드 |
 
 
 
