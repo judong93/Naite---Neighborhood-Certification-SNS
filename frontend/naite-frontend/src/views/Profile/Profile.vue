@@ -71,7 +71,7 @@ import jwt_decode from 'jwt-decode'
 import SettingBox from '@/components/Profile/SettingBox'
 // import HowToUse from '@/components/Basic/HowToUse'
 
-const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
   name: 'Profile',
