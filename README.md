@@ -28,7 +28,7 @@
 
 > 동사무소는 동네 주민들에게 질문을 하고 답변을 받을 수 있는 ‘질문게시판’입니다. 댓글을 통해 실제 동네 주민의 직접적인 답변을 받을 수 있습니다.
 
-<img src='./README/동사무소.gif' width= '74%'><img src='README/동사무소모바일.gif' width='20%'>
+<img src='./README/board2.gif' width= '74%'><img src='README/board2mobile.gif' width='20%'>
 
 
 
@@ -36,7 +36,7 @@
 
 > 수군수군은 동네 주민의 솔직한 리뷰를 볼 수 있는 ‘리뷰게시판’입니다. 카테고리(식당/의료/체육/미용/기타)를 선택하여 리뷰를 작성 및 확인할 수 있습니다. 사용자는 리뷰를 통해 별점을 부여할 수 있습니다.
 
-<img src='./README/수군수군.gif' width= '74%'><img src='./README/수군수군모바일.gif' width= '20%'>
+<img src='./README/board3.gif' width= '74%'><img src='./README/board3mobile.gif' width= '20%'>
 
 
 
@@ -44,7 +44,7 @@
 
 > 소리소문은 ‘우리 동네 정보 공유 게시판’입니다. 공사/세일/교통 등 여러가지 정보를 주민들과 공유할 수 있는 게시판입니다.
 
-<img src='README/소리소문.gif' width='74%'><img src='README/소리소문모바일.gif' width='21%'>
+<img src='README/board4.gif' width='74%'><img src='README/board4mobile.gif' width='21%'>
 
 
 
@@ -52,7 +52,7 @@
 
 > 장터는 중고거래와 공동구매를 진행할 수 있는 게시판입니다. 거래는 게시글 상세페이지 내의 채팅버튼을 눌러 시작하게 됩니다.
 
-<img src='README/market.gif' width='74%'> <img src='README/장터모바일.gif' width='20%'>
+<img src='README/market.gif' width='74%'> <img src='README/marketmobile.gif' width='20%'>
 
 
 
@@ -60,7 +60,7 @@
 
 > 게시판 상세 조회에서 ‘메세지' 버튼이나 장터게시판 상세 조회에서 ‘작성자와 거래하기' 버튼을 통해 일대일 채팅을 할 수 있습니다.
 
-<img src='README/1대1채팅.gif' width='74%'><img src='README/1대1채팅모바일.gif' width='21%'>\
+<img src='README/chat.gif' width='74%'><img src='README/chatmobile.gif' width='21%'>
 
 
 
@@ -68,7 +68,7 @@
 
 > 검색기능을 통해 게시물을 찾고, 클릭을 통해 해당 게시물을 자세히 볼 수 있습니다.
 
-<img src='README/검색.gif' width='74%'> <img src='README/검색모바일.gif' width='21%'>
+<img src='README/search.gif' width='74%'> <img src='README/searchmobile.gif' width='21%'>
 
 
 
