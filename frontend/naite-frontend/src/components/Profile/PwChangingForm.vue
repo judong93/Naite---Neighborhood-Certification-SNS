@@ -22,7 +22,7 @@ var check_num = /[0-9]/;
 var check_eng = /[a-zA-Z]/;
 var check_spc = /[~!@#$%^&*()_+./,';|<>?:{}"-]/;
 
-const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
   name: 'PwChangeForm',

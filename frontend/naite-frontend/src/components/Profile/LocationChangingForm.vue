@@ -19,7 +19,7 @@
 import Location from '@/components/Sign/Location'
 import axios from 'axios'
 
-const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 
 export default {
   name: 'LocationChangingForm',

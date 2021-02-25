@@ -89,7 +89,7 @@ import SockJS from 'sockjs-client'
 import jwt_decode from 'jwt-decode'
 let reconnect = 0
 
-const SERVER_URL = 'https://i4a402.p.ssafy.io/api'
+const SERVER_URL = process.env.VUE_APP_SERVER_URL
 // let sock = new SockJS('https://i4a402.p.ssafy.io:8080/ws-stomp')
 // let ws = Stomp.over(sock)
 // let reconnect = 0
