@@ -1,4 +1,6 @@
-# 나의 이웃 테두리 : 나이테
+# 나의 이웃 테두리 : 나이테🍃
+
+<br>
 
 ## 목차
 
@@ -24,7 +26,7 @@
   * [참여자](#참여자)
   * [기타사항](#기타사항)
 
-
+<br>
 
 ## 기획 의도 및 소개
 
@@ -32,11 +34,11 @@
  - 나이테는 사용자에게 동네 정보 공유, 공동  구매, 이웃과의 소통을 가능하게 하여 보다 더 편리한 동네 생활을 제공하고자 합니다.
  - 이를 통해 사용자가 동네의 사적인 정보를 공유하거나, 혼자 사기엔 많은 양의 물품들을 이웃과 나누어 편리한 동네 생활을 누릴 수 있도록 합니다.
 
-
+<br>
 
 ## 게시판 및 기능 소개
 
-
+<br>
 
 ### 번화가
 
@@ -44,7 +46,7 @@
 
 <img src='./README/board1.gif' width='74%'><img src='./README/board1mobile.gif' width='20%'>
 
-
+<br>
 
 ### 동사무소
 
@@ -52,7 +54,7 @@
 
 <img src='./README/board2.gif' width= '74%'><img src='README/board2mobile.gif' width='20%'>
 
-
+<br>
 
 ### 수군수군
 
@@ -60,7 +62,7 @@
 
 <img src='./README/board3.gif' width= '74%'><img src='./README/board3mobile.gif' width= '20%'>
 
-
+<br>
 
 ### 소리소문
 
@@ -68,7 +70,7 @@
 
 <img src='README/board4.gif' width='74%'><img src='README/board4mobile.gif' width='21%'>
 
-
+<br>
 
 ### 장터
 
@@ -76,7 +78,7 @@
 
 <img src='README/market.gif' width='74%'> <img src='README/marketmobile.gif' width='20%'>
 
-
+<br>
 
 ### 1대1 채팅
 
@@ -84,7 +86,7 @@
 
 <img src='README/chat.gif' width='74%'><img src='README/chatmobile.gif' width='21%'>
 
-
+<br>
 
 ### 검색
 
@@ -92,7 +94,7 @@
 
 <img src='README/search.gif' width='74%'> <img src='README/searchmobile.gif' width='21%'>
 
-
+<br>
 
 ### 신고
 
@@ -100,7 +102,7 @@
 
 ![img](README/report.gif)
 
-
+<br>
 
 ### 상호평가
 
@@ -109,7 +111,7 @@
 
 ![img](README/userScore.gif)
 
-
+<br>
 
 ## 사용방법
 
@@ -144,7 +146,7 @@
 ![image-20210219130842703](README/image-20210219130842703.png)
 
 
-
+<br>
 
 
 ### Frontend
@@ -192,7 +194,7 @@ $ npm run serve
 $ npm run serve -- --port ${SERVER_PORT}
 ```
 
-
+<br>
 
 ## 사용기술
 
@@ -213,9 +215,12 @@ ___
 | ------------- | :--------------------------------------------------------: |
 |               |                                                            |
 
+<br>
+
 ## ERD
 <img src='README/Naite_ERD.png' width='80%'>
 
+<br>
 
 ## 구현방법
 
@@ -245,6 +250,8 @@ ___
   - Nginx의 Certbot을 사용하여 HTTPS통신을 위한 SSL인증서 적용 
 
 
+<br>
+
 
 ## 개발 예정 사항
 
@@ -254,7 +261,7 @@ ___
 - 페이지별 사용가이드
 
 
-
+<br>
 
 
 ## 참여자
@@ -269,11 +276,8 @@ ___
 | 이동희 | [Donghee-L](https://github.com/Donghee-L)         | 프론트엔드 |
 | 박주동 | [judong93](https://github.com/judong93)           | 프론트엔드 |
 
-
+<br>
 
 ## 기타사항
 
 [나이테 Youtube 바로가기](https://youtu.be/fQ2vkrXv5J8?list=LL)
-
-<iframe width="560" height="560" src="https://www.youtube.com/embed/fQ2vkrXv5J8" frmeborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
